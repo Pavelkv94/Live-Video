@@ -3,12 +3,15 @@ import * as ActionTypes from "./AppConstants.js";
 
 const initialState = {
     camerasList: [],
+    currentCamera: {}
 };
 
 export function camerasReducer(state = initialState, action) {
     switch (action.type) {
         case ActionTypes.FETCH_CAMERAS:
             return { ...state, camerasList: action.payload };
+        case ActionTypes.FETCH_CAMERA:
+            return { ...state, currentCamera: action.payload };
         default:
             return state;
     }
@@ -20,10 +23,24 @@ const fetchCamerasAction = (payload) => ({
 });
 
 export const fetchCameras = (id) => (dispatch) => {
-    const response = fetchData(ActionTypes.userUrl(id), {}, {}, "cameras");
+    const response = fetchData(ActionTypes.camerasAllUrl(id), {}, {});
 
     response.then(
         (res) => dispatch(fetchCamerasAction(res.data)),
+        (err) => console.log(err)
+    );
+};
+
+const fetchCameraAction = (payload) => ({
+    type: ActionTypes.FETCH_CAMERA,
+    payload: payload,
+});
+
+export const fetchCamera = (id) => (dispatch) => {
+    const response = fetchData(ActionTypes.camerasUrl(id), {}, {});
+
+    response.then(
+        (res) => dispatch(fetchCameraAction(res.data)),
         (err) => console.log(err)
     );
 };
@@ -34,12 +51,13 @@ const createCameraAction = (payload) => ({
 });
 
 export const createCamera = (payload, id) => (dispatch) => {
-    const response = createData(ActionTypes.userUrl(id), {}, payload, 'cameras');
+    const response = createData(ActionTypes.camerasAllUrl(id), {}, payload);
 
     response.then(
         (res) => {
             dispatch(createCameraAction(res.data));
-            dispatch(fetchCameras(id))},
+            dispatch(fetchCameras(id));
+        },
         (err) => console.log(err)
     );
 };
@@ -50,7 +68,7 @@ const updateCameraAction = (payload) => ({
 });
 
 export const updateCamera = (payload, id) => (dispatch) => {
-    const response = updateData(ActionTypes.userUrl(id), {}, payload, 'cameras');
+    const response = updateData(ActionTypes.camerasUrl(id), {}, payload);
 
     response.then(
         (res) => {

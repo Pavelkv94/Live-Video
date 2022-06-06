@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import { HeaderNavBar } from "../HeaderNavBar/HeaderNavBar";
 import { MenuBar } from "../MenuBar/MenuBar";
 import { CamerasList } from "../CamerasList/CamersList";
+import { CamerasDetails } from "../CamerasDetails/CamerasDetails";
 const { Header, Content, Sider } = Layout;
 
 export const Main = () => {
@@ -42,7 +43,7 @@ export const Main = () => {
                         <Routes>
                             {/* <Route exact path="/main/:id?" render={() => <MainWindow />} /> */}
                             {/* <Route exact path="/admin" render={() => <Admin />} /> */}
-                            {/* <Route element={<Login />} path="/login" /> */}
+                            <Route element={<CamerasDetails />} path="/details/:id" />
                             <Route
                                 element={<CamerasList />}
                                 path="/"

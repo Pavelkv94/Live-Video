@@ -46,7 +46,7 @@ export const CameraModal = React.memo(
         };
 
         const saveCameraHandler = () => {
-            dispatch(updateCamera(cameraData, user.id));
+            dispatch(updateCamera(cameraData, cameraData.key));
             setOpen(false);
         };
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const base = async (url, subUrl) => `https://quiet-river.icdc.zby.icdc.io/api/v1/${url}/${subUrl}`;
+const base = async (url) => `https://quiet-river.icdc.zby.icdc.io/api/v1/${url}`;
 
 const expandHeaders = async () => ({
 
@@ -31,22 +31,22 @@ const API = {
     },
 };
 
-export const fetchData = async (url, headers, payload, subUrl) => {
-    const response = await API.get(await base(url, subUrl), expandHeaders(headers), payload);
+export const fetchData = async (url, headers, payload) => {
+    const response = await API.get(await base(url), expandHeaders(headers), payload);
     return response.data;
 };
 
-export const createData = async (url, headers, payload, subUrl) => {
-    const response = await API.post(await base(url, subUrl), expandHeaders(headers), payload);
+export const createData = async (url, headers, payload) => {
+    const response = await API.post(await base(url), expandHeaders(headers), payload);
     return response.data;
 };
 
-export const updateData = async (url, headers, payload, subUrl) => {
-    const response = await API.put(await base(url, subUrl), payload, headers);
+export const updateData = async (url, headers, payload) => {
+    const response = await API.put(await base(url), payload, headers);
     return response.data;
 };
 
-export const deleteData = async (url, headers, subUrl) => {
-    const response = await API.delete(await base(url, subUrl), expandHeaders(headers));
+export const deleteData = async (url, headers) => {
+    const response = await API.delete(await base(url), expandHeaders(headers));
     return response.data;
 };

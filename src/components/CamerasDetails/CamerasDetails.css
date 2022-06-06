@@ -1,0 +1,19 @@
+.camera-details {
+    width: 100%;
+    min-height: 500px;
+    border: 1px solid red;
+    display: flex;
+    justify-content: space-around;
+}
+.camera-details section:first-child {
+    width: 500px;
+    height: 300px;
+    margin: 20px;
+    border: 1px solid blue;
+}
+.camera-details section:last-child {
+    width: 50%;
+}
+.camera-details section:last-child td:first-child {
+    font-weight: 700;
+}
