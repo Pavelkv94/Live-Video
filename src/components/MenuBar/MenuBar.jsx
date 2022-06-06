@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu } from "antd";
-import { LaptopOutlined, NotificationOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
+import { VideoCameraOutlined } from "@ant-design/icons";
 
 export const MenuBar = React.memo(() => {
     const menuItems = [

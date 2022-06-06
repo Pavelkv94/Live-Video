@@ -24,7 +24,7 @@ export const Login = () => {
     // }, [error]);
 
     const onFinish = (values) => {
-        let currentUser = users.filter((e) => e.email == values.email)[0];
+        let currentUser = users.filter((e) => e.email === values.email)[0];
         if (currentUser) {
             dispatch(setCurrentUser(currentUser)) ;
             let savedUser = JSON.stringify(currentUser);
