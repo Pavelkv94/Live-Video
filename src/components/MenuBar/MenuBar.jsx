@@ -1,22 +1,18 @@
 import React from "react";
 import { Menu } from "antd";
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from "@ant-design/icons";
+import { LaptopOutlined, NotificationOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
 
 export const MenuBar = React.memo(() => {
-    const items1 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-        const key = String(index + 1);
-        return {
-          key: `sub${key}`,
-          icon: React.createElement(icon),
-          label: `subnav ${key}`,
-         
-        };
-      });
+    const menuItems = [
+      {key: '0',
+    icon: <VideoCameraOutlined />,
+  label: 'Cameras'}
+    ];
 
     return (
-        <div>
             <Menu
-                items={items1}
+            defaultSelectedKeys={['0']}
+                items={menuItems}
                 mode="inline"
                 theme="dark"
                 subMenuCloseDelay={2}
@@ -27,6 +23,5 @@ export const MenuBar = React.memo(() => {
             >
                
             </Menu>
-        </div>
     );
 });

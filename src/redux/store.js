@@ -1,10 +1,11 @@
 import { applyMiddleware, combineReducers, legacy_createStore } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
-import { appReducer } from "./dataReducer";
-
+import { authReducer } from "./authReducer";
+import { camerasReducer } from "./camerasReducer"
 const rootReducer = combineReducers({
-    app: appReducer,
+    authReducer,
+    camerasReducer,
 });
 
 export const store = legacy_createStore(

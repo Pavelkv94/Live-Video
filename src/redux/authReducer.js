@@ -1,0 +1,100 @@
+import { createData, deleteData, fetchData } from "../api/api.js";
+import * as ActionTypes from "./AppConstants.js";
+
+const initialState = {
+    users: [],
+    userId: "",
+    user: null,
+    registerStatus: "",
+};
+
+export function authReducer(state = initialState, action) {
+    switch (action.type) {
+        case ActionTypes.FETCH_ALL_USERS:
+            return { ...state, users: action.payload };
+
+        case ActionTypes.SET_REGISTER_STATUS:
+            return { ...state, registerStatus: action.payload };
+
+        case ActionTypes.FETCH_USER:
+            return { ...state, userId: action.payload };
+            
+        case ActionTypes.SET_USER:
+            return { ...state, user: action.payload };
+
+        default:
+            return state;
+    }
+}
+
+//TODO ACTIONS
+
+const setStatus = (status) => ({
+    type: ActionTypes.SET_REGISTER_STATUS,
+    payload: status,
+});
+
+const fetchAllUsersAction = (users) => ({
+    type: ActionTypes.FETCH_ALL_USERS,
+    payload: users,
+});
+
+export const fetchAllUsers = () => async (dispatch) => {
+    const response = fetchData(ActionTypes.usersUrl(), {}, {}, '');
+
+    response.then(
+        (res) => dispatch(fetchAllUsersAction(res.data)),
+        (err) => console.log(err)
+    );
+};
+
+const fetchUserAction = (id) => ({
+    type: ActionTypes.FETCH_USER,
+    payload: id,
+});
+
+export const fetchUser = (userId) => (dispatch) => {
+    const response = fetchData(ActionTypes.userUrl(userId), {});
+
+    response.payload.then(
+        (res) => fetchUserAction(userId),
+        (err) => console.log(err)
+    );
+};
+
+export const setCurrentUser = (payload) => ({
+    type: ActionTypes.SET_USER,
+    payload
+})
+
+const registerAction = (payload) => ({
+    type: ActionTypes.REGISTER_USER,
+    payload: createData(ActionTypes.usersUrl(), {}, payload),
+});
+
+export const registerUser = (payload) => (dispatch) => {
+    dispatch(setStatus("pending"));
+    const response = dispatch(registerAction(payload));
+
+    response.payload.then(
+        (res) => dispatch(setStatus("fulfilled")),
+        (err) => {
+            console.log(err);
+            dispatch(setStatus("rejected"));
+        }
+    );
+};
+
+const deleteUserAction = (id) => ({
+    type: ActionTypes.DELETE_USER,
+    payload: deleteData(ActionTypes.userUrl(id), {}),
+});
+
+export const deleteUser = (id) => (dispatch) => {
+    const response = dispatch(deleteUserAction(id));
+
+    response.payload.then(
+        (res) => console.log("DELETE Success"),
+        (err) => console.log(err)
+    );
+};
