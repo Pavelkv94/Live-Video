@@ -1,9 +1,9 @@
 .camera-details {
     width: 100%;
-    min-height: 500px;
+    min-height: 400px;
     border: 1px solid red;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 .camera-details section:first-child {
     width: 500px;

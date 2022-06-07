@@ -6,8 +6,6 @@ import { Login } from "./components/Login/Login";
 import { Main } from "./components/Main/Main";
 import { useDispatch } from "react-redux";
 import { fetchAllUsers, setCurrentUser } from "./redux/authReducer";
-import { CamerasList } from "./components/CamerasList/CamersList";
-import { CamerasDetails } from "./components/CamerasDetails/CamerasDetails";
 
 function App() {
     const dispatch = useDispatch();
@@ -19,14 +17,17 @@ function App() {
 
     const displayMode = {
         cameras: 'cameras',
-        camerasDetails: 'camerasDetails'
+        camerasDetails: 'camerasDetails',
+        storages: 'storages'
     }
     return (
         <div>
             <Routes>
+                <Route exact element={<Main mode={displayMode.cameras} />} path="/" />
                 <Route exact element={<Login />} path="/login" />
                 <Route exact element={<Main mode={displayMode.cameras}/>} path="/cameras" />
                 <Route exact element={<Main mode={displayMode.camerasDetails}/>} path="cameras/details/:id" />
+                <Route exact element={<Main mode={displayMode.storages}/>} path="/storages" />
             </Routes>
         </div>
     );

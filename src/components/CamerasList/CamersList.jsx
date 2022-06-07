@@ -1,16 +1,16 @@
-import { EditOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
-import { fetchCameras } from "../../redux/camerasReducer";
-import { CameraModal } from "../general/CameraModal";
+import { deleteCamera, fetchCameras } from "../../redux/camerasReducer";
+import { CustomModal } from "../general/CustomModal";
 import "./CamersList.css";
 
 export const CamerasList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [flag, setFlag] = useState('create');
+    const [flag, setFlag] = useState('create_camera');
     const [checkedCamera, setCheckedCamera] = useState({});
 
 
@@ -30,7 +30,7 @@ export const CamerasList = React.memo(() => {
 
     const columns = [
         {
-            title: "Title",
+            title: "Name",
             dataIndex: "name",
             key: "name",
             render: (text, params) => <Link to={`details/${params.key}`}>{text}</Link>,
@@ -59,7 +59,7 @@ export const CamerasList = React.memo(() => {
             title: "",
             dataIndex: "scedule",
             key: "scedule",
-            render: (el, params) => <Button icon={<EditOutlined />} onClick={ () => {showModal('edit'); setCheckedCamera(params)}}/>,
+            render: (el, params) => <><Button icon={<EditOutlined />} onClick={ () => {showModal('edit_camera'); setCheckedCamera(params)}}/><Button icon={<DeleteOutlined />} onClick={() => dispatch(deleteCamera(params.key, user.id))}/></>,
         },
     ];
     const data = camerasList.map((el) => ({
@@ -75,10 +75,10 @@ export const CamerasList = React.memo(() => {
 
     return (
         <div className="cameras-list">
-            <section><h2>Cameras</h2> <Button  shape="circle" icon={<VideoCameraAddOutlined />} onClick={() => showModal('create')}/></section>
+            <section><h2>Cameras</h2> <Button  shape="circle" icon={<VideoCameraAddOutlined />} onClick={() => showModal('create_camera')}/></section>
             <Table columns={columns} dataSource={data} />
 
-            <CameraModal open={open} setOpen={setOpen} flag={flag} checkedCamera={checkedCamera}/>
+            <CustomModal open={open} setOpen={setOpen} flag={flag} checkedElement={checkedCamera}/>
         </div>
     );
 });

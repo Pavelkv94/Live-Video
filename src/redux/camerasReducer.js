@@ -67,28 +67,24 @@ const updateCameraAction = (payload) => ({
     payload,
 });
 
-export const updateCamera = (payload, id) => (dispatch) => {
+export const updateCamera = (payload, id, userId) => (dispatch) => {
     const response = updateData(ActionTypes.camerasUrl(id), {}, payload);
 
     response.then(
         (res) => {
             dispatch(updateCameraAction(res.data));
-            dispatch(fetchCameras(id));
+            dispatch(fetchCameras(userId));
         },
         (err) => console.log(err)
     );
 };
 
-// const deleteCameraAction = () => ({
-//     type: ActionTypes.DELETE_CAMERA,
-// });
-
-export const deleteCamera = (id) => (dispatch) => {
+export const deleteCamera = (id, userId) => (dispatch) => {
     const response = deleteData(ActionTypes.camerasUrl(id), {});
 
     response.then(
         (res) => {
-            dispatch(fetchCameras(id));
+            dispatch(fetchCameras(userId));
         },
         (err) => console.log(err)
     );
