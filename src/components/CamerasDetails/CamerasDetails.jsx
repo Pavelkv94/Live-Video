@@ -17,39 +17,22 @@ export const CamerasDetails = React.memo(() => {
         dispatch(fetchCamera(id));
     }, []);
 
-    const params = [
-        {title: "Ip:", value: currentCamera.ip || "—"},
-        {title: "Device Name:", value: currentCamera.deviceName || "—"},
-        {title: "MAC Address:", value: currentCamera.macAddress || "—"},
-        {title: "Model:", value: currentCamera.model || "—"},
-        {title: "Login:", value: currentCamera.login || "—"},
-        {title: "Password:", value: currentCamera.password || "—"},
-        {title: "Serial Number:", value: currentCamera.serialNumber || "—"},
-        {title: "Status:", value: currentCamera.status || "—"},
-        {title: "Created", value: currentCamera.created_at || "—"},
-        {title: "Updated:", value: currentCamera.updated_at || "—"},
-        {title: "User:", value: currentCamera.user_id || "—"},
-        {title: "Bucket:", value: currentCamera.bucket_id || "—"}
+    const paramsData = [
+        {title: "Ip: ", value: currentCamera.ip || "—"},
+        {title: "Device Name: ", value: currentCamera.deviceName || "—"},
+        {title: "MAC Address: ", value: currentCamera.macAddress || "—"},
+        {title: "Model: ", value: currentCamera.model || "—"},
+        {title: "Login: ", value: currentCamera.login || "—"},
+        {title: "Password: ", value: currentCamera.password || "—"},
+        {title: "Serial Number: ", value: currentCamera.serialNumber || "—"},
+        {title: "Status: ", value: currentCamera.status || "—"},
+        {title: "Created: ", value: currentCamera.created_at || "—"},
+        {title: "Updated: ", value: currentCamera.updated_at || "—"},
+        {title: "User: ", value: currentCamera.user_id || "—"},
+        {title: "Bucket: ", value: currentCamera.bucket_id || "—"}
     ];
 
-    const columns = [
-        {
-            title: "",
-            dataIndex: "title",
-            key: "title",
-        },
-        {
-            title: "",
-            dataIndex: "value",
-            key: "value",
-        },
-    ];
-
-    const data = params.map((el, index) => ({
-        key: index,
-        title: el.title,
-        value: el.value
-    }))
+    const params = paramsData.map((el, index) => <span key={index} className="params-row"><p>{el.title}</p><p>{el.value}</p></span>)
 
     
     return (
@@ -63,13 +46,14 @@ export const CamerasDetails = React.memo(() => {
             <div className="camera-details">
                 <section></section>
                 <section>
-                    <Table
+                    {params}
+                    {/* <Table
                         columns={columns}
                         dataSource={data}
                         pagination={false}
                         bordered
                         showHeader={false}
-                    />
+                    /> */}
                    
                 </section>
             </div>

@@ -8,7 +8,7 @@ import { CamerasList } from "../CamerasList/CamersList";
 import { CamerasDetails } from "../CamerasDetails/CamerasDetails";
 const { Header, Content, Sider } = Layout;
 
-export const Main = () => {
+export const Main = ({mode}) => {
     const [collapsed, setCollapse] = useState(false);
     return (
         <Layout>
@@ -40,15 +40,8 @@ export const Main = () => {
                             height: "calc(100vh - 112px)",
                         }}
                     >
-                        <Routes>
-                            {/* <Route exact path="/main/:id?" render={() => <MainWindow />} /> */}
-                            {/* <Route exact path="/admin" render={() => <Admin />} /> */}
-                            <Route element={<CamerasDetails />} path="/details/:id" />
-                            <Route
-                                element={<CamerasList />}
-                                path="/"
-                            />
-                        </Routes>
+                        {mode == 'cameras' ? <CamerasList /> : <CamerasDetails />}
+
                     </Content>
                 </Layout>
             </Layout>

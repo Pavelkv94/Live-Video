@@ -54,7 +54,6 @@ export const CameraModal = React.memo(
             setOpen(false);
         };
 
-        console.log(cameraData);
         return (
             <Modal
                 title={flag === "create" ? "Add New Camera" : "Edit Camera"}

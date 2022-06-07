@@ -50,7 +50,7 @@ export const Login = () => {
     };
 
     if (user) {
-        return <Navigate to={"/"} />;
+        return <Navigate to={"/cameras"} />;
     }
 
     return (

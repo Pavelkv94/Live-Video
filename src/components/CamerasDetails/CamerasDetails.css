@@ -17,3 +17,15 @@
 .camera-details section:last-child td:first-child {
     font-weight: 700;
 }
+.params-row {
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+    font-size: 18px;
+}
+.params-row p {
+    margin: 0;
+}
+.params-row p:first-child {
+    font-weight: 700;
+}

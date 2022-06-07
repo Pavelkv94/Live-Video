@@ -2,7 +2,7 @@ import { EditOutlined, VideoCameraAddOutlined } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { fetchCameras } from "../../redux/camerasReducer";
 import { CameraModal } from "../general/CameraModal";
 import "./CamersList.css";
@@ -33,7 +33,7 @@ export const CamerasList = React.memo(() => {
             title: "Title",
             dataIndex: "name",
             key: "name",
-            render: (text, params) => <NavLink to={`details/${params.key}`}>{text}</NavLink>,
+            render: (text, params) => <Link to={`details/${params.key}`}>{text}</Link>,
         },
         {
             title: "Ip",
