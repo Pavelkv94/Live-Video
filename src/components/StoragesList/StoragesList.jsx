@@ -79,7 +79,7 @@ const StoragesList = React.memo(() => {
 
 
     return (
-        <div className="cameras-list">
+        <div className="common-list">
             <section><h2>Storages</h2> <Button  shape="circle" icon={<FolderAddOutlined />} onClick={() => showModal('create_storage')}/></section>
             <Table columns={columns} dataSource={data} />
 

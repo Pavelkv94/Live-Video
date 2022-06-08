@@ -1,10 +1,10 @@
-import { DeleteOutlined, EditOutlined, FolderAddOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, FolderAddOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteStorage, fetchStorages } from "../../redux/storagesReducer";
+import { fetchSchedules } from "../../redux/schedulesReducer";
+import { deleteStorage } from "../../redux/storagesReducer";
 import { CustomModal } from "../general/CustomModal";
-import "./Schedules.css";
 
 const Schedules = React.memo(() => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const Schedules = React.memo(() => {
 
 
     useEffect(() => {
-        user && dispatch(fetchStorages(user.id));
+        user && dispatch(fetchSchedules(user.id));
     }, [user]);
 
 
@@ -79,9 +79,9 @@ const Schedules = React.memo(() => {
 
 
     return (
-        <div className="cameras-list">
-            <section><h2>Storages</h2> <Button  shape="circle" icon={<FolderAddOutlined />} onClick={() => showModal('create_storage')}/></section>
-            <Table columns={columns} dataSource={data} />
+        <div className="common-list">
+            <section><h2>Schedules</h2> <Button  shape="circle" icon={<PlusOutlined />} onClick={() => showModal('create_schedule')}/></section>
+            {/* <Table columns={columns} dataSource={data} /> */}
 
             <CustomModal open={open} setOpen={setOpen} flag={flag} checkedElement={checkedStorage}/>
         </div>

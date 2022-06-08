@@ -10,6 +10,7 @@ const { Header, Content, Sider } = Layout;
 const CamerasList = React.lazy(() => import('../CamerasList/CamersList'));
 const CamerasDetails = React.lazy(() => import('../CamerasDetails/CamerasDetails'));
 const StoragesList = React.lazy(() => import('../StoragesList/StoragesList'));
+const Schedules = React.lazy(() => import('../Schedules/Schedules'));
 
 
 export const Main = ({ mode }) => {
@@ -24,6 +25,8 @@ export const Main = ({ mode }) => {
                 return <Suspense fallback={<Spin size="large"/>}><CamerasDetails /></Suspense>;;
             case "storages":
                 return <Suspense fallback={<Spin size="large"/>}><StoragesList /></Suspense>;
+            case "schedules":
+                return <Suspense fallback={<Spin size="large"/>}><Schedules /></Suspense>;
 
             default:
                 return <Suspense fallback={<Spin size="large"/>}><CamerasList /></Suspense>;;

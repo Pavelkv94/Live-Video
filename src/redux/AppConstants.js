@@ -24,6 +24,12 @@ export const FETCH_VIDEOS = "FETCH_VIDEOS";
 export const CREATE_VIDEO = "CREATE_VIDEO";
 export const UPDATE_VIDEO = "UPDATE_VIDEO";
 export const DELETE_VIDEO = "DELETE_VIDEO";
+//SCHEDULES
+export const FETCH_SCHEDULE = "FETCH_SCHEDULE";
+export const FETCH_SCHEDULES = "FETCH_SCHEDULES";
+export const CREATE_SCHEDULE = "CREATE_SCHEDULE";
+export const UPDATE_SCHEDULE = "UPDATE_VIDEO";
+export const DELETE_SCHEDULE = "DELETE_SCHEDULE";
 //URLS
 export const usersUrl = () => `users`;
 export const userUrl = (id) => `users/${id}`;
@@ -36,3 +42,6 @@ export const storageUrl = (id) => `storages/${id}`;
 
 export const videosAllUrl = (id) => `cameras/${id}/videos`;
 export const videoUrl = (id) => `videos/${id}`;
+
+export const schedulesAllUrl = (id) => `users/${id}/schedules`;
+export const scheduleUrl = (id) => `schedules/${id}`;

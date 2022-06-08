@@ -74,7 +74,7 @@ const CamerasList = React.memo(() => {
 
 
     return (
-        <div className="cameras-list">
+        <div className="common-list">
             <section><h2>Cameras</h2> <Button  shape="circle" icon={<VideoCameraAddOutlined />} onClick={() => showModal('create_camera')}/></section>
             <Table columns={columns} dataSource={data} />
 

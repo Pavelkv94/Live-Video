@@ -5,12 +5,14 @@ import { authReducer } from "./authReducer";
 import { camerasReducer } from "./camerasReducer";
 import { storagesReducer } from "./storagesReducer";
 import { videosReducer } from "./videosReducer";
+import { schedulesReducer } from "./schedulesReducer";
 
 const rootReducer = combineReducers({
     authReducer,
     camerasReducer,
     storagesReducer,
-    videosReducer
+    videosReducer,
+    schedulesReducer
 });
 
 export const store = legacy_createStore(

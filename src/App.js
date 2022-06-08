@@ -22,6 +22,7 @@ function App() {
         cameras: "cameras",
         camerasDetails: "camerasDetails",
         storages: "storages",
+        schedules: "schedules"
     };
 
     if (initStatus !== "complete") {
@@ -46,6 +47,10 @@ function App() {
                     <Route
                         element={<Main mode={displayMode.storages} />}
                         path="/storages"
+                    />
+                     <Route
+                        element={<Main mode={displayMode.schedules} />}
+                        path="/schedules"
                     />
                 </Routes>
             </div>

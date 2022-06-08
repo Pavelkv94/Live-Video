@@ -21,3 +21,27 @@
 h2 {
   margin: 0;
 }
+
+.common-list section h2 {
+  color: black;
+  margin: 0;
+}
+.common-list section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.common-list section button {
+  margin-left: 20px;
+}
+/* .ant-modal-body {
+  display: flex;
+  flex-wrap: wrap;
+} */
+.register-field {
+  margin: 10px;
+}
+.register-field p {
+  margin-bottom: 0px;
+}
