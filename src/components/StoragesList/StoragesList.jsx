@@ -8,7 +8,7 @@ import { deleteStorage, fetchStorages } from "../../redux/storagesReducer";
 import { CustomModal } from "../general/CustomModal";
 import "./StoragesList.css";
 
-export const StoragesList = React.memo(() => {
+const StoragesList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState('create_storage');
@@ -65,7 +65,7 @@ export const StoragesList = React.memo(() => {
             title: "",
             dataIndex: "edit",
             key: "edit",
-            render: (el, params) => <><Button icon={<EditOutlined />} onClick={ () => {showModal('edit_storage'); setCheckedStorage(params)}}/><Button icon={<DeleteOutlined />} onClick={() => dispatch(deleteStorage(params.key, user.id))}/></>,
+            render: (el, params) => <><Button icon={<EditOutlined />} onClick={ () => {showModal('edit_storage'); setCheckedStorage(params)}}/><Button icon={<DeleteOutlined />} onClick={() => dispatch(deleteStorage(params.key,))}/></>,
         },
     ];
     const data = storagesList.map((el) => ({
@@ -89,3 +89,5 @@ export const StoragesList = React.memo(() => {
         </div>
     );
 });
+
+export default StoragesList;

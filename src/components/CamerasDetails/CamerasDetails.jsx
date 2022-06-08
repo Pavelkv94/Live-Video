@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { fetchCamera } from "../../redux/camerasReducer";
 import "./CamerasDetails.css";
 
-export const CamerasDetails = React.memo(() => {
+const CamerasDetails = React.memo(() => {
     const { id } = useParams();
     const dispatch = useDispatch();
 
@@ -60,3 +60,6 @@ export const CamerasDetails = React.memo(() => {
         </div>
     );
 });
+
+
+export default CamerasDetails;

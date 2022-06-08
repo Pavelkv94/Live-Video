@@ -1,14 +1,16 @@
-import React, { useState } from "react";
-import { Layout } from "antd";
+import React, { lazy, Suspense, useState } from "react";
+import { useSelector } from "react-redux";
+import { Layout, Spin } from "antd";
 import "antd/dist/antd.css";
 import { Navigate } from "react-router";
 import { HeaderNavBar } from "../HeaderNavBar/HeaderNavBar";
 import { MenuBar } from "../MenuBar/MenuBar";
-import { CamerasList } from "../CamerasList/CamersList";
-import { CamerasDetails } from "../CamerasDetails/CamerasDetails";
-import { useSelector } from "react-redux";
-import { StoragesList } from "../StoragesList/StoragesList";
+
 const { Header, Content, Sider } = Layout;
+const CamerasList = React.lazy(() => import('../CamerasList/CamersList'));
+const CamerasDetails = React.lazy(() => import('../CamerasDetails/CamerasDetails'));
+const StoragesList = React.lazy(() => import('../StoragesList/StoragesList'));
+
 
 export const Main = ({ mode }) => {
     const [collapsed, setCollapse] = useState(false);
@@ -17,14 +19,14 @@ export const Main = ({ mode }) => {
     const currentWindow = (mode) => {
         switch (mode) {
             case "cameras":
-                return <CamerasList />;
+                return <Suspense fallback={<Spin size="large"/>}><CamerasList /></Suspense>;;
             case "camerasDetails":
-                return <CamerasDetails />;
+                return <Suspense fallback={<Spin size="large"/>}><CamerasDetails /></Suspense>;;
             case "storages":
-                return <StoragesList />;
+                return <Suspense fallback={<Spin size="large"/>}><StoragesList /></Suspense>;
 
             default:
-                return <CamerasList />;
+                return <Suspense fallback={<Spin size="large"/>}><CamerasList /></Suspense>;;
         }
     };
 

@@ -6,6 +6,7 @@ const initialState = {
     userId: "",
     user: null,
     registerStatus: "",
+    initializedStatus: ""
 };
 
 export function authReducer(state = initialState, action) {
@@ -17,17 +18,20 @@ export function authReducer(state = initialState, action) {
             return { ...state, registerStatus: action.payload };
 
         case ActionTypes.FETCH_USER:
-            return { ...state, userId: action.payload };
+            return { ...state, user: action.payload };
             
         case ActionTypes.SET_USER:
             return { ...state, user: action.payload };
+
+        case ActionTypes.INITIALIZED:
+            return { ...state, initializedStatus: action.payload };
 
         default:
             return state;
     }
 }
 
-//TODO ACTIONS
+
 
 const setStatus = (status) => ({
     type: ActionTypes.SET_REGISTER_STATUS,
@@ -48,16 +52,18 @@ export const fetchAllUsers = () => async (dispatch) => {
     );
 };
 
-const fetchUserAction = (id) => ({
+const fetchUserAction = (payload) => ({
     type: ActionTypes.FETCH_USER,
-    payload: id,
+    payload
 });
 
 export const fetchUser = (userId) => (dispatch) => {
     const response = fetchData(ActionTypes.userUrl(userId), {});
 
-    response.payload.then(
-        (res) => fetchUserAction(userId),
+    response.then(
+        (res) => {
+            dispatch(fetchUserAction(res.data));
+        },
         (err) => console.log(err)
     );
 };
@@ -98,3 +104,20 @@ export const deleteUser = (id) => (dispatch) => {
         (err) => console.log(err)
     );
 };
+
+
+const initializedAction = (status) => ({
+    type: ActionTypes.INITIALIZED,
+    payload: status
+});
+
+export const initializedApp = () => (dispatch) => {
+    dispatch(initializedAction('pending'))
+    let res1 = dispatch(fetchAllUsers());
+    let res2 = dispatch(setCurrentUser(JSON.parse(localStorage.getItem('user')))) ;
+
+    Promise.all([res1, res2]).then(
+        (res) =>{ dispatch(initializedAction('complete'))},
+        (err) => console.log(err))
+    
+}

@@ -7,7 +7,7 @@ import { deleteCamera, fetchCameras } from "../../redux/camerasReducer";
 import { CustomModal } from "../general/CustomModal";
 import "./CamersList.css";
 
-export const CamerasList = React.memo(() => {
+const CamerasList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState('create_camera');
@@ -33,7 +33,7 @@ export const CamerasList = React.memo(() => {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            render: (text, params) => <Link to={`details/${params.key}`}>{text}</Link>,
+            render: (text, params) => <NavLink to={`details/${params.key}`}>{text}</NavLink>,
         },
         {
             title: "Ip",
@@ -82,3 +82,6 @@ export const CamerasList = React.memo(() => {
         </div>
     );
 });
+
+
+export default CamerasList;

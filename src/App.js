@@ -4,33 +4,52 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./components/Login/Login";
 import { Main } from "./components/Main/Main";
-import { useDispatch } from "react-redux";
-import { fetchAllUsers, setCurrentUser } from "./redux/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { initializedApp } from "./redux/authReducer";
+import { Spin } from "antd";
 
 function App() {
     const dispatch = useDispatch();
+    const initStatus = useSelector(
+        (state) => state.authReducer.initializedStatus
+    );
 
     useEffect(() => {
-        dispatch(fetchAllUsers());
-        dispatch(setCurrentUser(JSON.parse(localStorage.getItem('user')))) ;
+        dispatch(initializedApp());
     }, []);
 
     const displayMode = {
-        cameras: 'cameras',
-        camerasDetails: 'camerasDetails',
-        storages: 'storages'
-    }
-    return (
-        <div>
-            <Routes>
-                <Route exact element={<Main mode={displayMode.cameras} />} path="/" />
-                <Route exact element={<Login />} path="/login" />
-                <Route exact element={<Main mode={displayMode.cameras}/>} path="/cameras" />
-                <Route exact element={<Main mode={displayMode.camerasDetails}/>} path="cameras/details/:id" />
-                <Route exact element={<Main mode={displayMode.storages}/>} path="/storages" />
-            </Routes>
-        </div>
-    );
+        cameras: "cameras",
+        camerasDetails: "camerasDetails",
+        storages: "storages",
+    };
+
+    if (initStatus !== "complete") {
+        return <Spin />;
+    } else
+        return (
+            <div>
+                <Routes>
+                    <Route
+                        element={<Main mode={displayMode.cameras} />}
+                        path="/"
+                    />
+                    <Route element={<Login />} path="/login" />
+                    <Route
+                        element={<Main mode={displayMode.cameras} />}
+                        path="/cameras"
+                    />
+                    <Route
+                        element={<Main mode={displayMode.camerasDetails} />}
+                        path="cameras/details/:id"
+                    />
+                    <Route
+                        element={<Main mode={displayMode.storages} />}
+                        path="/storages"
+                    />
+                </Routes>
+            </div>
+        );
 }
 
 export default App;
