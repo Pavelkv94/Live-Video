@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useSelector } from "react-redux";
 import { Layout, Spin } from "antd";
 import "antd/dist/antd.css";

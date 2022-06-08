@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteStorage, fetchStorages } from "../../redux/storagesReducer";
 import { CustomModal } from "../general/CustomModal";
-import "./StoragesList.css";
+import "./Schedules.css";
 
-const StoragesList = React.memo(() => {
+const Schedules = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState('create_storage');
@@ -88,4 +88,4 @@ const StoragesList = React.memo(() => {
     );
 });
 
-export default StoragesList;
+export default Schedules;

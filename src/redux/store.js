@@ -4,11 +4,13 @@ import thunk from "redux-thunk";
 import { authReducer } from "./authReducer";
 import { camerasReducer } from "./camerasReducer";
 import { storagesReducer } from "./storagesReducer";
+import { videosReducer } from "./videosReducer";
 
 const rootReducer = combineReducers({
     authReducer,
     camerasReducer,
     storagesReducer,
+    videosReducer
 });
 
 export const store = legacy_createStore(

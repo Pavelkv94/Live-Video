@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined, VideoCameraAddOutlined } from "@ant-desig
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { deleteCamera, fetchCameras } from "../../redux/camerasReducer";
 import { CustomModal } from "../general/CustomModal";
 import "./CamersList.css";

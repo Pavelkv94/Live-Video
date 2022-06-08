@@ -1,5 +1,5 @@
 import { UserOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, message, Modal } from "antd";
+import { Button, Card, Form, Input, Modal } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router";
@@ -15,9 +15,9 @@ export const Login = () => {
     const users = useSelector((state) => state.authReducer.users);
     const user = useSelector((state) => state.authReducer.user);
 
-    const errorMessage = (err) => {
-        message.error(err);
-    };
+    // const errorMessage = (err) => {
+    //     message.error(err);
+    // };
 
     // useEffect(() => {
     //     error !== null && error !== undefined && errorMessage(error);

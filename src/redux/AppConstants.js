@@ -18,7 +18,12 @@ export const FETCH_STORAGES = "FETCH_STORAGES";
 export const CREATE_STORAGE = "CREATE_STORAGE";
 export const UPDATE_STORAGE = "UPDATE_STORAGE";
 export const DELETE_STORAGE = "DELETE_STORAGE";
-
+//VIDEOS
+export const FETCH_VIDEO = "FETCH_VIDEO";
+export const FETCH_VIDEOS = "FETCH_VIDEOS";
+export const CREATE_VIDEO = "CREATE_VIDEO";
+export const UPDATE_VIDEO = "UPDATE_VIDEO";
+export const DELETE_VIDEO = "DELETE_VIDEO";
 //URLS
 export const usersUrl = () => `users`;
 export const userUrl = (id) => `users/${id}`;
@@ -28,3 +33,6 @@ export const camerasUrl = (id) => `cameras/${id}`;
 
 export const storagesAllUrl = (id) => `users/${id}/storages`;
 export const storageUrl = (id) => `storages/${id}`;
+
+export const videosAllUrl = (id) => `cameras/${id}/videos`;
+export const videoUrl = (id) => `videos/${id}`;

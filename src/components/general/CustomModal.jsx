@@ -64,16 +64,6 @@ export const CustomModal = React.memo(
             ],
         };
 
-        const createCameraHandler = () => {
-            dispatch(createCamera(cameraData, user.id));
-            setOpen(false);
-        };
-
-        const saveCameraHandler = () => {
-            dispatch(updateCamera(cameraData, cameraData.key));
-            setOpen(false);
-        };
-
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
@@ -89,7 +79,7 @@ export const CustomModal = React.memo(
             setCameraData(initialCamera);
             setStorageData(initialStorage)
         };
-        console.log(flag);
+
         const handleCancel = () => {
             setOpen(false);
         };

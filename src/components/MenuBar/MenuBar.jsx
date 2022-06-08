@@ -1,7 +1,6 @@
 import React from "react";
 import { Menu } from "antd";
 import { DatabaseOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import SubMenu from "antd/lib/menu/SubMenu";
 import { NavLink } from "react-router-dom";
 
 export const MenuBar = React.memo(({ mode }) => {
@@ -9,10 +8,10 @@ export const MenuBar = React.memo(({ mode }) => {
         { key: "0", icon: <VideoCameraOutlined />, label: "Cameras", path: '/cameras' },
         { key: "1", icon: <DatabaseOutlined />, label: "Storages", path: '/storages' },
     ];
-
+console.log(mode)
     return (
         <Menu
-            defaultSelectedKeys={mode === "cameras" ? ["0"] : ["1"]}
+            defaultSelectedKeys={mode === "cameras" || mode === "camerasDetails" ? ["0"] : ["1"]}
             mode="inline"
             theme="dark"
             subMenuCloseDelay={2}
