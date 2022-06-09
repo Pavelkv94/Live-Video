@@ -13,7 +13,7 @@ function App() {
     const initStatus = useSelector(
         (state) => state.authReducer.initializedStatus
     );
-
+        
     useEffect(() => {
         dispatch(initializedApp());
     }, []);
@@ -31,11 +31,7 @@ function App() {
         return (
             <div>
                 <Routes>
-                    <Route
-                        element={<Main mode={displayMode.cameras} />}
-                        path="/"
-                    />
-                    <Route element={<Login />} path="/login" />
+                    <Route element={<Login />} path="/" />
                     <Route
                         element={<Main mode={displayMode.cameras} />}
                         path="/cameras"

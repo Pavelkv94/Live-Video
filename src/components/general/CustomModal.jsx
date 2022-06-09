@@ -41,8 +41,11 @@ export const CustomModal = React.memo(
             flag === "edit_camera" && setCameraData(checkedElement);
             flag === "edit_storage" && setStorageData(checkedElement);
             flag === "create_schedule" && dispatch(fetchCameras(user.id));
-            flag === "create_schedule" && dispatch(fetchStorages(user.id));
         }, [flag]);
+
+        useEffect(() => {
+            dispatch(fetchStorages(user.id));
+        }, []);
 
         const handleOk = (flag) => {
             if (flag === "create_camera") {
@@ -54,9 +57,7 @@ export const CustomModal = React.memo(
             } else if (flag === "edit_storage") {
                 dispatch(updateStorage(storageData, storageData.key, user.id));
             } else if (flag === "create_schedule") {
-                dispatch(
-                    createSchedule(scheduleData, user.id)
-                );
+                dispatch(createSchedule(scheduleData, user.id));
             }
 
             setOpen(false);
@@ -75,6 +76,11 @@ export const CustomModal = React.memo(
             <Option key={el.id}>{el.name}</Option>
         ));
         const optionsStatus = ["disabled", "recording"].map((el) => (
+            <Option key={el} className={`option-${el}`}>
+                {el}
+            </Option>
+        ));
+        const optionsBucket = [].map((el) => (
             <Option key={el} className={`option-${el}`}>
                 {el}
             </Option>
@@ -172,6 +178,40 @@ export const CustomModal = React.memo(
                 );
         };
 
+        const camerasFields = (key) => {
+            if (key === "storage_id" || key === "bucket_id") {
+                return (
+                    <Select
+                        allowClear
+                        style={{
+                            width: "100%",
+                        }}
+                        placeholder="Please select"
+                        defaultValue={cameraData[key]}
+                        onChange={(value) => {
+                            setCameraData({
+                                ...cameraData,
+                                [key]: value,
+                            });
+                        }}
+                    >
+                        {key === "storage_id" ? optionsStorages : optionsBucket}
+                    </Select>
+                );
+            } else
+                return (
+                    <Input
+                        value={cameraData[key]}
+                        onChange={(e) => {
+                            setCameraData({
+                                ...cameraData,
+                                [key]: e.currentTarget.value,
+                            });
+                        }}
+                    />
+                );
+        };
+
         return (
             <Modal
                 title="Create/Edit"
@@ -200,18 +240,8 @@ export const CustomModal = React.memo(
                 {fields[flag].map((el, index) => (
                     <div className="register-field" key={index}>
                         <p>{el.label}</p>
-                        {(flag === "create_camera" ||
-                            flag === "edit_camera") && (
-                            <Input
-                                value={cameraData[el.key]}
-                                onChange={(e) => {
-                                    setCameraData({
-                                        ...cameraData,
-                                        [el.key]: e.currentTarget.value,
-                                    });
-                                }}
-                            />
-                        )}
+                        {(flag === "create_camera" || flag === "edit_camera") &&
+                            camerasFields(el.key)}
                         {(flag === "create_storage" ||
                             flag === "edit_storage") && (
                             <Input

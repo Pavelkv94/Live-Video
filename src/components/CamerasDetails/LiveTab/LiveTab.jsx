@@ -1,16 +1,21 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchCamera } from "../../../redux/camerasReducer";
+import { Button, Modal } from "antd";
+import React, { useState } from "react";
+import { deleteCamera } from "../../../redux/camerasReducer";
+import { CustomModal } from "../../general/CustomModal";
+import { DeleteModal } from "../../general/DeleteModal";
 import "./LiveTab.css";
 
-export const LiveTab = ({id, currentCamera}) => {
+export const LiveTab = ({ currentCamera }) => {
+   
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [flag, setFlag] = useState('create_camera');
 
-    const dispatch = useDispatch();
     
-
-    useEffect(() => {
-        dispatch(fetchCamera(id));
-    }, []);
+    const showModal = () => {
+        setFlag('edit_camera')
+        setOpen(true);
+    };
 
     const paramsData = [
         { title: "Ip: ", value: currentCamera.ip || "—" },
@@ -34,9 +39,23 @@ export const LiveTab = ({id, currentCamera}) => {
         </span>
     ));
     return (
-        <div className="camera-details">
-            <section></section>
-            <section>{params}</section>
+        <div>
+            <div className="camera-details">
+                <section></section>
+                <section>
+                    {params}
+                    <div className="camera-actions">
+                        <Button onClick={showModal}>Edit Camera</Button>
+                        <Button onClick={() => setIsModalVisible(true)} danger>Delete Camera</Button>
+                    </div>
+                    <div>
+                        scedule
+                    </div>
+                </section>
+            </div>
+
+            <CustomModal open={open} setOpen={setOpen} flag={flag} checkedElement={currentCamera}/>
+            <DeleteModal isModalVisible={isModalVisible} setIsModalVisible={setIsModalVisible} item='camera' callback={deleteCamera} id={currentCamera.id}/>
         </div>
     );
 };

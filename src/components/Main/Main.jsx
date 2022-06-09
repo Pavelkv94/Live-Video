@@ -34,7 +34,7 @@ export const Main = ({ mode }) => {
     };
 
     if (!user) {
-        return <Navigate to={"/login"} />;
+        return <Navigate to={"/"} />;
     } else
         return (
             <Layout>

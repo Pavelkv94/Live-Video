@@ -3,7 +3,8 @@ import * as ActionTypes from "./AppConstants.js";
 
 const initialState = {
     camerasList: [],
-    currentCamera: {}
+    currentCamera: {},
+    deleteCameraStatus: ''
 };
 
 export function camerasReducer(state = initialState, action) {
@@ -12,6 +13,8 @@ export function camerasReducer(state = initialState, action) {
             return { ...state, camerasList: action.payload };
         case ActionTypes.FETCH_CAMERA:
             return { ...state, currentCamera: action.payload };
+        case ActionTypes.DELETE_CAMERA:
+            return { ...state, deleteCameraStatus: action.payload };
         default:
             return state;
     }
@@ -79,13 +82,21 @@ export const updateCamera = (payload, id, userId) => (dispatch) => {
     );
 };
 
+export const deleteCameraAction = (status) => ({
+    type: ActionTypes.DELETE_CAMERA,
+    payload: status
+});
+
 export const deleteCamera = (id, userId) => (dispatch) => {
+    deleteCameraAction('pending')
     const response = deleteData(ActionTypes.camerasUrl(id), {});
 
     response.then(
         (res) => {
+            dispatch(deleteCameraAction('fulfilled'))
             dispatch(fetchCameras(userId));
         },
-        (err) => console.log(err)
+        (err) => dispatch(deleteCameraAction('rejected'))
+
     );
 };

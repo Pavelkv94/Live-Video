@@ -3,8 +3,8 @@ export const initialCamera = {
     login: "",
     password: "",
     name: "",
-    storage_id: "",
-    bucket_id: "",
+    storage_id: null,
+    bucket_id: null,
 };
 export const initialStorage = {
     storage_type: "",

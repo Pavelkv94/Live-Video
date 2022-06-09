@@ -1,0 +1,6 @@
+.storage-actions {
+    display: flex;
+}
+.storage-actions button {
+    margin-right: 20px;
+}
