@@ -1,17 +1,26 @@
 import { Button, Modal } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { loadPlayer } from 'rtsp-relay/browser';
 import { deleteCamera } from "../../../redux/camerasReducer";
 import { CustomModal } from "../../general/CustomModal";
 import { DeleteModal } from "../../general/DeleteModal";
 import "./LiveTab.css";
 
 export const LiveTab = ({ currentCamera }) => {
-   
+    const canvas = useRef(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState('create_camera');
 
+    useEffect(() => {
+        if (!canvas.current) throw new Error('Ref is null');
     
+        loadPlayer({
+          url: 'ws://localhost:2000/api/stream',
+          canvas: canvas.current,
+        });
+      }, []);
+
     const showModal = () => {
         setFlag('edit_camera')
         setOpen(true);
@@ -41,7 +50,7 @@ export const LiveTab = ({ currentCamera }) => {
     return (
         <div>
             <div className="camera-details">
-                <section></section>
+                <section><canvas ref={canvas} className="live"/></section>
                 <section>
                     {params}
                     <div className="camera-actions">

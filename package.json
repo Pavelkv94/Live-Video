@@ -18,10 +18,15 @@
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.4.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "express": "^4.18.1",
+    "node-rtsp-stream": "^0.0.9",
+    "nodemon": "^2.0.16",
+    "rtsp-relay": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "nodemon src/server/index.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -5,8 +5,8 @@
     justify-content: space-between;
 }
 .camera-details section:first-child {
-    min-width: 500px;
-    height: 300px;
+    min-width: 600px;
+    height: 338px;
     margin: 20px;
     background-color: gray;
 }
@@ -33,4 +33,7 @@
 }
 .camera-actions button {
     margin-right: 20px;
+}
+.live {
+    width: 600px !important;
 }
