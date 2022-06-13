@@ -5,7 +5,7 @@ import { fetchVideos } from "../../../redux/videosReducer";
 
 export const History = ({ id }) => {
     const dispatch = useDispatch();
-    const videos = useSelector(state => state.videosReducer.videosList);
+    const videos = useSelector((state) => state.videosReducer.videosList);
 
     useEffect(() => {
         dispatch(fetchVideos(id));
@@ -18,9 +18,9 @@ export const History = ({ id }) => {
             key: "name",
         },
         {
-            title: "Status",
-            dataIndex: "status",
-            key: "status",
+            title: "Size, kb",
+            dataIndex: "size",
+            key: "size",
         },
         {
             title: "Period description",
@@ -34,39 +34,12 @@ export const History = ({ id }) => {
             render: () => <a>Delete</a>,
         },
     ];
-    const data = [
-        // {
-        //     key: 1,
-        //     name: "John Brown",
-        //     age: 32,
-        //     address: "New York No. 1 Lake Park",
-        //     description:
-        //         "My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.",
-        // },
-        // {
-        //     key: 2,
-        //     name: "Jim Green",
-        //     age: 42,
-        //     address: "London No. 1 Lake Park",
-        //     description:
-        //         "My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.",
-        // },
-        // {
-        //     key: 3,
-        //     name: "Not Expandable",
-        //     age: 29,
-        //     address: "Jiangsu No. 1 Lake Park",
-        //     description: "This not expandable",
-        // },
-        // {
-        //     key: 4,
-        //     name: "Joe Black",
-        //     age: 32,
-        //     address: "Sidney No. 1 Lake Park",
-        //     description:
-        //         "My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.",
-        // },
-    ];
+    const data = videos.map((el) => ({
+        key: el.id,
+        name: el.name,
+        size: el.size,
+        period_description: el.period_description
+    }));
 
     return (
         <Table
