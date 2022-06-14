@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { fetchCamera } from "../../redux/camerasReducer";
 import { CameraSchedules } from "./CameraSchedules/CameraSchedules";
-import "./CamerasDetails.css";
+import "./CameraDetails.css";
 import { History } from "./History/History";
 import { LiveTab } from "./LiveTab/LiveTab";
 const { TabPane } = Tabs;
 
-const CamerasDetails = React.memo(() => {
+const CameraDetails = React.memo(() => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const currentCamera = useSelector(
@@ -31,7 +31,7 @@ const CamerasDetails = React.memo(() => {
     const onChangeTab = (key) => {
         setTab(key)
     };
-console.log(tab)
+
     return (
         <div>
             <PageHeader
@@ -55,4 +55,4 @@ console.log(tab)
     );
 });
 
-export default CamerasDetails;
+export default CameraDetails;

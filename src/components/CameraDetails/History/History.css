@@ -16,7 +16,7 @@
 }
 .description-video span p:first-child {
     font-weight: 600;
-    margin: 0px 5px 0px 0px;
+    margin: 0px 5px 6px 0px;
 }
 .controls-video-column {
     display: flex;

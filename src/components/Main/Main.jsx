@@ -8,7 +8,7 @@ import { MenuBar } from "../MenuBar/MenuBar";
 
 const { Header, Content, Sider } = Layout;
 const CamerasList = React.lazy(() => import('../CamerasList/CamersList'));
-const CamerasDetails = React.lazy(() => import('../CamerasDetails/CamerasDetails'));
+const CameraDetails = React.lazy(() => import('../CameraDetails/CameraDetails'));
 const StoragesList = React.lazy(() => import('../StoragesList/StoragesList'));
 const Schedules = React.lazy(() => import('../Schedules/Schedules'));
 
@@ -22,7 +22,7 @@ export const Main = ({ mode }) => {
             case "cameras":
                 return <Suspense fallback={<Spin size="large"/>}><CamerasList /></Suspense>;;
             case "camerasDetails":
-                return <Suspense fallback={<Spin size="large"/>}><CamerasDetails /></Suspense>;;
+                return <Suspense fallback={<Spin size="large"/>}><CameraDetails /></Suspense>;;
             case "storages":
                 return <Suspense fallback={<Spin size="large"/>}><StoragesList /></Suspense>;
             case "schedules":

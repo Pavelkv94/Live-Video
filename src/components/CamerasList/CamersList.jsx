@@ -1,17 +1,9 @@
-import {
-    DeleteOutlined,
-    EditOutlined,
-    VideoCameraAddOutlined,
-} from "@ant-design/icons";
+import { VideoCameraAddOutlined } from "@ant-design/icons";
 import { Button, Table, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import {
-    deleteCamera,
-    deleteCameraAction,
-    fetchCameras,
-} from "../../redux/camerasReducer";
+import { deleteCameraAction, fetchCameras } from "../../redux/camerasReducer";
 import { dateConvert } from "../../utils/dateConvert";
 import { CustomModal } from "../general/CustomModal";
 import "./CamersList.css";
@@ -71,15 +63,19 @@ const CamerasList = React.memo(() => {
         },
         {
             title: "Created",
-            dataIndex: "created",
-            key: "created",
+            dataIndex: "created_at",
+            key: "created_at",
         },
         {
             title: "Status",
             dataIndex: "status",
             key: "status",
-            render: (el, params) => <Tag color={params.status === 'recording' ? "green" : "red" }>{params.status ? params.status : 'disabled'}</Tag>
-        }
+            render: (el, params) => (
+                <Tag color={params.status === "recording" ? "green" : "red"}>
+                    {params.status ? params.status : "disabled"}
+                </Tag>
+            ),
+        },
         // {
         //     title: "",
         //     dataIndex: "scedule",
@@ -104,14 +100,10 @@ const CamerasList = React.memo(() => {
         // },
     ];
     const data = camerasList.map((el) => ({
+        ...el,
         key: el.id,
-        name: el.name,
-        deviceName: el.deviceName,
-        status: el.status,
-        ip: el.ip,
-        login: el.login,
-        password: el.password,
-        created: dateConvert(el.created_at),
+        created_at: dateConvert(el.created_at),
+        updated_at: dateConvert(el.updated_at),
     }));
 
     return (

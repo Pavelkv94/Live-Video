@@ -66,7 +66,7 @@ export const History = () => {
                             </div>
                             <div className="description-video-column">
                             <span><p>Size:</p> <p style={{ margin: 0 }}>{record.size}</p></span> 
-                           <span><p>Status:</p> {record.status ? <Tag color="error">{record.status}</Tag> : <Tag color="processing">{"Uploaded into storage"}</Tag>}</span> 
+                           {/* <span><p>Status:</p> {record.status ? <Tag color="error">{record.status}</Tag> : <Tag color="processing">{"Uploaded into storage"}</Tag>}</span>  */}
                            <span><p>Created:</p> <p style={{ margin: 0 }}>{record.created_at}</p></span> 
                            <span><p>Updated:</p> <p style={{ margin: 0 }}>{record.updated_at}</p></span> 
                             </div>
