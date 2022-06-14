@@ -1,13 +1,17 @@
 import { Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router";
 import { loadPlayer } from 'rtsp-relay/browser';
-import { deleteCamera } from "../../../redux/camerasReducer";
+import { deleteCamera, fetchCameraSchedules } from "../../../redux/camerasReducer";
 import { dateConvert } from "../../../utils/dateConvert";
 import { CustomModal } from "../../general/CustomModal";
 import { DeleteModal } from "../../general/DeleteModal";
 import "./LiveTab.css";
 
-export const LiveTab = ({ currentCamera }) => {
+export const LiveTab = ({ currentCamera, setTab }) => {
+    const { id } = useParams();
+    const dispatch = useDispatch();
     const canvas = useRef(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
@@ -49,17 +53,15 @@ export const LiveTab = ({ currentCamera }) => {
         </span>
     ));
     return (
-        <div>
+        <div className="">
             <div className="camera-details">
                 <section><canvas ref={canvas} className="live"/></section>
                 <section>
                     {params}
                     <div className="camera-actions">
-                        <Button onClick={showModal}>Edit Camera</Button>
-                        <Button onClick={() => setIsModalVisible(true)} danger>Delete Camera</Button>
-                    </div>
-                    <div>
-                        scedule
+                        <Button type="dashed" onClick={showModal}>Edit Camera</Button>
+                        <Button onClick={() => setTab('2')}>Set Schedules</Button>
+                        <Button onClick={() => setIsModalVisible(true)} danger type="primary">Delete Camera</Button>
                     </div>
                 </section>
             </div>

@@ -4,9 +4,10 @@ import * as ActionTypes from "./AppConstants.js";
 const initialState = {
     camerasList: [],
     currentCamera: {},
-    deleteCameraStatus: '',
+    deleteCameraStatus: "",
     camerasSchedules: [],
-    checkedCameraSchedule: {}
+    checkedCameraSchedule: {},
+    unAssignScheduleStatus: ""
 };
 
 export function camerasReducer(state = initialState, action) {
@@ -17,11 +18,18 @@ export function camerasReducer(state = initialState, action) {
             return { ...state, currentCamera: action.payload };
         case ActionTypes.DELETE_CAMERA:
             return { ...state, deleteCameraStatus: action.payload };
+        case ActionTypes.FETCH_CAMERA_SCHEDULES:
+            return { ...state, camerasSchedules: action.payload };
+        case ActionTypes.FETCH_CAMERA_SCHEDULE:
+            return { ...state, checkedCameraSchedule: action.payload };
+        case ActionTypes.DELETE_CAMERA_SCHEDULE:
+            return { ...state, unAssignScheduleStatus: action.payload };
         default:
             return state;
     }
 }
 
+//CAMERAS
 const fetchCamerasAction = (payload) => ({
     type: ActionTypes.FETCH_CAMERAS,
     payload: payload,
@@ -86,19 +94,83 @@ export const updateCamera = (payload, id, userId) => (dispatch) => {
 
 export const deleteCameraAction = (status) => ({
     type: ActionTypes.DELETE_CAMERA,
-    payload: status
+    payload: status,
 });
 
 export const deleteCamera = (id, userId) => (dispatch) => {
-    deleteCameraAction('pending')
+    deleteCameraAction("pending");
     const response = deleteData(ActionTypes.camerasUrl(id), {});
 
     response.then(
         (res) => {
-            dispatch(deleteCameraAction('fulfilled'))
+            dispatch(deleteCameraAction("fulfilled"));
             dispatch(fetchCameras(userId));
         },
-        (err) => dispatch(deleteCameraAction('rejected'))
+        (err) => dispatch(deleteCameraAction("rejected"))
+    );
+};
 
+//CAMERAS SCHEDULE
+
+const fetchCameraSchedulesAction = (payload) => ({
+    type: ActionTypes.FETCH_CAMERA_SCHEDULES,
+    payload: payload,
+});
+
+export const fetchCameraSchedules = (id) => (dispatch) => {
+    const response = fetchData(ActionTypes.cameraSchedulesAllUrl(id), {}, {});
+
+    response.then(
+        (res) => dispatch(fetchCameraSchedulesAction(res.data)),
+        (err) => console.log(err)
+    );
+};
+
+const fetchCameraScheduleAction = (payload) => ({
+    type: ActionTypes.FETCH_CAMERA_SCHEDULE,
+    payload: payload,
+});
+
+export const fetchCameraSchedule = (id) => (dispatch) => {
+    const response = fetchData(ActionTypes.cameraScheduleUrl(id), {}, {});
+
+    response.then(
+        (res) => dispatch(fetchCameraScheduleAction(res.data)),
+        (err) => console.log(err)
+    );
+};
+
+const asignCameraScheduleAction = (payload) => ({
+    type: ActionTypes.ASSIGN_CAMERA_SCHEDULE,
+    payload,
+});
+
+export const asignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
+    const response = createData(ActionTypes.cameraScheduleUrl(cameraId, scheduleId), {}, {});
+
+    response.then(
+        (res) => {
+            dispatch(asignCameraScheduleAction(res.data));
+            // dispatch(fetchCameras(id));
+        },
+        (err) => console.log(err)
+    );
+};
+
+export const unAssignCameraScheduleAction = (status) => ({
+    type: ActionTypes.DELETE_CAMERA_SCHEDULE,
+    payload: status,
+});
+
+export const unAssignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
+    // deleteCameraAction("pending");
+    const response = deleteData(ActionTypes.cameraScheduleUrl(cameraId, scheduleId), {});
+
+    response.then(
+        (res) => {
+            dispatch(unAssignCameraScheduleAction("fulfilled"));
+            // dispatch(fetchCameras(userId));
+        },
+        // (err) => dispatch(unAssignCameraScheduleAction("rejected"))
     );
 };

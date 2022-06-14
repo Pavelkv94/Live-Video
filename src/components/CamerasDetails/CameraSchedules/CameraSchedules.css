@@ -1,0 +1,31 @@
+
+.active-schedule {
+    background: #f6ffed;
+    border-color: #b7eb8f;
+}
+.inactive-schedule {
+    background: #fff1f0;
+    border-color: #ffa39e;
+}
+.schedule-card p {
+    margin: 4px 0;
+}
+.schedule-card span {
+    display: flex;
+    justify-content: space-between;
+}
+.schedule-card span p:first-child {
+    font-weight: 600;
+}
+.schedule-card.active-schedule .ant-card-head {
+    border-color: #b7eb8f;
+}
+.schedule-card.inactive-schedule .ant-card-head {
+    border-color: #ffa39e;
+}
+.schedule-card.active-schedule .schedule-status {
+   color: #389e0d;
+}
+.schedule-card.inactive-schedule .schedule-status {
+    color: #cf1322;
+}

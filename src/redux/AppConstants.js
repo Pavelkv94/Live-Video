@@ -12,6 +12,11 @@ export const FETCH_CAMERAS = "FETCH_CAMERAS";
 export const CREATE_CAMERA = "CREATE_CAMERA";
 export const UPDATE_CAMERA = "UPDATE_CAMERA";
 export const DELETE_CAMERA = "DELETE_CAMERA";
+//CAMERAS SCHEDULE
+export const FETCH_CAMERA_SCHEDULE = "FETCH_CAMERA_SCHEDULE";
+export const FETCH_CAMERA_SCHEDULES= "FETCH_CAMERA_SCHEDULES";
+export const ASSIGN_CAMERA_SCHEDULE = "ASSIGN_CAMERA_SCHEDULE";
+export const DELETE_CAMERA_SCHEDULE = "DELETE_CAMERA_SCHEDULE";
 // STORAGES
 export const FETCH_STORAGE = "FETCH_STORAGE";
 export const FETCH_STORAGES = "FETCH_STORAGES";
@@ -42,6 +47,9 @@ export const userUrl = (id) => `users/${id}`;
 
 export const camerasAllUrl = (id) => `users/${id}/cameras`;
 export const camerasUrl = (id) => `cameras/${id}`;
+
+export const cameraSchedulesAllUrl = (cameraId) => `cameras/${cameraId}/schedules`;
+export const cameraScheduleUrl = (cameraId, scheduleId) => `cameras/${cameraId}/schedules/${scheduleId}`;
 
 export const storagesAllUrl = (id) => `users/${id}/storages`;
 export const storageUrl = (id) => `storages/${id}`;

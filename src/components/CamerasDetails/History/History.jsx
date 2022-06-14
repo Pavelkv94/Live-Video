@@ -1,10 +1,13 @@
-import { Button, Table } from "antd";
+import { Button, Table, Tag } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
 import { fetchVideos } from "../../../redux/videosReducer";
 import { dateConvert } from "../../../utils/dateConvert";
 import "./History.css";
-export const History = ({ id }) => {
+
+export const History = () => {
+    const { id } = useParams();
     const dispatch = useDispatch();
     const videos = useSelector((state) => state.videosReducer.videosList);
     const currentCamera = useSelector((state) => state.camerasReducer.currentCamera);
@@ -39,7 +42,7 @@ export const History = ({ id }) => {
             dataIndex: "status",
             key: "status",
             render: (text) =>
-                text ? <p className="status-video">{text}</p> : "—",
+                text ? <Tag color="error">{text}</Tag> : <Tag color="processing">{"Uploaded into storage"}</Tag>,
         },
     ];
 
@@ -63,7 +66,7 @@ export const History = ({ id }) => {
                             </div>
                             <div className="description-video-column">
                             <span><p>Size:</p> <p style={{ margin: 0 }}>{record.size}</p></span> 
-                           <span><p>Status:</p> {record.status ? <p style={{ margin: 0 }} className="status-video">{record.status}</p> : <p style={{ margin: 0 }}>{"—"}</p>}</span> 
+                           <span><p>Status:</p> {record.status ? <Tag color="error">{record.status}</Tag> : <Tag color="processing">{"Uploaded into storage"}</Tag>}</span> 
                            <span><p>Created:</p> <p style={{ margin: 0 }}>{record.created_at}</p></span> 
                            <span><p>Updated:</p> <p style={{ margin: 0 }}>{record.updated_at}</p></span> 
                             </div>

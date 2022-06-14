@@ -1,8 +1,10 @@
 import { PageHeader, Tabs, Tag } from "antd";
 import React, { useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { fetchCamera } from "../../redux/camerasReducer";
+import { CameraSchedules } from "./CameraSchedules/CameraSchedules";
 import "./CamerasDetails.css";
 import { History } from "./History/History";
 import { LiveTab } from "./LiveTab/LiveTab";
@@ -16,6 +18,8 @@ const CamerasDetails = React.memo(() => {
     );
     const deleteCameraStatus = useSelector(state => state.camerasReducer.deleteCameraStatus);
 
+    const [tab, setTab] = useState('1');
+
     useEffect(() => {
         dispatch(fetchCamera(id));
     }, []);
@@ -24,10 +28,10 @@ const CamerasDetails = React.memo(() => {
         if(deleteCameraStatus === 'fulfilled') {window.history.back()}
     }, [deleteCameraStatus]);
 
-    const onChange = (key) => {
-        console.log(key);
+    const onChangeTab = (key) => {
+        setTab(key)
     };
-
+console.log(tab)
     return (
         <div>
             <PageHeader
@@ -36,15 +40,15 @@ const CamerasDetails = React.memo(() => {
                 title={currentCamera.name}
                 tags={<Tag color={currentCamera.status === 'recording' ? "green" : "red" }>{currentCamera.status ? currentCamera.status : 'disabled'}</Tag>}
             />
-            <Tabs defaultActiveKey="1" onChange={onChange}>
+            <Tabs defaultActiveKey="1" onChange={onChangeTab} activeKey={tab}>
                 <TabPane tab="Live" key="1">
-                    <LiveTab currentCamera={currentCamera}/>
+                    <LiveTab currentCamera={currentCamera} setTab={onChangeTab}/>
                 </TabPane>
-                <TabPane tab="History" key="2">
-                    <History id={id}/>
+                <TabPane tab="Camera Schedules" key="2">
+                    <CameraSchedules/>
                 </TabPane>
-                <TabPane tab="Tab 3" key="3">
-                    Content of Tab Pane 3
+                <TabPane tab="History" key="3">
+                    <History/>
                 </TabPane>
             </Tabs>
         </div>
