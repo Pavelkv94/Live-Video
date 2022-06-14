@@ -13,7 +13,7 @@ function App() {
     const initStatus = useSelector(
         (state) => state.authReducer.initializedStatus
     );
-        
+
     useEffect(() => {
         dispatch(initializedApp());
     }, []);
@@ -22,7 +22,9 @@ function App() {
         cameras: "cameras",
         camerasDetails: "camerasDetails",
         storages: "storages",
-        schedules: "schedules"
+        storagesDetails: "storageDetails",
+        schedules: "schedules",
+        schedulesDetails: "scheduleDetails",
     };
 
     if (initStatus !== "complete") {
@@ -44,9 +46,17 @@ function App() {
                         element={<Main mode={displayMode.storages} />}
                         path="/storages"
                     />
-                     <Route
+                    <Route
+                        element={<Main mode={displayMode.storagesDetails} />}
+                        path="/details:id"
+                    />
+                    <Route
                         element={<Main mode={displayMode.schedules} />}
                         path="/schedules"
+                    />
+                    <Route
+                        element={<Main mode={displayMode.schedulesDetails} />}
+                        path="/schedules/details:id"
                     />
                 </Routes>
             </div>

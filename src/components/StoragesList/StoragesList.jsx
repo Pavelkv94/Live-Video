@@ -10,7 +10,9 @@ import { deleteCameraAction } from "../../redux/camerasReducer";
 import { deleteStorage, fetchStorages } from "../../redux/storagesReducer";
 import { CustomModal } from "../general/CustomModal";
 import { DeleteModal } from "../general/DeleteModal";
+import { dateConvert } from "../../utils/dateConvert";
 import "./StoragesList.css";
+import { NavLink } from "react-router-dom";
 
 const StoragesList = React.memo(() => {
     const dispatch = useDispatch();
@@ -42,7 +44,9 @@ const StoragesList = React.memo(() => {
             title: "Name",
             dataIndex: "name",
             key: "name",
-            render: (text, params) => <a>{text}</a>,
+            render: (text, params) => (
+                <NavLink to={`details/${params.key}`}>{text}</NavLink>
+            ),
         },
         {
             title: "Storage Type",
@@ -56,8 +60,8 @@ const StoragesList = React.memo(() => {
         },
         {
             title: "Created",
-            dataIndex: "created",
-            key: "created",
+            dataIndex: "created_at",
+            key: "created_at",
         },
         {
             title: "Access key",
@@ -85,20 +89,21 @@ const StoragesList = React.memo(() => {
                     <Button
                         danger
                         icon={<DeleteOutlined />}
-                        onClick={() => {setIsModalVisible(true); setCheckedStorage(params)}}
+                        onClick={() => {
+                            setIsModalVisible(true);
+                            setCheckedStorage(params);
+                        }}
                     />
                 </div>
             ),
         },
     ];
+
     const data = storagesList.map((el) => ({
+        ...el,
         key: el.id,
-        name: el.name,
-        storage_type: el.storage_type,
-        url: el.url,
-        aws_access_key_id: el.aws_access_key_id,
-        aws_secret_access_key: el.aws_secret_access_key,
-        created: el.created_at.slice(0, 10),
+        created_at: dateConvert(el.created_at),
+        updated_at: dateConvert(el.updated_at),
     }));
 
     return (
