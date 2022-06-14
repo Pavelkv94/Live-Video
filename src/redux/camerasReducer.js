@@ -4,7 +4,9 @@ import * as ActionTypes from "./AppConstants.js";
 const initialState = {
     camerasList: [],
     currentCamera: {},
-    deleteCameraStatus: ''
+    deleteCameraStatus: '',
+    camerasSchedules: [],
+    checkedCameraSchedule: {}
 };
 
 export function camerasReducer(state = initialState, action) {

@@ -2,6 +2,7 @@ import { Button } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { loadPlayer } from 'rtsp-relay/browser';
 import { deleteCamera } from "../../../redux/camerasReducer";
+import { dateConvert } from "../../../utils/dateConvert";
 import { CustomModal } from "../../general/CustomModal";
 import { DeleteModal } from "../../general/DeleteModal";
 import "./LiveTab.css";
@@ -35,8 +36,8 @@ export const LiveTab = ({ currentCamera }) => {
         { title: "Password: ", value: currentCamera.password || "—" },
         { title: "Serial Number: ", value: currentCamera.serialNumber || "—" },
         { title: "Status: ", value: currentCamera.status || "—" },
-        { title: "Created: ", value: currentCamera.created_at || "—" },
-        { title: "Updated: ", value: currentCamera.updated_at || "—" },
+        { title: "Created: ", value: dateConvert(currentCamera.created_at) || "—" },
+        { title: "Updated: ", value: dateConvert(currentCamera.updated_at) || "—" },
         { title: "User: ", value: currentCamera.user_id || "—" },
         { title: "Bucket: ", value: currentCamera.bucket_id || "—" },
     ];

@@ -12,6 +12,7 @@ import {
     deleteCameraAction,
     fetchCameras,
 } from "../../redux/camerasReducer";
+import { dateConvert } from "../../utils/dateConvert";
 import { CustomModal } from "../general/CustomModal";
 import "./CamersList.css";
 
@@ -110,7 +111,7 @@ const CamerasList = React.memo(() => {
         ip: el.ip,
         login: el.login,
         password: el.password,
-        created: el.created_at.slice(0, 10),
+        created: dateConvert(el.created_at),
     }));
 
     return (

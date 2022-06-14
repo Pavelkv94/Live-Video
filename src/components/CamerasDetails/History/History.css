@@ -1,0 +1,35 @@
+.status-video {
+    color: orange;
+}
+.description-video-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.description-video {
+    display: flex;
+    margin: 0px 40px;
+}
+.description-video-column {
+    margin-right: 100px;
+    display: flex;
+    flex-direction: column;
+}
+.description-video span {
+    display: flex;
+}
+.description-video span p:first-child {
+    font-weight: 600;
+    margin-right: 5px;
+}
+.controls-video-column {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin-right: 40px;
+}
+.controls-video-column button {
+    margin-bottom: 14px;
+}
+tr.ant-table-expanded-row > td, tr.ant-table-expanded-row:hover > td {
+    background: #f7f7f7;
+}

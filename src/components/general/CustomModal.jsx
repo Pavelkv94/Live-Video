@@ -9,6 +9,8 @@ import {
 import { createSchedule } from "../../redux/schedulesReducer";
 import {
     createStorage,
+    fetchBuckets,
+    fetchBucketsAction,
     fetchStorages,
     updateStorage,
 } from "../../redux/storagesReducer";
@@ -32,6 +34,9 @@ export const CustomModal = React.memo(
         const storagesList = useSelector(
             (state) => state.storagesReducer.storagesList
         );
+        const bucketsList = useSelector(
+            (state) => state.storagesReducer.bucketsList
+        );
 
         const [cameraData, setCameraData] = useState(initialCamera);
         const [storageData, setStorageData] = useState(initialStorage);
@@ -47,6 +52,11 @@ export const CustomModal = React.memo(
             dispatch(fetchStorages(user.id));
         }, []);
 
+        useEffect(() => {
+            cameraData.storage_id ? dispatch(fetchBuckets(cameraData.storage_id)) : dispatch(fetchBucketsAction([]))
+        }, [cameraData]);
+
+        // console.log(cameraData) //!========================
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
@@ -60,12 +70,16 @@ export const CustomModal = React.memo(
                 dispatch(createSchedule(scheduleData, user.id));
             }
 
-            setOpen(false);
             setCameraData(initialCamera);
             setStorageData(initialStorage);
+            setScheduleData(initialSchedule);
+            setOpen(false);
         };
 
         const handleCancel = () => {
+            setCameraData(initialCamera);
+            setStorageData(initialStorage);
+            setScheduleData(initialSchedule);
             setOpen(false);
         };
 
@@ -80,10 +94,8 @@ export const CustomModal = React.memo(
                 {el}
             </Option>
         ));
-        const optionsBucket = [].map((el) => (
-            <Option key={el} className={`option-${el}`}>
-                {el}
-            </Option>
+        const optionsBucket = bucketsList.map((el) => (
+            <Option key={el.id}>{el.name}</Option>
         ));
 
         const scedulesFields = (key) => {
