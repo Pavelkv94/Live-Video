@@ -8,6 +8,7 @@ import {
 } from "../../redux/camerasReducer";
 import { createSchedule } from "../../redux/schedulesReducer";
 import {
+    createBucket,
     createStorage,
     fetchBuckets,
     fetchBucketsAction,
@@ -16,16 +17,19 @@ import {
 } from "../../redux/storagesReducer";
 import {
     fields,
+    initialBucket,
     initialCamera,
     initialSchedule,
     initialStorage,
 } from "./initialData";
 import "./CustomModal.css";
+import { useParams } from "react-router";
 
 const { Option } = Select;
 
 export const CustomModal = React.memo(
     ({ open, setOpen, flag, checkedElement }) => {
+        const {id} = useParams();
         const dispatch = useDispatch();
         const user = useSelector((state) => state.authReducer.user);
         const camerasList = useSelector(
@@ -41,6 +45,7 @@ export const CustomModal = React.memo(
         const [cameraData, setCameraData] = useState(initialCamera);
         const [storageData, setStorageData] = useState(initialStorage);
         const [scheduleData, setScheduleData] = useState(initialSchedule);
+        const [bucketData, setBucketData] = useState(initialBucket);
 
         useEffect(() => {
             flag === "edit_camera" && setCameraData(checkedElement);
@@ -56,7 +61,7 @@ export const CustomModal = React.memo(
             cameraData.storage_id ? dispatch(fetchBuckets(cameraData.storage_id)) : dispatch(fetchBucketsAction([]))
         }, [cameraData]);
 
-        // console.log(cameraData) //!========================
+        // console.log(storageData) //!========================
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
@@ -68,11 +73,14 @@ export const CustomModal = React.memo(
                 dispatch(updateStorage(storageData, storageData.key, user.id));
             } else if (flag === "create_schedule") {
                 dispatch(createSchedule(scheduleData, user.id));
+            } else if (flag === "create_bucket") {
+                dispatch(createBucket(bucketData, id));
             }
 
             setCameraData(initialCamera);
             setStorageData(initialStorage);
             setScheduleData(initialSchedule);
+            setBucketData(initialBucket)
             setOpen(false);
         };
 
@@ -80,6 +88,7 @@ export const CustomModal = React.memo(
             setCameraData(initialCamera);
             setStorageData(initialStorage);
             setScheduleData(initialSchedule);
+            setBucketData(initialBucket)
             setOpen(false);
         };
 
@@ -243,7 +252,7 @@ export const CustomModal = React.memo(
                     >
                         {flag === "create_camera" ||
                         flag === "create_storage" ||
-                        flag === "create_schedule"
+                        flag === "create_schedule" || "create_bucket"
                             ? "Create"
                             : "Save"}
                     </Button>,
@@ -269,6 +278,15 @@ export const CustomModal = React.memo(
                         {(flag === "create_schedule" ||
                             flag === "edit_schedule") &&
                             scedulesFields(el.key)}
+                        { flag === "create_bucket" && <Input
+                        value={bucketData[el.key]}
+                        onChange={(e) => {
+                            setBucketData({
+                                ...bucketData,
+                                [el.key]: e.currentTarget.value,
+                            });
+                        }}
+                    />}
                     </div>
                 ))}
             </Modal>

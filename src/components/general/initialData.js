@@ -27,6 +27,8 @@ export const initialSchedule = {
     cameras: [],
 };
 
+export const initialBucket = { name: "" };
+
 export const fields = {
     create_camera: [
         { label: "Name", key: "name" },
@@ -70,4 +72,5 @@ export const fields = {
         { label: "Bucket", key: "bucket_id" },
         { label: "Cameras", key: "cameras" },
     ],
+    create_bucket: [ {label: "Name", key: "name"} ]
 };

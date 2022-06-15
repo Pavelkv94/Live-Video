@@ -131,13 +131,13 @@ const createBucketAction = (payload) => ({
     payload,
 });
 
-export const createBucket = (payload, id) => (dispatch) => {
-    const response = createData(ActionTypes.bucketsAllUrl(id), {}, payload);
+export const createBucket = (payload, storageId) => (dispatch) => {
+    const response = createData(ActionTypes.bucketsAllUrl(storageId), {}, payload);
 
     response.then(
         (res) => {
             dispatch(createBucketAction(res.data));
-            dispatch(fetchBuckets(id));
+            dispatch(fetchBuckets(storageId));
         },
         (err) => console.log(err)
     );
@@ -148,13 +148,13 @@ const updateBucketAction = (payload) => ({
     payload,
 });
 
-export const updateBucket = (payload, id, userId) => (dispatch) => {
-    const response = updateData(ActionTypes.bucketUrl(id), {}, payload);
+export const updateBucket = (bucketId, storageId, payload) => (dispatch) => {
+    const response = updateData(ActionTypes.bucketUrl(bucketId), {}, payload);
 
     response.then(
         (res) => {
             dispatch(updateBucketAction(res.data));
-            dispatch(fetchBuckets(userId));
+            dispatch(fetchBuckets(storageId));
         },
         (err) => console.log(err)
     );

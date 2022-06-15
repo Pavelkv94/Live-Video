@@ -1,7 +1,5 @@
 import { Button } from "antd";
 import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router";
 import { deleteCamera } from "../../../redux/camerasReducer";
 import { dateConvert } from "../../../utils/dateConvert";
 import { CustomModal } from "../../general/CustomModal";
@@ -9,8 +7,6 @@ import { DeleteModal } from "../../general/DeleteModal";
 import "./LiveTab.css";
 
 export const LiveTab = ({ currentCamera, setTab }) => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
     const canvas = useRef(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [open, setOpen] = useState(false);

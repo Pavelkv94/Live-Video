@@ -32,7 +32,7 @@ export const MenuBar = React.memo(({ mode }) => {
     const defaultKey =
         mode === "cameras" || mode === "camerasDetails"
             ? ["0"]
-            : mode === "storages"
+            : mode === "storages" || mode === "storageDetails"
             ? ["1"]
             : ["2"];
     return (

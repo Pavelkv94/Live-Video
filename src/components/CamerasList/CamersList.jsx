@@ -12,7 +12,7 @@ const CamerasList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState("create_camera");
-    const [checkedCamera, setCheckedCamera] = useState({});
+    // const [checkedCamera, setCheckedCamera] = useState({});
 
     const user = useSelector((state) => state.authReducer.user);
     const camerasList = useSelector(
@@ -122,7 +122,7 @@ const CamerasList = React.memo(() => {
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
-                checkedElement={checkedCamera}
+                // checkedElement={checkedCamera}
             />
         </div>
     );

@@ -48,7 +48,7 @@ function App() {
                     />
                     <Route
                         element={<Main mode={displayMode.storagesDetails} />}
-                        path="/details:id"
+                        path="storages/details/:id"
                     />
                     <Route
                         element={<Main mode={displayMode.schedules} />}
@@ -56,7 +56,7 @@ function App() {
                     />
                     <Route
                         element={<Main mode={displayMode.schedulesDetails} />}
-                        path="/schedules/details:id"
+                        path="/schedules/details/:id"
                     />
                 </Routes>
             </div>

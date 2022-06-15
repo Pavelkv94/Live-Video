@@ -1,8 +1,4 @@
-import {
-    DeleteOutlined,
-    EditOutlined,
-    FolderAddOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, FolderAddOutlined } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -79,13 +75,13 @@ const StoragesList = React.memo(() => {
             key: "edit",
             render: (el, params) => (
                 <div className="storage-actions">
-                    <Button
+                    {/* <Button
                         icon={<EditOutlined />}
                         onClick={() => {
                             showModal("edit_storage");
                             setCheckedStorage(params);
                         }}
-                    />
+                    /> */}
                     <Button
                         danger
                         icon={<DeleteOutlined />}
