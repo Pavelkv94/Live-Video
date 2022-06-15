@@ -83,6 +83,7 @@ export const LiveTab = ({ currentCamera, setTab }) => {
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
+                setFlag={setFlag}
                 checkedElement={currentCamera}
             />
             <DeleteModal

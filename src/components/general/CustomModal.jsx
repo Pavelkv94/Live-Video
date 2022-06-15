@@ -28,7 +28,7 @@ import { useParams } from "react-router";
 const { Option } = Select;
 
 export const CustomModal = React.memo(
-    ({ open, setOpen, flag, checkedElement }) => {
+    ({ open, setOpen, flag, setFlag, checkedElement }) => {
         const {id} = useParams();
         const dispatch = useDispatch();
         const user = useSelector((state) => state.authReducer.user);
@@ -89,6 +89,7 @@ export const CustomModal = React.memo(
             setStorageData(initialStorage);
             setScheduleData(initialSchedule);
             setBucketData(initialBucket)
+            setFlag('create_camera')
             setOpen(false);
         };
 

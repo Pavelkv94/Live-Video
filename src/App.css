@@ -35,13 +35,12 @@ h2 {
 .common-list section button {
   margin-left: 20px;
 }
-/* .ant-modal-body {
-  display: flex;
-  flex-wrap: wrap;
-} */
 .register-field {
   margin: 10px;
 }
 .register-field p {
   margin-bottom: 0px;
+}
+.ant-page-header {
+  padding: 0px;
 }
