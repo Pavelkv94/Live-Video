@@ -1,17 +1,20 @@
-.schedules-modal .ant-modal-body{
+/* .schedules-modal .ant-modal-body{
 display: flex;
 flex-wrap: wrap;
-}
+} */
 
-.schedules-modal .register-field {
+/* .schedules-modal .register-field {
     width: 45%;
 }
-.schedules-modal .register-field:last-child {
+.schedules-modal .register-field:first-child {
     width: 100%;
-}
+} */
 .option-disabled {
     color: red;
 }
 .option-recording {
     color: green;
 }
+/* .cameras-select {
+    width: 100%;
+} */

@@ -1,0 +1,36 @@
+.schedule-details {
+    display: flex;
+}
+.schedule-details section {
+    margin: 20px;
+    /* max-width: 800px; */
+}
+.schedule-details section:first-child {
+    width: 30%;
+}
+.schedule-details section:last-child {
+    width: 70%;
+}
+.schedule-details section span {
+    display: flex;
+    justify-content: space-between;
+}
+.schedule-details section span p:first-child {
+    font-weight: 600;
+    word-wrap: break-word;
+}
+.schedule-details section h2 {
+    color: black;
+    margin-bottom: 10px;
+}
+.schedule-details-actions {
+    display: flex;
+    justify-content: space-around;
+}
+.dot {
+    display: flex;
+    align-items: center;
+}
+.dot p {
+    margin: 0;
+}

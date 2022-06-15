@@ -38,7 +38,6 @@ const CameraDetails = React.memo(() => {
                 className="site-page-header"
                 onBack={() => window.history.back()}
                 title={currentCamera.name}
-                tags={<Tag color={currentCamera.status === 'recording' ? "green" : "red" }>{currentCamera.status ? currentCamera.status : 'disabled'}</Tag>}
             />
             <Tabs defaultActiveKey="1" onChange={onChangeTab} activeKey={tab}>
                 <TabPane tab="Live" key="1">

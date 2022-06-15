@@ -1,9 +1,10 @@
+import { message } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 
 const initialState = {
     videosList: [],
-    currentVideo: {}
+    currentVideo: {},
 };
 
 export function videosReducer(state = initialState, action) {
@@ -45,22 +46,7 @@ export const fetchVideo = (id) => (dispatch) => {
     );
 };
 
-const createVideoAction = (payload) => ({
-    type: ActionTypes.CREATE_STORAGE,
-    payload,
-});
 
-export const createVideo = (payload, id) => (dispatch) => {
-    const response = createData(ActionTypes.videosAllUrl(id), {}, payload);
-
-    response.then(
-        (res) => {
-            dispatch(createVideoAction(res.data));
-            dispatch(fetchVideos(id));
-        },
-        (err) => console.log(err)
-    );
-};
 
 //Delete video from storage
 const updateVideoAction = (payload) => ({
@@ -71,15 +57,12 @@ const updateVideoAction = (payload) => ({
 export const updateVideo = (payload, id, userId) => (dispatch) => {
     const response = updateData(ActionTypes.videoUrl(id), {}, payload);
 
-    response.then(
-        (res) => {
-            dispatch(updateVideoAction(res.data));
-            dispatch(fetchVideos(userId));
-        },
-        (err) => console.log(err)
-    );
+    response.then((res) => {
+        dispatch(updateVideoAction(res.data));
+        dispatch(fetchVideos(userId));
+        message.success("Success!");
+    }, err => message.error(err.response.data ? err.response.data.data.message : "Error"));
 };
-
 
 export const deleteVideo = (id, userId) => (dispatch) => {
     const response = deleteData(ActionTypes.videoUrl(id), {});
@@ -87,7 +70,11 @@ export const deleteVideo = (id, userId) => (dispatch) => {
     response.then(
         () => {
             dispatch(fetchVideos(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };

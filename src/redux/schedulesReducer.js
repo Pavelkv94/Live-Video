@@ -1,9 +1,11 @@
+import { message } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 
 const initialState = {
     schedulesList: [],
-    currentSchedule: {}
+    currentSchedule: {},
+    assignedCameras: [],
 };
 
 export function schedulesReducer(state = initialState, action) {
@@ -12,6 +14,8 @@ export function schedulesReducer(state = initialState, action) {
             return { ...state, schedulesList: action.payload };
         case ActionTypes.FETCH_SCHEDULE:
             return { ...state, currentSchedule: action.payload };
+        case ActionTypes.FETCH_ASSIGN_CAMERAS:
+            return { ...state, assignedCameras: action.payload };
         default:
             return state;
     }
@@ -27,6 +31,20 @@ export const fetchSchedules = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchSchedulesAction(res.data)),
+        (err) => console.log(err)
+    );
+};
+
+const fetchAssignedCamerasAction = (payload) => ({
+    type: ActionTypes.FETCH_ASSIGN_CAMERAS,
+    payload: payload,
+});
+
+export const fetchAssignedCameras = (id) => (dispatch) => {
+    const response = fetchData(ActionTypes.assignedCamerasUrl(id), {}, {});
+
+    response.then(
+        (res) => dispatch(fetchAssignedCamerasAction(res.data)),
         (err) => console.log(err)
     );
 };
@@ -57,8 +75,12 @@ export const createSchedule = (payload, id) => (dispatch) => {
         (res) => {
             dispatch(createScheduleAction(res.data));
             dispatch(fetchSchedules(id));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };
 
@@ -74,11 +96,14 @@ export const updateSchedule = (payload, id, userId) => (dispatch) => {
         (res) => {
             dispatch(updateScheduleAction(res.data));
             dispatch(fetchSchedules(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };
-
 
 export const deleteSchedule = (id, userId) => (dispatch) => {
     const response = deleteData(ActionTypes.scheduleUrl(id), {});
@@ -86,7 +111,11 @@ export const deleteSchedule = (id, userId) => (dispatch) => {
     response.then(
         () => {
             dispatch(fetchSchedules(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };

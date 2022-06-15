@@ -10,8 +10,8 @@ import { CustomModal } from "../general/CustomModal";
 const SchedulesList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [flag, setFlag] = useState("create_storage");
-    const [checkedStorage, setCheckedStorage] = useState({});
+    const [flag, setFlag] = useState("default");
+    // const [checkedStorage, setCheckedStorage] = useState({});
 
     const user = useSelector((state) => state.authReducer.user);
     const schedulesList = useSelector(
@@ -80,7 +80,8 @@ const SchedulesList = React.memo(() => {
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
-                checkedElement={checkedStorage}
+                setFlag={setFlag}
+                // checkedElement={checkedStorage}
             />
         </div>
     );

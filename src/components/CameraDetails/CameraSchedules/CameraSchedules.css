@@ -7,6 +7,9 @@
     background: #fff1f0;
     border-color: #ffa39e;
 }
+.schedule-card {
+    min-width: 235px;
+}
 .schedule-card p {
     margin: 4px 0;
 }

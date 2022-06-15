@@ -1,17 +1,23 @@
 import { Button } from "antd";
 import React, { useRef, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteCamera } from "../../../redux/camerasReducer";
+import { fetchStorage } from "../../../redux/storagesReducer";
 import { dateConvert } from "../../../utils/dateConvert";
 import { CustomModal } from "../../general/CustomModal";
 import { DeleteModal } from "../../general/DeleteModal";
 import "./LiveTab.css";
 
 export const LiveTab = ({ currentCamera, setTab }) => {
+    const dispatch = useDispatch();
     const canvas = useRef(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [open, setOpen] = useState(false);
-    const [flag, setFlag] = useState("create_camera");
+    const [flag, setFlag] = useState("default");
 
+    const storage = useSelector(state => state.storagesReducer.currentStorage);
+    const bucket = useSelector(state => state.storagesReducer.currentBucket);
     // useEffect(() => {
     //     if (!canvas.current) throw new Error('Ref is null');
 
@@ -43,8 +49,8 @@ export const LiveTab = ({ currentCamera, setTab }) => {
             title: "Updated: ",
             value: dateConvert(currentCamera.updated_at) || "—",
         },
-        { title: "User: ", value: currentCamera.user_id || "—" },
-        { title: "Bucket: ", value: currentCamera.bucket_id || "—" },
+        { title: "Storage: ", value: storage ? storage.name : "—" },
+        { title: "Bucket: ", value: bucket ? bucket.name : "—" },
     ];
 
     const params = paramsData.map((el, index) => (

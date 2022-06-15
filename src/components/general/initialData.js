@@ -14,22 +14,20 @@ export const initialStorage = {
     aws_secret_access_key: "",
 };
 export const initialSchedule = {
-    status: "disabled",
     duration: "0",
-    frequency: "0",
+    period: "0",
     name: "",
     start_day: "",
     end_day: "",
     start_hour: "",
     end_hour: "",
-    storage_id: null,
-    bucket_id: null,
     cameras: [],
 };
 
 export const initialBucket = { name: "" };
 
 export const fields = {
+    default: [{ label: "Default", name: "default" }],
     create_camera: [
         { label: "Name", key: "name" },
         { label: "Ip", key: "ip" },
@@ -61,16 +59,22 @@ export const fields = {
     ],
     create_schedule: [
         { label: "Name", key: "name" },
-        { label: "Status", key: "status" },
-        { label: "Duration", key: "duration" },
-        { label: "Frequency", key: "frequency" },
+        { label: "Duration, s", key: "duration" },
+        { label: "Period, s", key: "period" },
         { label: "Start Day", key: "start_day" },
         { label: "End Day", key: "end_day" },
         { label: "Start Hour", key: "start_hour" },
         { label: "End Hour", key: "end_hour" },
-        { label: "Storage", key: "storage_id" },
-        { label: "Bucket", key: "bucket_id" },
         { label: "Cameras", key: "cameras" },
     ],
-    create_bucket: [ {label: "Name", key: "name"} ]
+    edit_schedule: [
+        { label: "Name", key: "name" },
+        { label: "Duration, s", key: "duration" },
+        { label: "Period, s", key: "period" },
+        { label: "Start Day", key: "start_day" },
+        { label: "End Day", key: "end_day" },
+        { label: "Start Hour", key: "start_hour" },
+        { label: "End Hour", key: "end_hour" },
+    ],
+    create_bucket: [{ label: "Name", key: "name" }],
 };

@@ -34,3 +34,8 @@
 .storage-details section .bucket-title h2 {
     margin: 0 10px 0;
 }
+
+.storage-details section p {
+    display: flex;
+    align-items: center;
+}

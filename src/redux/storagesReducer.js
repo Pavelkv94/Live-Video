@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 
@@ -34,7 +35,7 @@ export const fetchStorages = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchStoragesAction(res.data)),
-        (err) => console.log(err)
+        (err) => console.log(err.response.data)
     );
 };
 
@@ -48,7 +49,7 @@ export const fetchStorage = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchStorageAction(res.data)),
-        (err) => console.log(err)
+        (err) => console.log(err.response.data)
     );
 };
 
@@ -64,8 +65,9 @@ export const createStorage = (payload, id) => (dispatch) => {
         (res) => {
             dispatch(createStorageAction(res.data));
             dispatch(fetchStorages(id));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) => message.error(err.response.data ? err.response.data.data.message : 'Error')
     );
 };
 
@@ -81,8 +83,9 @@ export const updateStorage = (payload, id, userId) => (dispatch) => {
         (res) => {
             dispatch(updateStorageAction(res.data));
             dispatch(fetchStorages(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) => message.error(err.response.data ? err.response.data.data.message : 'Error')
     );
 };
 
@@ -92,8 +95,9 @@ export const deleteStorage = (id, userId) => (dispatch) => {
     response.then(
         () => {
             dispatch(fetchStorages(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) => message.error(err.response.data ? err.response.data.data.message : 'Error')
     );
 };
 
@@ -138,8 +142,9 @@ export const createBucket = (payload, storageId) => (dispatch) => {
         (res) => {
             dispatch(createBucketAction(res.data));
             dispatch(fetchBuckets(storageId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) => message.error(err.response.data ? err.response.data.data.message : 'Error')
     );
 };
 
@@ -155,8 +160,9 @@ export const updateBucket = (bucketId, storageId, payload) => (dispatch) => {
         (res) => {
             dispatch(updateBucketAction(res.data));
             dispatch(fetchBuckets(storageId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) => message.error(err.response.data ? err.response.data.data.message : 'Error')
     );
 };
 
@@ -166,7 +172,8 @@ export const deleteBucket = (id, userId) => (dispatch) => {
     response.then(
         () => {
             dispatch(fetchBuckets(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) => message.error(err.response.data ? err.response.data.data.message : 'Error')
     );
 };

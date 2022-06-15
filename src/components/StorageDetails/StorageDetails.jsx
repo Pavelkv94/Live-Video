@@ -1,4 +1,4 @@
-import { Button, Card, Input, PageHeader, Table } from "antd";
+import { Button, Card, Input, PageHeader, Table, Tooltip } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -13,12 +13,14 @@ import { dateConvert } from "../../utils/dateConvert";
 import {
     CheckOutlined,
     CloseOutlined,
+    CopyOutlined,
     DeleteOutlined,
     EditOutlined,
     PlusOutlined,
 } from "@ant-design/icons";
 import { DeleteModal } from "../general/DeleteModal";
 import { CustomModal } from "../general/CustomModal";
+import { CopyClipboard } from "../general/CopyClipboard";
 
 const StorageDetails = React.memo(() => {
     const { id } = useParams();
@@ -30,7 +32,7 @@ const StorageDetails = React.memo(() => {
     const buckets = useSelector((state) => state.storagesReducer.bucketsList);
     const [open, setOpen] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [flag, setFlag] = useState("create_storage");
+    const [flag, setFlag] = useState("default");
     const [checkedElement, setCheckedElement] = useState({});
     // const deleteCameraStatus = useSelector(state => state.camerasReducer.deleteCameraStatus);
     const [editBucket, setEditBucket] = useState(false);
@@ -45,6 +47,7 @@ const StorageDetails = React.memo(() => {
     useEffect(() => {
         editBucket && ref.current.focus();
     }, [editBucket]);
+
     const showModal = (flag) => {
         setFlag(flag);
         setOpen(true);
@@ -119,7 +122,10 @@ const StorageDetails = React.memo(() => {
                     <Button
                         danger
                         icon={<DeleteOutlined />}
-                        onClick={() => setIsModalVisible(true)}
+                        onClick={() => {
+                            setCheckedBucket(params);
+                            setIsModalVisible(true);
+                        }}
                     />
                 </div>
             ),
@@ -154,11 +160,21 @@ const StorageDetails = React.memo(() => {
                         </span>
                         <span>
                             <p>Access key:</p>
-                            <p>{currentStorage.aws_access_key_id}</p>
+                            <p>
+                                {currentStorage.aws_access_key_id}
+                                <CopyClipboard
+                                    value={currentStorage.aws_access_key_id}
+                                />
+                            </p>
                         </span>
                         <span>
                             <p>Secret Access key:</p>
-                            <p>{currentStorage.aws_secret_access_key}</p>
+                            <p>
+                                {currentStorage.aws_secret_access_key}
+                                <CopyClipboard
+                                    value={currentStorage.aws_secret_access_key}
+                                />
+                            </p>
                         </span>
                         <span>
                             <p>Created:</p>
@@ -202,7 +218,7 @@ const StorageDetails = React.memo(() => {
                 setIsModalVisible={setIsModalVisible}
                 item="bucket"
                 callback={deleteBucket}
-                id={id}
+                id={checkedBucket.id}
             />
             <CustomModal
                 open={open}

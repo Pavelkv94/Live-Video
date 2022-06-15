@@ -1,5 +1,5 @@
 import { UserOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, Modal } from "antd";
+import { Button, Card, Form, Input, message, Modal } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router";
@@ -29,6 +29,7 @@ export const Login = () => {
             dispatch(setCurrentUser(currentUser)) ;
             let savedUser = JSON.stringify(currentUser);
             localStorage.setItem("user", savedUser);
+            message.info("Welcome");
         } 
     };
 

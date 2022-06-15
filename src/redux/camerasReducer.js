@@ -1,5 +1,7 @@
+import { message } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
+import { fetchBucket, fetchStorage } from "./storagesReducer.js";
 
 const initialState = {
     camerasList: [],
@@ -7,7 +9,7 @@ const initialState = {
     deleteCameraStatus: "",
     camerasSchedules: [],
     checkedCameraSchedule: {},
-    unAssignScheduleStatus: ""
+    unAssignScheduleStatus: "",
 };
 
 export function camerasReducer(state = initialState, action) {
@@ -40,7 +42,7 @@ export const fetchCameras = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchCamerasAction(res.data)),
-        (err) => console.log(err)
+        (err) => console.log(err.response.data)
     );
 };
 
@@ -52,10 +54,18 @@ const fetchCameraAction = (payload) => ({
 export const fetchCamera = (id) => (dispatch) => {
     const response = fetchData(ActionTypes.camerasUrl(id), {}, {});
 
-    response.then(
-        (res) => dispatch(fetchCameraAction(res.data)),
-        (err) => console.log(err)
-    );
+    response
+        .then(
+            (res) => dispatch(fetchCameraAction(res.data)),
+            (err) => console.log(err.response.data)
+        )
+        .then(
+            (res) => {
+                dispatch(fetchStorage(res.payload.storage_id));
+                dispatch(fetchBucket(res.payload.bucket_id));
+            },
+            (err) => console.log(err.response.data)
+        );
 };
 
 const createCameraAction = (payload) => ({
@@ -70,8 +80,12 @@ export const createCamera = (payload, id) => (dispatch) => {
         (res) => {
             dispatch(createCameraAction(res.data));
             dispatch(fetchCameras(id));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };
 
@@ -87,8 +101,12 @@ export const updateCamera = (payload, id, userId) => (dispatch) => {
         (res) => {
             dispatch(updateCameraAction(res.data));
             dispatch(fetchCameras(userId));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };
 
@@ -105,8 +123,14 @@ export const deleteCamera = (id, userId) => (dispatch) => {
         (res) => {
             dispatch(deleteCameraAction("fulfilled"));
             dispatch(fetchCameras(userId));
+            message.success("Success!");
         },
-        (err) => dispatch(deleteCameraAction("rejected"))
+        (err) => {
+            dispatch(deleteCameraAction("rejected"));
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            );
+        }
     );
 };
 
@@ -122,7 +146,7 @@ export const fetchCameraSchedules = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchCameraSchedulesAction(res.data)),
-        (err) => console.log(err)
+        (err) => console.log(err.response.data)
     );
 };
 
@@ -136,7 +160,7 @@ export const fetchCameraSchedule = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchCameraScheduleAction(res.data)),
-        (err) => console.log(err)
+        (err) => console.log(err.response.data)
     );
 };
 
@@ -146,14 +170,22 @@ const asignCameraScheduleAction = (payload) => ({
 });
 
 export const asignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
-    const response = createData(ActionTypes.cameraScheduleUrl(cameraId, scheduleId), {}, {});
+    const response = createData(
+        ActionTypes.cameraScheduleUrl(cameraId, scheduleId),
+        {},
+        {}
+    );
 
     response.then(
         (res) => {
             dispatch(asignCameraScheduleAction(res.data));
             // dispatch(fetchCameras(id));
+            message.success("Success!");
         },
-        (err) => console.log(err)
+        (err) =>
+            message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )
     );
 };
 
@@ -164,13 +196,19 @@ export const unAssignCameraScheduleAction = (status) => ({
 
 export const unAssignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
     // deleteCameraAction("pending");
-    const response = deleteData(ActionTypes.cameraScheduleUrl(cameraId, scheduleId), {});
+    const response = deleteData(
+        ActionTypes.cameraScheduleUrl(cameraId, scheduleId),
+        {}
+    );
 
     response.then(
         (res) => {
             dispatch(unAssignCameraScheduleAction("fulfilled"));
             // dispatch(fetchCameras(userId));
+            message.success("Success!");
         },
-        // (err) => dispatch(unAssignCameraScheduleAction("rejected"))
+        (err) =>  message.error(
+                err.response.data ? err.response.data.data.message : "Error"
+            )//dispatch(unAssignCameraScheduleAction("rejected"))
     );
 };

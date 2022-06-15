@@ -6,7 +6,7 @@ import {
     fetchCameras,
     updateCamera,
 } from "../../redux/camerasReducer";
-import { createSchedule } from "../../redux/schedulesReducer";
+import { createSchedule, updateSchedule } from "../../redux/schedulesReducer";
 import {
     createBucket,
     createStorage,
@@ -50,7 +50,9 @@ export const CustomModal = React.memo(
         useEffect(() => {
             flag === "edit_camera" && setCameraData(checkedElement);
             flag === "edit_storage" && setStorageData(checkedElement);
+            flag === "edit_schedule" && setScheduleData(checkedElement);
             flag === "create_schedule" && dispatch(fetchCameras(user.id));
+
         }, [flag]);
 
         useEffect(() => {
@@ -61,18 +63,20 @@ export const CustomModal = React.memo(
             cameraData.storage_id ? dispatch(fetchBuckets(cameraData.storage_id)) : dispatch(fetchBucketsAction([]))
         }, [cameraData]);
 
-        // console.log(storageData) //!========================
+        // console.log(cameraData) //!========================
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
             } else if (flag === "edit_camera") {
-                dispatch(updateCamera(cameraData, cameraData.key, user.id));
+                dispatch(updateCamera(cameraData, cameraData.id, user.id));
             } else if (flag === "create_storage") {
                 dispatch(createStorage(storageData, user.id));
             } else if (flag === "edit_storage") {
-                dispatch(updateStorage(storageData, storageData.key, user.id));
+                dispatch(updateStorage(storageData, storageData.id, user.id));
             } else if (flag === "create_schedule") {
-                dispatch(createSchedule(scheduleData, user.id));
+                dispatch(updateSchedule(scheduleData, user.id));
+            } else if (flag === "edit_schedule") {
+                dispatch(createSchedule(scheduleData, id));
             } else if (flag === "create_bucket") {
                 dispatch(createBucket(bucketData, id));
             }
@@ -89,7 +93,7 @@ export const CustomModal = React.memo(
             setStorageData(initialStorage);
             setScheduleData(initialSchedule);
             setBucketData(initialBucket)
-            setFlag('create_camera')
+            setFlag('default')
             setOpen(false);
         };
 
@@ -117,6 +121,7 @@ export const CustomModal = React.memo(
                         style={{
                             width: "100%",
                         }}
+                        className="cameras-select"
                         placeholder="Please select"
                         defaultValue={scheduleData[key]}
                         onChange={(value) =>
@@ -129,10 +134,10 @@ export const CustomModal = React.memo(
                         {optionsCameras}
                     </Select>
                 );
-            } else if (key === "duration" || key === "frequency") {
+            } else if (key === "duration" || key === "period") {
                 return (
                     <InputNumber
-                        style={{ width: "40%" }}
+                        // style={{ width: "40%" }}
                         min={0}
                         value={scheduleData[key]}
                         onChange={(value) => {
@@ -143,50 +148,7 @@ export const CustomModal = React.memo(
                         }}
                     />
                 );
-            } else if (key === "status") {
-                return (
-                    <Select
-                        allowClear
-                        style={{
-                            width: "100%",
-                            color: `${
-                                scheduleData[key] === "disabled"
-                                    ? "red"
-                                    : "green"
-                            }`,
-                        }}
-                        placeholder="Please select"
-                        defaultValue={scheduleData[key]}
-                        onChange={(value) =>
-                            setScheduleData({
-                                ...scheduleData,
-                                [key]: value,
-                            })
-                        }
-                    >
-                        {optionsStatus}
-                    </Select>
-                );
-            } else if (key === "storage_id") {
-                return (
-                    <Select
-                        allowClear
-                        style={{
-                            width: "100%",
-                        }}
-                        placeholder="Please select"
-                        defaultValue={scheduleData[key]}
-                        onChange={(value) =>
-                            setScheduleData({
-                                ...scheduleData,
-                                [key]: value,
-                            })
-                        }
-                    >
-                        {optionsStorages}
-                    </Select>
-                );
-            } else
+            }  else
                 return (
                     <Input
                         value={scheduleData[key]}
@@ -237,7 +199,7 @@ export const CustomModal = React.memo(
         return (
             <Modal
                 title="Create/Edit"
-                className={flag === "create_schedule" ? "schedules-modal" : ""}
+                className={flag === "create_schedule" || flag === "edit_schedule" ? "schedules-modal" : ""}
                 visible={open}
                 onOk={() => handleOk(flag)}
                 onCancel={handleCancel}

@@ -11,7 +11,7 @@ import "./CamersList.css";
 const CamerasList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
-    const [flag, setFlag] = useState("create_camera");
+    const [flag, setFlag] = useState("default");
     // const [checkedCamera, setCheckedCamera] = useState({});
 
     const user = useSelector((state) => state.authReducer.user);
@@ -65,39 +65,7 @@ const CamerasList = React.memo(() => {
             title: "Created",
             dataIndex: "created_at",
             key: "created_at",
-        },
-        {
-            title: "Status",
-            dataIndex: "status",
-            key: "status",
-            render: (el, params) => (
-                <Tag color={params.status === "recording" ? "green" : "red"}>
-                    {params.status ? params.status : "disabled"}
-                </Tag>
-            ),
-        },
-        // {
-        //     title: "",
-        //     dataIndex: "scedule",
-        //     key: "scedule",
-        //     render: (el, params) => (
-        //         <>
-        //             <Button
-        //                 icon={<EditOutlined />}
-        //                 onClick={() => {
-        //                     showModal("edit_camera");
-        //                     setCheckedCamera(params);
-        //                 }}
-        //             />
-        //             <Button
-        //                 icon={<DeleteOutlined />}
-        //                 onClick={() =>
-        //                     dispatch(deleteCamera(params.key, user.id))
-        //                 }
-        //             />
-        //         </>
-        //     ),
-        // },
+        }
     ];
     const data = camerasList.map((el) => ({
         ...el,
@@ -122,6 +90,7 @@ const CamerasList = React.memo(() => {
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
+                setFlag={setFlag}
                 // checkedElement={checkedCamera}
             />
         </div>

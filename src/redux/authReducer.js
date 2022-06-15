@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { createData, deleteData, fetchData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 
@@ -83,10 +84,12 @@ export const registerUser = (payload) => (dispatch) => {
     const response = dispatch(registerAction(payload));
 
     response.payload.then(
-        (res) => dispatch(setStatus("fulfilled")),
+        (res) => {dispatch(setStatus("fulfilled"));
+     message.success("Success!");},
         (err) => {
             console.log(err);
             dispatch(setStatus("rejected"));
+            message.error(err.response.data ? err.response.data.data.message : 'Error')
         }
     );
 };
