@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
+import { fetchCameraSchedules } from "./camerasReducer.js";
 
 const initialState = {
     schedulesList: [],
@@ -41,7 +42,11 @@ const fetchAssignedCamerasAction = (payload) => ({
 });
 
 export const fetchAssignedCameras = (scheduleId) => (dispatch) => {
-    const response = fetchData(ActionTypes.assignedCamerasUrl(scheduleId), {}, {});
+    const response = fetchData(
+        ActionTypes.assignedCamerasUrl(scheduleId),
+        {},
+        {}
+    );
 
     response.then(
         (res) => dispatch(fetchAssignedCamerasAction(res.data)),
@@ -54,7 +59,10 @@ const assignSchedulesToCamAction = (payload) => ({
     payload: payload,
 });
 
-export const assignScheduleToCam = (scheduleId, payload) => (dispatch) => {
+export const assignScheduleToCam = (cameraId, scheduleId, payload) => (
+    dispatch
+) => {
+    console.log(payload);
     const response = updateData(
         ActionTypes.assignedCamerasUrl(scheduleId),
         {},
@@ -65,6 +73,7 @@ export const assignScheduleToCam = (scheduleId, payload) => (dispatch) => {
         (res) => {
             dispatch(assignSchedulesToCamAction(res.data));
             dispatch(fetchAssignedCameras(scheduleId));
+            dispatch(fetchCameraSchedules(cameraId));
             message.success("Success!");
         },
         (err) => console.log(err)

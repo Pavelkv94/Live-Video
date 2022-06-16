@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
+import { fetchAssignedCameras } from "./schedulesReducer.js";
 import { fetchBucket, fetchStorage } from "./storagesReducer.js";
 
 const initialState = {
@@ -179,7 +180,7 @@ export const asignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
     response.then(
         (res) => {
             dispatch(asignCameraScheduleAction(res.data));
-            // dispatch(fetchCameras(id));
+            dispatch(fetchAssignedCameras(scheduleId));
             message.success("Success!");
         },
         (err) =>
@@ -203,8 +204,9 @@ export const unAssignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
 
     response.then(
         (res) => {
-            dispatch(unAssignCameraScheduleAction("fulfilled"));
+            // dispatch(unAssignCameraScheduleAction("fulfilled"));
             dispatch(fetchCameraSchedules(cameraId));
+            dispatch(fetchAssignedCameras(scheduleId));
             message.success("Success!");
         },
         (err) =>  message.error(
@@ -212,3 +214,4 @@ export const unAssignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
             )//dispatch(unAssignCameraScheduleAction("rejected"))
     );
 };
+

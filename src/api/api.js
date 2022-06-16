@@ -42,7 +42,7 @@ export const createData = async (url, headers, payload) => {
 };
 
 export const updateData = async (url, headers, payload) => {
-    const response = await API.put(await base(url), payload, headers);
+    const response = await API.put(await base(url), expandHeaders(headers), payload);
     return response.data;
 };
 

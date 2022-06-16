@@ -4,13 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import "./ScheduleDetails.css";
 import {
-    assignScheduleToCam,
     fetchAssignedCameras,
     fetchSchedule,
 } from "../../redux/schedulesReducer";
 import { dateConvert } from "../../utils/dateConvert";
 import { CustomModal } from "../general/CustomModal";
 import { daysOfWeek } from "../general/initialData";
+import {
+    asignCameraSchedule,
+    fetchCameras,
+    unAssignCameraSchedule,
+} from "../../redux/camerasReducer";
 
 const ScheduleDetails = React.memo(() => {
     const { id } = useParams();
@@ -21,10 +25,21 @@ const ScheduleDetails = React.memo(() => {
     const assignedCameras = useSelector(
         (state) => state.schedulesReducer.assignedCameras
     );
+    const user = useSelector((state) => state.authReducer.user);
+    const camerasList = useSelector(
+        (state) => state.camerasReducer.camerasList
+    );
+
     const [flag, setFlag] = useState("default");
     const [open, setOpen] = useState(false);
     // const [checkedSchedule, setCheckedStorage] = useState({});
     // const deleteCameraStatus = useSelector(state => state.camerasReducer.deleteCameraStatus);
+
+    // const filteredCamerasList = camerasList.filter(el => )
+
+    useEffect(() => {
+        user && dispatch(fetchCameras(user.id));
+    }, [user]);
 
     useEffect(() => {
         dispatch(fetchSchedule(id));
@@ -39,13 +54,23 @@ const ScheduleDetails = React.memo(() => {
         setFlag(flag);
         setOpen(true);
     };
-    
+
+    const assignedCamerasId = assignedCameras.map((el) => el.camera.id);
+    const unAssignedCameras = camerasList.filter(
+        (el) => !assignedCamerasId.includes(el.id)
+    );
+
     const columns = [
         {
             title: "Camera",
             dataIndex: "name",
             key: "name",
-            render: (text, params) =>  <div className="dot"><Badge status={params.status ? "success" : "error"} /><p>{text}</p></div>
+            render: (text, params) => (
+                <div className="dot">
+                    <Badge status={params.status ? "success" : "error"} />
+                    <p>{text}</p>
+                </div>
+            ),
         },
         {
             title: "IP",
@@ -66,7 +91,51 @@ const ScheduleDetails = React.memo(() => {
             title: "",
             dataIndex: "asign",
             key: "asign",
-            render: (el, params) => <Button onClick={() => dispatch(assignScheduleToCam(id, { status: true, cameras: [ params.id]}))}>Assign</Button>
+            render: (el, params) => (
+                <Button
+                className="unassign-camera"
+                    onClick={() =>
+                        dispatch(unAssignCameraSchedule(params.id, id))
+                    }
+                >
+                    Unassign
+                </Button>
+            ),
+        },
+    ];
+
+    const columns2 = [
+        {
+            title: "Camera",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "IP",
+            dataIndex: "ip",
+            key: "ip",
+        },
+        {
+            title: "Login",
+            dataIndex: "login",
+            key: "login",
+        },
+        {
+            title: "Password",
+            dataIndex: "password",
+            key: "password",
+        },
+        {
+            title: "",
+            dataIndex: "asign",
+            key: "asign",
+            render: (el, params) => (
+                <Button className="assign-camera"
+                    onClick={() => dispatch(asignCameraSchedule(params.id, id))}
+                >
+                    Assign
+                </Button>
+            ),
         },
     ];
 
@@ -75,7 +144,15 @@ const ScheduleDetails = React.memo(() => {
         key: el.camera.id,
         created_at: dateConvert(el.camera.created_at),
         updated_at: dateConvert(el.camera.updated_at),
-        status: el.status
+        status: el.status,
+    }));
+
+    const data2 = unAssignedCameras.map((el) => ({
+        ...el,
+        key: el.id,
+        created_at: dateConvert(el.created_at),
+        updated_at: dateConvert(el.updated_at),
+        status: el.status,
     }));
 
     return (
@@ -99,7 +176,11 @@ const ScheduleDetails = React.memo(() => {
                         </span>
                         <span>
                             <p>Start Day:</p>
-                            <p>{currentSchedule.start_day ? daysOfWeek[currentSchedule.start_day] : "—"}</p>
+                            <p>
+                                {currentSchedule.start_day
+                                    ? daysOfWeek[currentSchedule.start_day]
+                                    : "—"}
+                            </p>
                         </span>
                         <span>
                             <p>Start Hour:</p>
@@ -107,7 +188,11 @@ const ScheduleDetails = React.memo(() => {
                         </span>
                         <span>
                             <p>End Day:</p>
-                            <p>{currentSchedule.end_day ? daysOfWeek[currentSchedule.end_day] : "—"}</p>
+                            <p>
+                                {currentSchedule.end_day
+                                    ? daysOfWeek[currentSchedule.end_day]
+                                    : "—"}
+                            </p>
                         </span>
                         <span>
                             <p>End Hour:</p>
@@ -139,6 +224,16 @@ const ScheduleDetails = React.memo(() => {
                     <Table
                         columns={columns}
                         dataSource={data}
+                        pagination={false}
+                        bordered
+                    />
+                    <br />
+                    <div className="cameras-title">
+                        <h2>Unassigned Cameras</h2>
+                    </div>
+                    <Table
+                        columns={columns2}
+                        dataSource={data2}
                         pagination={false}
                         bordered
                     />

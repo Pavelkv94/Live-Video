@@ -32,3 +32,22 @@
 .schedule-card.inactive-schedule .schedule-status {
     color: #cf1322;
 }
+.add-camera-schedule {
+    height: 440px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+}
+.add-camera-schedule:hover {
+    transform: scale(1.05);
+    transition: 0.5s;
+    cursor: pointer;
+}
+.add-camera-schedule img {
+    width: 200px;
+    opacity: 0.5;
+}
+.add-camera-schedule img:hover {
+    opacity: 0.8;
+}

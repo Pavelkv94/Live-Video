@@ -34,3 +34,14 @@
 .dot p {
     margin: 0;
 }
+
+.schedule-details section .ant-table-cell:last-child {
+    width: 200px;
+    text-align: center;
+}
+.assign-camera {
+color: green;
+}
+.unassign-camera {
+    color: red;
+}

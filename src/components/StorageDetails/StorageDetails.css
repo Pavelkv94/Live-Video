@@ -21,9 +21,11 @@
 }
 .storage-details section .ant-table-cell:nth-child(2) {
     width: 200px;
+    text-align: center;
 }
 .storage-details section .ant-table-cell:nth-child(3) {
     width: 200px;
+    text-align: center;
 }
 
 .bucket-title {
