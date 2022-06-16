@@ -16,7 +16,6 @@ import {
     updateStorage,
 } from "../../redux/storagesReducer";
 import {
-    daysOfWeek,
     fields,
     initialBucket,
     initialCamera,
@@ -55,7 +54,7 @@ export const CustomModal = React.memo(
             "Thursday",
             "Friday",
             "Saturday",
-            "Sunday"
+            "Sunday",
         ];
 
         useEffect(() => {
@@ -75,7 +74,7 @@ export const CustomModal = React.memo(
                 : dispatch(fetchBucketsAction([]));
         }, [cameraData]);
 
-        console.log(scheduleData) //!========================
+        // console.log(scheduleData) //!========================
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
@@ -120,8 +119,13 @@ export const CustomModal = React.memo(
         //         {el}
         //     </Option>
         // ));
+        const optionsStoragesTypes = ["IBA/S3", "Amazon/S3"].map((el) => (
+            <Option key={el}>{el}</Option>
+        ));
 
-        const optionsDaysOfWeek = daysOfWeekArray.map((el, index) =>  <Option key={index+1}>{el}</Option>);
+        const optionsDaysOfWeek = daysOfWeekArray.map((el, index) => (
+            <Option key={index + 1}>{el}</Option>
+        ));
 
         const optionsBucket = bucketsList.map((el) => (
             <Option key={el.id}>{el.name}</Option>
@@ -231,6 +235,40 @@ export const CustomModal = React.memo(
                 );
         };
 
+        const storageFields = (key) => {
+            if (key === "storage_type") {
+                return (
+                    <Select
+                        allowClear
+                        style={{
+                            width: "100%",
+                        }}
+                        placeholder="Please select"
+                        defaultValue={cameraData[key]}
+                        onChange={(value) => {
+                            setStorageData({
+                                ...storageData,
+                                [key]: value,
+                            });
+                        }}
+                    >
+                        {optionsStoragesTypes}
+                    </Select>
+                );
+            } else
+                return (
+                    <Input
+                        value={storageData[key]}
+                        onChange={(e) => {
+                            setStorageData({
+                                ...storageData,
+                                [key]: e.currentTarget.value,
+                            });
+                        }}
+                    />
+                );
+        };
+
         return (
             <Modal
                 title="Create/Edit"
@@ -267,17 +305,7 @@ export const CustomModal = React.memo(
                         {(flag === "create_camera" || flag === "edit_camera") &&
                             camerasFields(el.key)}
                         {(flag === "create_storage" ||
-                            flag === "edit_storage") && (
-                            <Input
-                                value={storageData[el.key]}
-                                onChange={(e) => {
-                                    setStorageData({
-                                        ...storageData,
-                                        [el.key]: e.currentTarget.value,
-                                    });
-                                }}
-                            />
-                        )}
+                            flag === "edit_storage") && storageFields(el.key)}
                         {(flag === "create_schedule" ||
                             flag === "edit_schedule") &&
                             scedulesFields(el.key)}
