@@ -79,7 +79,7 @@ export const CustomModal = React.memo(
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
             } else if (flag === "edit_camera") {
-                dispatch(updateCamera(cameraData, cameraData.id, user.id));
+                dispatch(updateCamera(cameraData, cameraData.id));
             } else if (flag === "create_storage") {
                 dispatch(createStorage(storageData, user.id));
             } else if (flag === "edit_storage") {

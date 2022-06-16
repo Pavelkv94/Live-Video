@@ -240,13 +240,13 @@ const ScheduleDetails = React.memo(() => {
                 </section>
             </div>
 
-            <CustomModal
+            {open && <CustomModal
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
                 setFlag={setFlag}
                 checkedElement={currentSchedule}
-            />
+            />}
         </div>
     );
 });

@@ -62,7 +62,7 @@ const assignSchedulesToCamAction = (payload) => ({
 export const assignScheduleToCam = (cameraId, scheduleId, payload) => (
     dispatch
 ) => {
-    console.log(payload);
+
     const response = updateData(
         ActionTypes.assignedCamerasUrl(scheduleId),
         {},
@@ -71,6 +71,7 @@ export const assignScheduleToCam = (cameraId, scheduleId, payload) => (
 
     response.then(
         (res) => {
+            console.log(res)
             dispatch(assignSchedulesToCamAction(res.data));
             dispatch(fetchAssignedCameras(scheduleId));
             dispatch(fetchCameraSchedules(cameraId));

@@ -95,13 +95,13 @@ const updateCameraAction = (payload) => ({
     payload,
 });
 
-export const updateCamera = (payload, id, userId) => (dispatch) => {
-    const response = updateData(ActionTypes.camerasUrl(id), {}, payload);
+export const updateCamera = (payload, cameraId) => (dispatch) => {
+    const response = updateData(ActionTypes.camerasUrl(cameraId), {}, payload);
 
     response.then(
         (res) => {
             dispatch(updateCameraAction(res.data));
-            dispatch(fetchCameras(userId));
+            dispatch(fetchCamera(cameraId));
             message.success("Success!");
         },
         (err) =>
@@ -181,6 +181,7 @@ export const asignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
         (res) => {
             dispatch(asignCameraScheduleAction(res.data));
             dispatch(fetchAssignedCameras(scheduleId));
+            dispatch(fetchCameraSchedules(cameraId))
             message.success("Success!");
         },
         (err) =>

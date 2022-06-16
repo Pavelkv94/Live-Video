@@ -84,15 +84,14 @@ const CamerasList = React.memo(() => {
                     onClick={() => showModal("create_camera")}
                 />
             </section>
-            <Table columns={columns} dataSource={data} />
+            <Table columns={columns} dataSource={data} pagination={data.length > 9} />
 
-            <CustomModal
+            {open && <CustomModal
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
                 setFlag={setFlag}
-                // checkedElement={checkedCamera}
-            />
+            />}
         </div>
     );
 });

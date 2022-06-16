@@ -85,13 +85,13 @@ export const LiveTab = ({ currentCamera, setTab }) => {
                 </section>
             </div>
 
-            <CustomModal
+            {open && <CustomModal
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
                 setFlag={setFlag}
                 checkedElement={currentCamera}
-            />
+            />}
             <DeleteModal
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}

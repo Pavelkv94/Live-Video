@@ -220,13 +220,13 @@ const StorageDetails = React.memo(() => {
                 callback={deleteBucket}
                 id={checkedBucket.id}
             />
-            <CustomModal
+             {open && <CustomModal
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
                 setFlag={setFlag}
                 checkedElement={checkedElement}
-            />
+            />}
         </div>
     );
 });

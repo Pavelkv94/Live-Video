@@ -7,8 +7,9 @@ import { fetchCameraSchedules } from "../../../redux/camerasReducer";
 import { dateConvert } from "../../../utils/dateConvert";
 import { daysOfWeek } from "../../general/initialData";
 import { assignScheduleToCam } from "../../../redux/schedulesReducer";
-import { FileAddOutlined } from "@ant-design/icons";
-import addIcon from "../../../assets/img/add-circle.svg"
+import addIcon from "../../../assets/img/add-circle.svg";
+import { useState } from "react";
+import { AddModalSchedule } from "./AddModalSchedule";
 
 export const CameraSchedules = () => {
     const { id } = useParams();
@@ -16,6 +17,8 @@ export const CameraSchedules = () => {
     const camerasSchedules = useSelector(
         (state) => state.camerasReducer.camerasSchedules
     );
+
+    const [openAddModal, setOpenAddModal] = useState(false);
 
     useEffect(() => {
         dispatch(fetchCameraSchedules(id));
@@ -28,6 +31,7 @@ export const CameraSchedules = () => {
                 cameras: [cameraId],
             })
         );
+
     const unAssignFromCamera = (cameraId, scheduleId) =>
         dispatch(
             assignScheduleToCam(cameraId, scheduleId, {
@@ -36,13 +40,43 @@ export const CameraSchedules = () => {
             })
         );
 
+    const scheduleParams = [
+        { title: "Job Name:", value: "job_name" },
+        { title: "Duration:", value: "duration" },
+        { title: "Period:", value: "period" },
+        { title: "Start Hour:", value: "start_day" },
+        { title: "Start Day:", value: "start_hour" },
+        { title: "End Day:", value: "end_day" },
+        { title: "End Hour:", value: "end_hour" },
+        { title: "Created:", value: "created_at" },
+        { title: "Updated:", value: "updated_at" },
+    ];
+
+    //todo refactoring
+    const showScheduleParams = (schedule) =>
+        scheduleParams.map((el, index) => (
+            <span key={index}>
+                <p>{el.title}</p>
+                <p>
+                    {el.value === "created_at" || el.value === "updated_at"
+                        ? dateConvert(schedule[el.value])
+                        : schedule[el.value]}
+                </p>
+            </span>
+        ));
+
+
+    const camerasSchedulesId = camerasSchedules.map((el) => el.schedule.id);
+
     const displayCameraSchedules = [
         ...camerasSchedules,
         { schedule: { id: "empty", name: "empty_rec" } },
     ].map((el) =>
         el.schedule.name === "empty_rec" ? (
             <Col span={6} key={el.schedule.id}>
-                <Card className="add-camera-schedule"><img src={addIcon} alt="addIcon" /></Card>
+                <Card className="add-camera-schedule">
+                    <img src={addIcon} alt="addIcon" onClick={() => setOpenAddModal(true)}/>
+                </Card>
             </Col>
         ) : (
             <Col span={6} key={el.schedule.id}>
@@ -127,6 +161,7 @@ export const CameraSchedules = () => {
     return (
         <div>
             <Row gutter={16}>{displayCameraSchedules}</Row>
+            {openAddModal && <AddModalSchedule openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} camerasSchedulesId={camerasSchedulesId}/>}
         </div>
     );
 };
