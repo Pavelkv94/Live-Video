@@ -11,7 +11,6 @@ const SchedulesList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState("default");
-    // const [checkedStorage, setCheckedStorage] = useState({});
 
     const user = useSelector((state) => state.authReducer.user);
     const schedulesList = useSelector(
@@ -81,7 +80,6 @@ const SchedulesList = React.memo(() => {
                 setOpen={setOpen}
                 flag={flag}
                 setFlag={setFlag}
-                // checkedElement={checkedStorage}
             />
         </div>
     );

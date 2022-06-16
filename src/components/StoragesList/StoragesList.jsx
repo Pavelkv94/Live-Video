@@ -118,6 +118,7 @@ const StoragesList = React.memo(() => {
                 open={open}
                 setOpen={setOpen}
                 flag={flag}
+                setFlag={setFlag}
                 checkedElement={checkedStorage}
             />
 

@@ -40,11 +40,33 @@ const fetchAssignedCamerasAction = (payload) => ({
     payload: payload,
 });
 
-export const fetchAssignedCameras = (id) => (dispatch) => {
-    const response = fetchData(ActionTypes.assignedCamerasUrl(id), {}, {});
+export const fetchAssignedCameras = (scheduleId) => (dispatch) => {
+    const response = fetchData(ActionTypes.assignedCamerasUrl(scheduleId), {}, {});
 
     response.then(
         (res) => dispatch(fetchAssignedCamerasAction(res.data)),
+        (err) => console.log(err)
+    );
+};
+
+const assignSchedulesToCamAction = (payload) => ({
+    type: ActionTypes.IS_ENABLE_SCHEDULE,
+    payload: payload,
+});
+
+export const assignScheduleToCam = (scheduleId, payload) => (dispatch) => {
+    const response = updateData(
+        ActionTypes.assignedCamerasUrl(scheduleId),
+        {},
+        payload
+    );
+
+    response.then(
+        (res) => {
+            dispatch(assignSchedulesToCamAction(res.data));
+            dispatch(fetchAssignedCameras(scheduleId));
+            message.success("Success!");
+        },
         (err) => console.log(err)
     );
 };
@@ -58,7 +80,9 @@ export const fetchSchedule = (id) => (dispatch) => {
     const response = fetchData(ActionTypes.scheduleUrl(id), {}, {});
 
     response.then(
-        (res) => dispatch(fetchScheduleAction(res.data)),
+        (res) => {
+            dispatch(fetchScheduleAction(res.data));
+        },
         (err) => console.log(err)
     );
 };

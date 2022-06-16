@@ -17,8 +17,8 @@ export const initialSchedule = {
     duration: "0",
     period: "0",
     name: "",
-    start_day: "",
-    end_day: "",
+    start_day: null,
+    end_day: null,
     start_hour: "",
     end_hour: "",
     cameras: [],
@@ -78,3 +78,13 @@ export const fields = {
     ],
     create_bucket: [{ label: "Name", key: "name" }],
 };
+
+export const daysOfWeek = {
+    "1": "Monday",
+    "2": "Tuesday",
+    "3" : "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday",
+    "7": "Sunday"
+}

@@ -16,6 +16,7 @@ import {
     updateStorage,
 } from "../../redux/storagesReducer";
 import {
+    daysOfWeek,
     fields,
     initialBucket,
     initialCamera,
@@ -29,7 +30,7 @@ const { Option } = Select;
 
 export const CustomModal = React.memo(
     ({ open, setOpen, flag, setFlag, checkedElement }) => {
-        const {id} = useParams();
+        const { id } = useParams();
         const dispatch = useDispatch();
         const user = useSelector((state) => state.authReducer.user);
         const camerasList = useSelector(
@@ -47,12 +48,21 @@ export const CustomModal = React.memo(
         const [scheduleData, setScheduleData] = useState(initialSchedule);
         const [bucketData, setBucketData] = useState(initialBucket);
 
+        const daysOfWeekArray = [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+        ];
+
         useEffect(() => {
             flag === "edit_camera" && setCameraData(checkedElement);
             flag === "edit_storage" && setStorageData(checkedElement);
             flag === "edit_schedule" && setScheduleData(checkedElement);
             flag === "create_schedule" && dispatch(fetchCameras(user.id));
-
         }, [flag]);
 
         useEffect(() => {
@@ -60,10 +70,12 @@ export const CustomModal = React.memo(
         }, []);
 
         useEffect(() => {
-            cameraData.storage_id ? dispatch(fetchBuckets(cameraData.storage_id)) : dispatch(fetchBucketsAction([]))
+            cameraData.storage_id
+                ? dispatch(fetchBuckets(cameraData.storage_id))
+                : dispatch(fetchBucketsAction([]));
         }, [cameraData]);
 
-        // console.log(cameraData) //!========================
+        console.log(scheduleData) //!========================
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
@@ -74,9 +86,9 @@ export const CustomModal = React.memo(
             } else if (flag === "edit_storage") {
                 dispatch(updateStorage(storageData, storageData.id, user.id));
             } else if (flag === "create_schedule") {
-                dispatch(updateSchedule(scheduleData, user.id));
+                dispatch(createSchedule(scheduleData, user.id));
             } else if (flag === "edit_schedule") {
-                dispatch(createSchedule(scheduleData, id));
+                dispatch(updateSchedule(scheduleData, id));
             } else if (flag === "create_bucket") {
                 dispatch(createBucket(bucketData, id));
             }
@@ -84,7 +96,7 @@ export const CustomModal = React.memo(
             setCameraData(initialCamera);
             setStorageData(initialStorage);
             setScheduleData(initialSchedule);
-            setBucketData(initialBucket)
+            setBucketData(initialBucket);
             setOpen(false);
         };
 
@@ -92,8 +104,8 @@ export const CustomModal = React.memo(
             setCameraData(initialCamera);
             setStorageData(initialStorage);
             setScheduleData(initialSchedule);
-            setBucketData(initialBucket)
-            setFlag('default')
+            setBucketData(initialBucket);
+            setFlag("default");
             setOpen(false);
         };
 
@@ -103,11 +115,14 @@ export const CustomModal = React.memo(
         const optionsStorages = storagesList.map((el) => (
             <Option key={el.id}>{el.name}</Option>
         ));
-        const optionsStatus = ["disabled", "recording"].map((el) => (
-            <Option key={el} className={`option-${el}`}>
-                {el}
-            </Option>
-        ));
+        // const optionsStatus = ["disabled", "recording"].map((el) => (
+        //     <Option key={el} className={`option-${el}`}>
+        //         {el}
+        //     </Option>
+        // ));
+
+        const optionsDaysOfWeek = daysOfWeekArray.map((el, index) =>  <Option key={index+1}>{el}</Option>);
+
         const optionsBucket = bucketsList.map((el) => (
             <Option key={el.id}>{el.name}</Option>
         ));
@@ -148,7 +163,27 @@ export const CustomModal = React.memo(
                         }}
                     />
                 );
-            }  else
+            } else if (key === "start_day" || key === "end_day") {
+                return (
+                    <Select
+                        allowClear
+                        style={{
+                            width: "100%",
+                        }}
+                        className="cameras-select"
+                        placeholder="Please select"
+                        defaultValue={scheduleData[key]}
+                        onChange={(value) =>
+                            setScheduleData({
+                                ...scheduleData,
+                                [key]: value,
+                            })
+                        }
+                    >
+                        {optionsDaysOfWeek}
+                    </Select>
+                );
+            } else
                 return (
                     <Input
                         value={scheduleData[key]}
@@ -199,7 +234,11 @@ export const CustomModal = React.memo(
         return (
             <Modal
                 title="Create/Edit"
-                className={flag === "create_schedule" || flag === "edit_schedule" ? "schedules-modal" : ""}
+                className={
+                    flag === "create_schedule" || flag === "edit_schedule"
+                        ? "schedules-modal"
+                        : ""
+                }
                 visible={open}
                 onOk={() => handleOk(flag)}
                 onCancel={handleCancel}
@@ -215,7 +254,8 @@ export const CustomModal = React.memo(
                     >
                         {flag === "create_camera" ||
                         flag === "create_storage" ||
-                        flag === "create_schedule" || "create_bucket"
+                        flag === "create_schedule" ||
+                        "create_bucket"
                             ? "Create"
                             : "Save"}
                     </Button>,
@@ -241,15 +281,17 @@ export const CustomModal = React.memo(
                         {(flag === "create_schedule" ||
                             flag === "edit_schedule") &&
                             scedulesFields(el.key)}
-                        { flag === "create_bucket" && <Input
-                        value={bucketData[el.key]}
-                        onChange={(e) => {
-                            setBucketData({
-                                ...bucketData,
-                                [el.key]: e.currentTarget.value,
-                            });
-                        }}
-                    />}
+                        {flag === "create_bucket" && (
+                            <Input
+                                value={bucketData[el.key]}
+                                onChange={(e) => {
+                                    setBucketData({
+                                        ...bucketData,
+                                        [el.key]: e.currentTarget.value,
+                                    });
+                                }}
+                            />
+                        )}
                     </div>
                 ))}
             </Modal>

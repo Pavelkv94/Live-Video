@@ -5,6 +5,7 @@ import { Button, Card, Col, Row } from "antd";
 import "./CameraSchedules.css";
 import { asignCameraSchedule, fetchCameraSchedules, unAssignCameraSchedule } from "../../../redux/camerasReducer";
 import { dateConvert } from "../../../utils/dateConvert";
+import { daysOfWeek } from "../../general/initialData";
 
 export const CameraSchedules = () => {
     const { id } = useParams();
@@ -47,19 +48,19 @@ export const CameraSchedules = () => {
                 </span>
                 <span>
                     <p>Start Hour:</p>
-                    <p>{el.schedule.start_day}</p>
+                    <p>{el.schedule.start_day ? daysOfWeek[el.schedule.start_day] : "—"}</p>
                 </span>
                 <span>
                     <p>Start Day:</p>
-                    <p>{el.schedule.start_houe}</p>
+                    <p>{el.schedule.start_houe || "—"}</p>
                 </span>
                 <span>
                     <p>End Day:</p>
-                    <p>{el.schedule.end_day}</p>
+                    <p>{el.schedule.end_day ? daysOfWeek[el.schedule.end_day] : "—"}</p>
                 </span>
                 <span>
                     <p>End Hour:</p>
-                    <p>{el.schedule.end_hour}</p>
+                    <p>{el.schedule.end_hour || "—"}</p>
                 </span>
                 <span>
                     <p>Created:</p>

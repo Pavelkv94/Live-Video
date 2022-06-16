@@ -160,7 +160,7 @@ const StorageDetails = React.memo(() => {
                         </span>
                         <span>
                             <p>Access key:</p>
-                            <p>
+                            <p className="access-key">
                                 {currentStorage.aws_access_key_id}
                                 <CopyClipboard
                                     value={currentStorage.aws_access_key_id}
@@ -169,7 +169,7 @@ const StorageDetails = React.memo(() => {
                         </span>
                         <span>
                             <p>Secret Access key:</p>
-                            <p>
+                            <p className="access-key">
                                 {currentStorage.aws_secret_access_key}
                                 <CopyClipboard
                                     value={currentStorage.aws_secret_access_key}

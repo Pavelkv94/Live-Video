@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import "./ScheduleDetails.css";
 import {
+    assignScheduleToCam,
     fetchAssignedCameras,
     fetchSchedule,
 } from "../../redux/schedulesReducer";
 import { dateConvert } from "../../utils/dateConvert";
 import { CustomModal } from "../general/CustomModal";
+import { daysOfWeek } from "../general/initialData";
 
 const ScheduleDetails = React.memo(() => {
     const { id } = useParams();
@@ -64,9 +66,10 @@ const ScheduleDetails = React.memo(() => {
             title: "",
             dataIndex: "asign",
             key: "asign",
-            render: () => <Button>Assign</Button>
+            render: (el, params) => <Button onClick={() => dispatch(assignScheduleToCam(id, { status: true, cameras: [ params.id]}))}>Assign</Button>
         },
     ];
+
     const data = assignedCameras.map((el) => ({
         ...el.camera,
         key: el.camera.id,
@@ -96,19 +99,19 @@ const ScheduleDetails = React.memo(() => {
                         </span>
                         <span>
                             <p>Start Day:</p>
-                            <p>{currentSchedule.start_day}</p>
+                            <p>{currentSchedule.start_day ? daysOfWeek[currentSchedule.start_day] : "—"}</p>
                         </span>
                         <span>
                             <p>Start Hour:</p>
-                            <p>{currentSchedule.start_hour}</p>
+                            <p>{currentSchedule.start_hour || "—"}</p>
                         </span>
                         <span>
                             <p>End Day:</p>
-                            <p>{currentSchedule.end_day}</p>
+                            <p>{currentSchedule.end_day ? daysOfWeek[currentSchedule.end_day] : "—"}</p>
                         </span>
                         <span>
                             <p>End Hour:</p>
-                            <p>{currentSchedule.end_hour}</p>
+                            <p>{currentSchedule.end_hour || "—"}</p>
                         </span>
                         <span>
                             <p>Created:</p>

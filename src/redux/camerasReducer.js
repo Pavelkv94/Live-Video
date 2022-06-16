@@ -204,7 +204,7 @@ export const unAssignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
     response.then(
         (res) => {
             dispatch(unAssignCameraScheduleAction("fulfilled"));
-            // dispatch(fetchCameras(userId));
+            dispatch(fetchCameraSchedules(cameraId));
             message.success("Success!");
         },
         (err) =>  message.error(
