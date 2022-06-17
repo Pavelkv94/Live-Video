@@ -15,14 +15,6 @@ export const Login = () => {
     const users = useSelector((state) => state.authReducer.users);
     const user = useSelector((state) => state.authReducer.user);
 
-    // const errorMessage = (err) => {
-    //     message.error(err);
-    // };
-
-    // useEffect(() => {
-    //     error !== null && error !== undefined && errorMessage(error);
-    // }, [error]);
-
     const onFinish = (values) => {
         let currentUser = users.filter((e) => e.email === values.email)[0];
         if (currentUser) {
