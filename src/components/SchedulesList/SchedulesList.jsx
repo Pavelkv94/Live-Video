@@ -1,16 +1,19 @@
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { fetchSchedules } from "../../redux/schedulesReducer";
+import { deleteSchedule, fetchSchedules } from "../../redux/schedulesReducer";
 import { dateConvert } from "../../utils/dateConvert";
 import { CustomModal } from "../general/CustomModal";
+import { DeleteModal } from "../general/DeleteModal";
 
 const SchedulesList = React.memo(() => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [flag, setFlag] = useState("default");
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [checkedSchedule, setCheckedSchedule] = useState({});
 
     const user = useSelector((state) => state.authReducer.user);
     const schedulesList = useSelector(
@@ -55,6 +58,21 @@ const SchedulesList = React.memo(() => {
             dataIndex: "created_at",
             key: "created_at",
         },
+        {
+            title: "",
+            dataIndex: "delete",
+            key: "delete",
+            render: (el, params) =>  <Button
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => {
+                setIsModalVisible(true);
+                setCheckedSchedule(params);
+            }}
+        />
+        },
+
+        
     ];
     const data = schedulesList.map((el) => ({
         ...el,
@@ -81,6 +99,13 @@ const SchedulesList = React.memo(() => {
                 flag={flag}
                 setFlag={setFlag}
             />}
+            <DeleteModal
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+                item="schedule"
+                callback={deleteSchedule}
+                id={checkedSchedule.key}
+            />
         </div>
     );
 });

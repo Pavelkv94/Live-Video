@@ -1,4 +1,13 @@
-import { Button, Input, InputNumber, Modal, Select } from "antd";
+import {
+    Button,
+    Checkbox,
+    Col,
+    Input,
+    InputNumber,
+    Modal,
+    Row,
+    Select,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,7 +20,6 @@ import {
     createBucket,
     createStorage,
     fetchBuckets,
-    fetchBucketsAction,
     fetchStorages,
     updateStorage,
 } from "../../redux/storagesReducer";
@@ -19,6 +27,7 @@ import {
     fields,
     initialBucket,
     initialCamera,
+    initialCheckedDays,
     initialSchedule,
     initialStorage,
 } from "./initialData";
@@ -46,22 +55,25 @@ export const CustomModal = React.memo(
         const [storageData, setStorageData] = useState(initialStorage);
         const [scheduleData, setScheduleData] = useState(initialSchedule);
         const [bucketData, setBucketData] = useState(initialBucket);
-
-        const daysOfWeekArray = [
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday",
-        ];
+        const [checkedDays, setCheckedDays] = useState(initialCheckedDays);
 
         useEffect(() => {
             flag === "edit_camera" && setCameraData(checkedElement);
             flag === "edit_storage" && setStorageData(checkedElement);
             flag === "edit_schedule" && setScheduleData(checkedElement);
+            flag === "edit_schedule" &&
+                checkedElement.days &&
+                setCheckedDays(
+                    checkedDays.map((el) => ({
+                        ...el,
+                        checked: checkedElement.days
+                            .split(",")
+                            .map((d) => +d)
+                            .includes(el.num),
+                    }))
+                );
             flag === "create_schedule" && dispatch(fetchCameras(user.id));
+            console.log(checkedElement);
         }, [flag]);
 
         useEffect(() => {
@@ -69,12 +81,13 @@ export const CustomModal = React.memo(
         }, []);
 
         useEffect(() => {
-            cameraData.storage_id
-                ? dispatch(fetchBuckets(cameraData.storage_id))
-                : dispatch(fetchBucketsAction([]));
-        }, [cameraData]);
+            (flag === "edit_camera" || flag === "create_camera") &&
+                cameraData.storage_id &&
+                dispatch(fetchBuckets(cameraData.storage_id));
+        }, [cameraData, flag]);
 
-        // console.log(scheduleData) //!========================
+        // console.log(scheduleData)
+        // console.log(checkedDays); //!========================
         const handleOk = (flag) => {
             if (flag === "create_camera") {
                 dispatch(createCamera(cameraData, user.id));
@@ -85,9 +98,53 @@ export const CustomModal = React.memo(
             } else if (flag === "edit_storage") {
                 dispatch(updateStorage(storageData, storageData.id, user.id));
             } else if (flag === "create_schedule") {
-                dispatch(createSchedule(scheduleData, user.id));
+                dispatch(
+                    createSchedule(
+                        {
+                            ...scheduleData,
+                            days:
+                                scheduleData.days === ""
+                                    ? null
+                                    : checkedDays
+                                          .filter((el) => el.checked)
+                                          .map((el) => el.num)
+                                          .join(","),
+                            start_hour:
+                                scheduleData.start_hour === ""
+                                    ? null
+                                    : scheduleData.start_hour,
+                            end_hour:
+                                scheduleData.end_hour === ""
+                                    ? null
+                                    : scheduleData.end_hour,
+                        },
+                        user.id
+                    )
+                );
             } else if (flag === "edit_schedule") {
-                dispatch(updateSchedule(scheduleData, id));
+                dispatch(
+                    updateSchedule(
+                        {
+                            ...scheduleData,
+                            days:
+                                scheduleData.days === ""
+                                    ? null
+                                    : checkedDays
+                                          .filter((el) => el.checked)
+                                          .map((el) => el.num)
+                                          .join(","),
+                            start_hour:
+                                scheduleData.start_hour === ""
+                                    ? null
+                                    : scheduleData.start_hour,
+                            end_hour:
+                                scheduleData.end_hour === ""
+                                    ? null
+                                    : scheduleData.end_hour,
+                        },
+                        id
+                    )
+                );
             } else if (flag === "create_bucket") {
                 dispatch(createBucket(bucketData, id));
             }
@@ -123,13 +180,31 @@ export const CustomModal = React.memo(
             <Option key={el}>{el}</Option>
         ));
 
-        const optionsDaysOfWeek = daysOfWeekArray.map((el, index) => (
-            <Option key={index + 1}>{el}</Option>
-        ));
-
         const optionsBucket = bucketsList.map((el) => (
             <Option key={el.id}>{el.name}</Option>
         ));
+
+        const onChangeDays = (e) =>
+            setCheckedDays(
+                checkedDays.map((el) =>
+                    el.num === e.target.value
+                        ? { ...el, checked: e.target.checked }
+                        : el
+                )
+            );
+
+        const disableButton = (flag) => {
+            switch (flag) {
+                case "create_schedule": {
+                    if (scheduleData.name == "") {
+                        return true;
+                    } else return false;
+                }
+
+                default:
+                    return false;
+            }
+        };
 
         const scedulesFields = (key) => {
             if (key === "cameras") {
@@ -156,7 +231,6 @@ export const CustomModal = React.memo(
             } else if (key === "duration" || key === "period") {
                 return (
                     <InputNumber
-                        // style={{ width: "40%" }}
                         min={0}
                         value={scheduleData[key]}
                         onChange={(value) => {
@@ -167,25 +241,23 @@ export const CustomModal = React.memo(
                         }}
                     />
                 );
-            } else if (key === "start_day" || key === "end_day") {
+            } else if (key === "days") {
                 return (
-                    <Select
-                        allowClear
-                        style={{
-                            width: "100%",
-                        }}
-                        className="cameras-select"
-                        placeholder="Please select"
-                        defaultValue={scheduleData[key]}
-                        onChange={(value) =>
-                            setScheduleData({
-                                ...scheduleData,
-                                [key]: value,
-                            })
-                        }
-                    >
-                        {optionsDaysOfWeek}
-                    </Select>
+                    <div>
+                        <Row>
+                            {checkedDays.map((day, index) => (
+                                <Col span={8} key={index}>
+                                    <Checkbox
+                                        value={day.num}
+                                        checked={day.checked}
+                                        onChange={onChangeDays}
+                                    >
+                                        {day.day}
+                                    </Checkbox>
+                                </Col>
+                            ))}
+                        </Row>
+                    </div>
                 );
             } else
                 return (
@@ -271,7 +343,14 @@ export const CustomModal = React.memo(
 
         return (
             <Modal
-                title="Create/Edit"
+                title={
+                    flag === "create_camera" ||
+                    flag === "create_storage" ||
+                    flag === "create_schedule" ||
+                    flag === "create_bucket"
+                        ? "Create"
+                        : "Edit"
+                }
                 className={
                     flag === "create_schedule" || flag === "edit_schedule"
                         ? "schedules-modal"
@@ -288,14 +367,14 @@ export const CustomModal = React.memo(
                         key="ok"
                         onClick={() => handleOk(flag)}
                         type="primary"
-                        // disabled={!regData.password || !regData.email}
+                        disabled={disableButton(flag)}
                     >
                         {flag === "create_camera" ||
                         flag === "create_storage" ||
                         flag === "create_schedule" ||
-                        "create_bucket"
+                        flag === "create_bucket"
                             ? "Create"
-                            : "Save"}
+                            : "Edit"}
                     </Button>,
                 ]}
             >
@@ -305,7 +384,8 @@ export const CustomModal = React.memo(
                         {(flag === "create_camera" || flag === "edit_camera") &&
                             camerasFields(el.key)}
                         {(flag === "create_storage" ||
-                            flag === "edit_storage") && storageFields(el.key)}
+                            flag === "edit_storage") &&
+                            storageFields(el.key)}
                         {(flag === "create_schedule" ||
                             flag === "edit_schedule") &&
                             scedulesFields(el.key)}

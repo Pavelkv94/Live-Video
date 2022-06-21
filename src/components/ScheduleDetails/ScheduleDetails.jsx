@@ -175,24 +175,16 @@ const ScheduleDetails = React.memo(() => {
                             <p>{currentSchedule.period}</p>
                         </span>
                         <span>
-                            <p>Start Day:</p>
+                            <p>Days:</p>
                             <p>
-                                {currentSchedule.start_day
-                                    ? daysOfWeek[currentSchedule.start_day]
+                                {currentSchedule.days
+                                    ? currentSchedule.days.split(',').map((el, index) => <i key={index}>{daysOfWeek[el]} <br/></i>)
                                     : "—"}
                             </p>
                         </span>
                         <span>
                             <p>Start Hour:</p>
                             <p>{currentSchedule.start_hour || "—"}</p>
-                        </span>
-                        <span>
-                            <p>End Day:</p>
-                            <p>
-                                {currentSchedule.end_day
-                                    ? daysOfWeek[currentSchedule.end_day]
-                                    : "—"}
-                            </p>
                         </span>
                         <span>
                             <p>End Hour:</p>

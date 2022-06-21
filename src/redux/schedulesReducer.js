@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 import { fetchCameraSchedules } from "./camerasReducer.js";
@@ -62,7 +62,6 @@ const assignSchedulesToCamAction = (payload) => ({
 export const assignScheduleToCam = (cameraId, scheduleId, payload) => (
     dispatch
 ) => {
-
     const response = updateData(
         ActionTypes.assignedCamerasUrl(scheduleId),
         {},
@@ -71,11 +70,21 @@ export const assignScheduleToCam = (cameraId, scheduleId, payload) => (
 
     response.then(
         (res) => {
-            console.log(res)
-            dispatch(assignSchedulesToCamAction(res.data));
-            dispatch(fetchAssignedCameras(scheduleId));
-            dispatch(fetchCameraSchedules(cameraId));
-            message.success("Success!");
+            console.log("asdasdasdasdadsadadasd", res.data);
+            if (res.data.errors < 1 || !res.data.errors) {
+                dispatch(assignSchedulesToCamAction(res.data));
+                dispatch(fetchAssignedCameras(scheduleId));
+                dispatch(fetchCameraSchedules(cameraId));
+                message.success("Success!");
+                
+            } else {
+                res.data.errors.map(el =>   notification.open({
+                    message: 'Notification Title',
+                    description: `${el.message}: ${el.cameras.map(e => e.test).join(', ')}`,
+                  }))
+                
+               
+            }
         },
         (err) => console.log(err)
     );
@@ -129,7 +138,7 @@ export const updateSchedule = (payload, id, userId) => (dispatch) => {
     response.then(
         (res) => {
             dispatch(updateScheduleAction(res.data));
-            dispatch(fetchSchedules(userId));
+            dispatch(fetchSchedule(id));
             message.success("Success!");
         },
         (err) =>

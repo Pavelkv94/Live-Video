@@ -17,8 +17,7 @@ export const initialSchedule = {
     duration: "0",
     period: "0",
     name: "",
-    start_day: null,
-    end_day: null,
+    days: "",
     start_hour: "",
     end_hour: "",
     cameras: [],
@@ -61,8 +60,7 @@ export const fields = {
         { label: "Name", key: "name" },
         { label: "Duration, s", key: "duration" },
         { label: "Period, s", key: "period" },
-        { label: "Start Day", key: "start_day" },
-        { label: "End Day", key: "end_day" },
+        { label: "Days", key: "days" },
         { label: "Start Hour", key: "start_hour" },
         { label: "End Hour", key: "end_hour" },
         { label: "Cameras", key: "cameras" },
@@ -71,8 +69,7 @@ export const fields = {
         { label: "Name", key: "name" },
         { label: "Duration, s", key: "duration" },
         { label: "Period, s", key: "period" },
-        { label: "Start Day", key: "start_day" },
-        { label: "End Day", key: "end_day" },
+        { label: "Days", key: "days" },
         { label: "Start Hour", key: "start_hour" },
         { label: "End Hour", key: "end_hour" },
     ],
@@ -87,4 +84,24 @@ export const daysOfWeek = {
     "5": "Friday",
     "6": "Saturday",
     "7": "Sunday"
-}
+};
+
+export const daysOfWeekArray = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+];
+
+export const initialCheckedDays = [
+   {num: 1, checked: false, day: "Monday"},
+   {num: 2, checked: false, day: "Tuesday"},
+   {num: 3, checked: false, day: "Wednesday"},
+   {num: 4, checked: false, day: "Thursday"},
+   {num: 5, checked: false, day: "Friday"},
+   {num: 6, checked: false, day: "Saturday"},
+   {num: 7, checked: false, day: "Sunday"}
+]

@@ -9,6 +9,7 @@
 }
 .schedule-card {
     min-width: 235px;
+    height: 100%;
 }
 .schedule-card p {
     margin: 4px 0;
@@ -19,6 +20,9 @@
 }
 .schedule-card span p:first-child {
     font-weight: 600;
+}
+.schedule-card span p {
+    text-align: end;
 }
 .schedule-card.active-schedule .ant-card-head {
     border-color: #b7eb8f;
@@ -33,10 +37,10 @@
     color: #cf1322;
 }
 .add-camera-schedule {
-    height: 440px;
+    height: 100%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center !important;
     transition: 0.5s;
 }
 .add-camera-schedule:hover {
@@ -50,4 +54,9 @@
 }
 .add-camera-schedule img:hover {
     opacity: 0.8;
+}
+.camera-schedules .ant-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

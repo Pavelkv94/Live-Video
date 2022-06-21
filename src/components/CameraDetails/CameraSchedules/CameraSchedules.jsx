@@ -5,7 +5,7 @@ import { Button, Card, Col, Empty, Row } from "antd";
 import "./CameraSchedules.css";
 import { fetchCameraSchedules } from "../../../redux/camerasReducer";
 import { dateConvert } from "../../../utils/dateConvert";
-import { daysOfWeek } from "../../general/initialData";
+import { daysOfWeek, daysOfWeekArray } from "../../general/initialData";
 import { assignScheduleToCam } from "../../../redux/schedulesReducer";
 import addIcon from "../../../assets/img/add-circle.svg";
 import { useState } from "react";
@@ -65,7 +65,6 @@ export const CameraSchedules = () => {
             </span>
         ));
 
-
     const camerasSchedulesId = camerasSchedules.map((el) => el.schedule.id);
 
     const displayCameraSchedules = [
@@ -73,13 +72,17 @@ export const CameraSchedules = () => {
         { schedule: { id: "empty", name: "empty_rec" } },
     ].map((el) =>
         el.schedule.name === "empty_rec" ? (
-            <Col span={6} key={el.schedule.id}>
+            <Col span={6} key={el.schedule.id} style={{margin: '10px 0'}}>
                 <Card className="add-camera-schedule">
-                    <img src={addIcon} alt="addIcon" onClick={() => setOpenAddModal(true)}/>
+                    <img
+                        src={addIcon}
+                        alt="addIcon"
+                        onClick={() => setOpenAddModal(true)}
+                    />
                 </Card>
             </Col>
         ) : (
-            <Col span={6} key={el.schedule.id}>
+            <Col span={6} key={el.schedule.id} style={{margin: '10px 0'}}>
                 <Card
                     title={el.schedule.name}
                     className={`schedule-card ${
@@ -130,17 +133,20 @@ export const CameraSchedules = () => {
                         </p>
                     </span>
                     <span>
-                        <p>Start Day:</p>
-                        <p>{el.schedule.start_houe || "—"}</p>
-                    </span>
-                    <span>
-                        <p>End Day:</p>
+                        <p>Days:</p>
                         <p>
-                            {el.schedule.end_day
-                                ? daysOfWeek[el.schedule.end_day]
+                            {el.schedule.days
+                                ? el.schedule.days
+                                      .split(",")
+                                      .map((el, index) => (
+                                          <i key={index}>
+                                              {daysOfWeek[el]} <br />
+                                          </i>
+                                      ))
                                 : "—"}
                         </p>
                     </span>
+
                     <span>
                         <p>End Hour:</p>
                         <p>{el.schedule.end_hour || "—"}</p>
@@ -159,9 +165,15 @@ export const CameraSchedules = () => {
     );
 
     return (
-        <div>
+        <div className="camera-schedules">
             <Row gutter={16}>{displayCameraSchedules}</Row>
-            {openAddModal && <AddModalSchedule openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} camerasSchedulesId={camerasSchedulesId}/>}
+            {openAddModal && (
+                <AddModalSchedule
+                    openAddModal={openAddModal}
+                    setOpenAddModal={setOpenAddModal}
+                    camerasSchedulesId={camerasSchedulesId}
+                />
+            )}
         </div>
     );
 };

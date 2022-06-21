@@ -15,6 +15,9 @@
     display: flex;
     justify-content: space-between;
 }
+.schedule-details section span  p {
+text-align: end;
+}
 .schedule-details section span p:first-child {
     font-weight: 600;
     word-wrap: break-word;
