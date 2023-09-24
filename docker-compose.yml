@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: front_oms-app:latest
+    container_name: front_oms
+    ports:
+      - "3000:3000"

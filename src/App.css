@@ -1,0 +1,114 @@
+#components-layout-demo-top-side-2 .logo {
+    float: left;
+    width: 120px;
+    height: 31px;
+    margin: 16px 24px 16px 0;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.ant-row-rtl #components-layout-demo-top-side-2 .logo {
+    float: right;
+    margin: 16px 0 16px 24px;
+}
+
+.site-layout-background {
+    background: #fff;
+}
+.header {
+    display: flex;
+    justify-content: flex-end;
+}
+h2 {
+    margin: 0;
+}
+
+.common-list section h2 {
+    color: black;
+    margin: 0;
+}
+.common-list section {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.common-list section button {
+    margin-left: 20px;
+}
+.register-field {
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.register-field p {
+    margin-bottom: 0px;
+}
+.ant-page-header {
+    padding: 0px;
+}
+.logout {
+    width: 400px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.logout h2 {
+    color: white;
+}
+
+section.head-section {
+    display: flex;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+section.head-section button {
+    margin-left: 20px;
+}
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: black;
+    margin-right: 10px;
+}
+
+.nav-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.icon-container {
+    position: relative;
+}
+
+.circle {
+    position: absolute;
+    top: 4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.leaflet-container {
+    width: 100%;
+    height: 100%;
+}
+
+
+@media print {
+    .ant-layout-header, .ant-layout-sider, .reports-short .ant-page-header,.reports-short .ant-card {
+        display: none;
+    }
+}

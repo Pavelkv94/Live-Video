@@ -1,0 +1,78 @@
+.routes {
+    .head-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .head-section-title {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .routes-content {
+        display: flex;
+
+        .routes-form {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            max-width: 500px;
+
+            .ant-picker.ant-picker-range {
+                float: right;
+            }
+            .ant-form-item .ant-form-item-row {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .trackers-table {
+            margin-right: 20px;
+            .ant-spin-nested-loading {
+                width: 550px;
+            }
+
+            .sub-row-item {
+                display: flex;
+                justify-content: space-between;
+
+                button {
+                    margin-bottom: 20px;
+                }
+
+                .tracker-details-item {
+                    display: flex;
+                    align-items: center;
+
+                    p {
+                        margin: 0;
+                        margin-left: 4px;
+                    }
+                }
+            }
+        }
+
+        .routes-details {
+            margin-top: 20px;
+    
+            .ant-card-body {
+                display: flex;
+                flex-direction: column;
+    
+                .tabs-header {
+                    margin: 0;
+                    align-self: flex-end
+                }
+            }
+        }
+        
+    }
+    .map-content {
+        height: calc(60vh);
+        width: 100%;
+    }
+
+   
+}

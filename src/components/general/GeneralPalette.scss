@@ -1,0 +1,45 @@
+.palette-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid #d9d9d9;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: #ffffff;
+
+    &:hover {
+        border-color: #1677ff;
+    }
+
+    .color-picker {
+        position: relative;
+        border-radius: 4px;
+        width: 24px;
+        height: 24px;
+        box-shadow: inset 0 0 1px 0 rgba(0, 0, 0, 0.25);
+        background-image: conic-gradient(#eee 0 25%, transparent 0 50%, #eee 0 75%, transparent 0);
+        background-size: 50% 50%;
+    }
+}
+
+.colors {
+
+    display: flex;
+    flex-wrap: wrap;
+    width: 204px;
+
+    .color-item {
+        width: 24px;
+        height: 24px;
+        border: 1px solid #d9d9d9;
+        margin: 4px;
+        cursor: pointer;
+
+        &:hover {
+            border-color: black;
+        }
+    }
+}

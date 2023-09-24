@@ -1,0 +1,35 @@
+.admin-users {
+    .actions {
+        display: flex;
+        
+        button {
+        margin: 4px;
+    }}
+    .admin-users-info-wrap {
+        display: flex;
+        justify-content: space-between;
+        .admin-users-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            .admin-users-item {
+                margin: 10px;
+
+                span {
+                    margin: 0 2px;
+
+                    &:first-child {
+                        color: rgba(0, 0, 0, 0.45);
+                    }
+                }
+            }
+        }
+        .admin-users-actions {
+            display: flex;
+            flex-direction: column;
+
+            button {
+                margin: 10px;
+            }
+        }
+    }
+}

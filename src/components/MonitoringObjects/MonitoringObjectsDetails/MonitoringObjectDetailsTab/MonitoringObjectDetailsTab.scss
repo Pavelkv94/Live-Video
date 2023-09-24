@@ -1,0 +1,23 @@
+.monitoring-details-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+
+    .info {
+        height: min-content;
+    }
+    .actions {
+        display: flex;
+        button {
+            margin-right: 20px;
+        }
+    }
+
+    .object-image {
+        max-width: 500px;
+        height: 300px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
+}

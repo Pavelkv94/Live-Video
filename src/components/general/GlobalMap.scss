@@ -1,0 +1,36 @@
+.map-wrapper {
+    width: 100%;
+    border: 1px solid #001529;
+    position: relative;
+
+    .expand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: #001529;
+        position: absolute;
+        left: 0;
+        top: 55%;
+        z-index: 999;
+        border-radius: 0 10px 10px 0px;
+        
+        ymaps {
+            width: 100%;
+        }
+        &:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        svg {
+            fill: white;
+            font-size: 32px;
+        }
+    }
+}
+.marker-label {
+    color: red; /* Change the color here */
+  }
+

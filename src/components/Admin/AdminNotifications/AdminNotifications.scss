@@ -1,0 +1,45 @@
+.select-all {
+    margin: 4px 0 10px 0;
+
+    button {
+        margin-right: 6px;
+    }
+
+
+}
+
+.admin-notifications {
+    .admin-notifications-actions button {
+        margin: 4px;
+    }
+
+    .note-users {
+        display: flex;
+        flex-wrap: wrap;
+
+        .note-users-item {
+            margin: 10px;
+            border-radius: 5px;
+            background-color: white;
+
+            span {
+                margin: 0 2px;
+
+                &:first-child {
+                    color: rgba(0, 0, 0, 0.45)
+                }
+            }
+        }
+    }
+
+    .admin-notif-item {
+
+        span {
+            margin-right: 4px;
+        }
+        display: flex;
+        align-items: center;
+    }
+
+}
+

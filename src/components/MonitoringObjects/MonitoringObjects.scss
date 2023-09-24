@@ -1,0 +1,71 @@
+.monitoring {
+    .monitoring-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 260px);
+        gap: 1rem;
+        margin-bottom: 20px;
+
+        .cover-img {
+            position: relative;
+
+            .shared-icon {
+                position: absolute;
+                font-size: 24px;
+                border: 1px solid black;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 5px;
+                background-color: white;
+                right: 10px;
+                top: 10px;
+            }
+
+            .object-image {
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                height: 170px;
+            }
+        }
+    }
+}
+
+.shared-block {
+    .shared-select {
+        margin: 0 10px;
+    }
+
+    .shared-item {
+        display: flex;
+        align-items: center;
+        margin: 6px 0;
+
+        .shared-remove-btn {
+            border-color: red;
+            color: red;
+        }
+    }
+
+    .add-shared-user {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+
+        p {
+            color: rgba(0, 0, 0, 0.38);
+            margin: 0;
+            margin-left: 5px;
+        }
+        svg {
+            fill: rgba(0, 0, 0, 0.38);
+        }
+    }
+}
+
+.photo-wrap {
+   width: min-content;
+}

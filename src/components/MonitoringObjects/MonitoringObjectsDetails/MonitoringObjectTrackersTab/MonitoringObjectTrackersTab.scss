@@ -1,0 +1,25 @@
+.monitoring-trackers-content {
+    display: flex;
+
+    .monitoring-trackers-table {
+        margin-right: 20px;
+        .ant-spin-nested-loading {
+            width: 500px;
+
+        }
+        .sub-row-item {
+            display: flex;
+            justify-content: space-between;
+
+            .tracker-details-item {
+                display: flex;
+                align-items: center;
+
+                p {
+                    margin: 0;
+                    margin-left: 4px;
+                }
+            }
+        }
+    }
+}

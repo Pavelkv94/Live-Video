@@ -1,0 +1,43 @@
+.profile {
+    .card {
+
+        .fields-container {
+            display: flex;
+            justify-content: space-around;
+
+            .buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+
+                button:first-child {
+                    margin-right: 20px;
+                }
+            }
+        }
+
+        section {
+            margin-top: 15px;
+            min-width: 260px;
+
+            input {
+                margin-top: 5px;
+            }
+
+        }
+
+        .fields-wrapper {
+            width: 25%;
+
+            label {
+                margin-right: 20px;
+            }
+
+            .switch {
+                height: 35px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}

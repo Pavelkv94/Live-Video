@@ -1,0 +1,86 @@
+.login-page {
+    background: linear-gradient(to bottom right, rgb(50, 0, 252), rgb(0, 0, 0));
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h2 {
+        color: white;
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        width: 350px;
+    }
+
+    .field {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .field input {
+        width: 500px;
+    }
+
+    .field .ant-form-item-label>label {
+        font-size: 18px;
+    }
+
+    .field .ant-form-item-label>label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+        display: none;
+    }
+
+    .login-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+
+    form .ant-row.ant-form-item-row {
+        width: 300px;
+    }
+
+    .loader {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 20px;
+    }
+
+}
+.reg-container {
+    display: flex;
+    justify-content: space-around;
+
+    .fields-wrapper {
+        width: 200px;
+    }
+
+    .switch {
+        height: 54px;
+        display: flex;
+        align-items: center;
+    }
+
+    .ant-switch {
+        margin-left: 7px;
+    }
+
+
+}
