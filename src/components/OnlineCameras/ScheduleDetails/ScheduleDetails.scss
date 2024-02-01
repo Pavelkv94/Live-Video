@@ -1,16 +1,20 @@
 .schedule-details {
     display: flex;
+    @media screen and (max-width: 800px) {
+    flex-direction: column;
+    }
 }
 .schedule-details section {
     margin: 20px;
     /* max-width: 800px; */
+    @media screen and (max-width: 800px) {
+        margin: 20px 0;
+        }
 }
 .schedule-details section:first-child {
-    width: 30%;
+    min-width: 340px;
 }
-.schedule-details section:last-child {
-    width: 70%;
-}
+
 .schedule-details section span {
     display: flex;
     justify-content: space-between;

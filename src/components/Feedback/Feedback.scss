@@ -7,5 +7,17 @@
         .fields-wrap {
             display: flex;
         }
+
+        @media screen and (max-width: 800px) {
+            grid-template-columns: 1fr;
+            row-gap: 20px;
+
+            .ant-form-item {
+                margin-bottom: 10px;
+            }
+        }
+        .ant-card {
+            min-width: 300px;
+        }
     }
 }

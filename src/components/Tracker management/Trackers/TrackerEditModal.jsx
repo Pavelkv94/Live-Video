@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { GeneralModalWrapper } from "../../general/GeneralModalWrapper";
-import { Checkbox, Input, Select } from "antd";
+import { Input, Select } from "antd";
 import { initalTrackerFields } from "../../general/initialData";
 import GeneralPalette from "../../general/GeneralPalette";
 import { useSelector } from "react-redux";
@@ -20,11 +20,15 @@ const TrackerEditModal = ({ t, open, item, handleCancel, handleSubmit, setItem, 
         setItem({ ...item, [field]: e.currentTarget.value });
     };
 
-    const handleCheckbox = (field) => (e) => {
-        setItem({ ...item, [field]: e.target.checked });
-    };
+    const trackerModelsOptions = trackerModels.map((el) => ({ value: el.id, label: el.name }));
 
-    const trackerModelsOptions = trackerModels.map((el) => ({ value: el.trmodel_id, label: el.trmodel_name }));
+    const disableModalButton =
+        item.name.trim() === "" ||
+        !item.tracker_model_id.toString().trim() === "" ||
+        item.average_consumption.toString().trim() === "" ||
+        item.imei.toString().trim().trim() === "" ||
+        item.stopping_time.toString().trim().trim() === "" ||
+        item.parking_time.toString().trim().trim() === "";
 
     return (
         <GeneralModalWrapper
@@ -33,28 +37,24 @@ const TrackerEditModal = ({ t, open, item, handleCancel, handleSubmit, setItem, 
             action={editMode ? "edit" : "create"}
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
-            disableButton={!item.trobject_name || !item.trobject_ref_trmodel}
-            title={editMode ? t("trackerManagement.editTracker") : t("trackerManagement.createTracker")}
+            disableButton={disableModalButton}
+            title={editMode ? t("edit_tracker") : t("create_tracker")}
             width={600}
         >
             <div className="tracker-modal-content">
                 {initalTrackerFields.map((el, i) => (
                     <div key={i} className="register-field">
                         <label>{t(el.label)}:</label>
-                        {el.name === "trobject_public" ? (
-                            <Checkbox checked={item[el.name]} onChange={handleCheckbox(el.name)}>
-                                {t("trackerManagement.makePublic")}
-                            </Checkbox>
-                        ) : el.name === "trobject_ref_trmodel" ? (
+                        {el.name === "tracker_model_id" ? (
                             <Select
                                 allowClear
                                 style={{
                                     width: "100%"
                                 }}
-                                placeholder={t("common.selectTracker")}
-                                defaultValue={null}
+                                placeholder={t("select_tracker")}
+                                defaultValue={editMode ? item.tracker_model_id : null}
                                 onChange={(value) => {
-                                    setItem({ ...item, trobject_ref_trmodel: value });
+                                    setItem({ ...item, tracker_model_id: value });
                                 }}
                                 options={trackerModelsOptions}
                             />
@@ -64,7 +64,7 @@ const TrackerEditModal = ({ t, open, item, handleCancel, handleSubmit, setItem, 
                     </div>
                 ))}
                 <div className="register-field">
-                    <label>{t("trackerManagement.trackerColor")}:</label>
+                    <label>{t("tracker_color")}:</label>
                     <GeneralPalette value={colorHex} setValue={setColorHex} />
                 </div>
             </div>

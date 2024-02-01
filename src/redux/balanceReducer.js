@@ -1,6 +1,7 @@
 import { message } from "antd";
-import { fetchData } from "../api/api.js";
+import { fetchData, createData, deleteData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
+import { fetchAllUsers } from "./usersReducer.js";
 
 const initialState = {
     balanceOperations: []
@@ -8,11 +9,13 @@ const initialState = {
 
 export function balanceReducer(state = initialState, action) {
     switch (action.type) {
-    case ActionTypes.FETCH_BALANCE_OPERATIONS:
-        return { ...state, balanceOperations: action.payload };
-
-    default:
-        return state;
+        case ActionTypes.FETCH_BALANCE_OPERATIONS:
+            return { ...state, balanceOperations: action.payload };
+        case ActionTypes.ADMIN_ROLL_BACK_OPERATION:
+            return { ...state, balanceOperations: {...state.balanceOperations, payments: state.balanceOperations.payments.filter(el => el.id !== action.id)} };
+    
+        default:
+            return state;
     }
 }
 
@@ -21,42 +24,41 @@ const fetcBalanceOperationsAction = (payload) => ({
     payload
 });
 
-export const fetchBalanceOperations = (user_id) => (dispatch) => {
-    const response = fetchData(ActionTypes.balanceUrl(user_id), {}, {});
+export const fetchBalanceOperations = () => (dispatch) => {
+    const response = fetchData(ActionTypes.balanceUrl(), {}, {});
 
     response.then(
         (res) => dispatch(fetcBalanceOperationsAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => (err.response.data ? err.response.data.map((el) => message.error(el)) : message.error("Error"))
     );
 };
 
-// const createTariffAction = (payload) => ({
-//     type: ActionTypes.CREATE_TARIFF,
-//     payload
-// });
+// eslint-disable-next-line no-unused-vars
+export const refillBalanceFromAdmin = (user_id, amount, mode) => (dispatch) => {
+    //!user_id
+    const response = createData(ActionTypes.refillBalanceFromAdminUrl(user_id), {}, { amount: amount });
 
-// export const createTariff = (payload) => (dispatch) => {
-//     const response = createData(ActionTypes.tariffsUrl(), {}, payload);
+    response.then(
+        () => {
+            mode === "fromBalance" ? dispatch(fetchBalanceOperations()) : dispatch(fetchAllUsers());
+            message.success("Success")},
+        (err) => (err.response.data ? err.response.data.map((el) => message.error(el)) : message.error("Error"))
+    );
+};
 
-//     response.then(
-//         (res) => {
-//             dispatch(createTariffAction(res.data.tariff));
-//             message.success("Success!");
-//         },
-//         (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
-//     );
-// };
+const rollBackOperationFromAdminAC = (id) => ({
+    type: ActionTypes.ADMIN_ROLL_BACK_OPERATION,
+    id
+});
 
-// const createTariffAndAssignAction = (payload) => ({
-//     type: ActionTypes.CREATE_TARIFF_AND_ASSIGN,
-//     payload
-// });
+export const rollBackOperationFromAdmin = (payment_id) => (dispatch) => {
+    const response = deleteData(ActionTypes.balanceOperationUrl(payment_id), {});
 
-// export const createTariffAndAssign = (user_id, payload) => (dispatch) => {
-//     const response = createData(ActionTypes.tariffsAssignUrl(user_id), {}, payload);
-
-//     response.then(
-//         (res) => dispatch(createTariffAndAssignAction(res.data.tariff)),
-//         (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
-//     );
-// };
+    response.then(
+        () => {
+            dispatch(rollBackOperationFromAdminAC(payment_id));
+            message.success("Success");
+        },
+        (err) => (err.response.data ? err.response.data.map((el) => message.error(el)) : message.error("Error"))
+    );
+};

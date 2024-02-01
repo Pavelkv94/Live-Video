@@ -15,6 +15,9 @@ export function schedulesReducer(state = initialState, action) {
         return { ...state, schedulesList: action.payload };
     case ActionTypes.FETCH_SCHEDULE:
         return { ...state, currentSchedule: action.payload };
+    case ActionTypes.UPDATE_SCHEDULE:
+        return { ...state, currentSchedule: action.payload };
+        
     case ActionTypes.FETCH_ASSIGN_CAMERAS:
         return { ...state, assignedCameras: action.payload };
     default:
@@ -32,7 +35,7 @@ export const fetchSchedules = () => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchSchedulesAction(res.schedules)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -46,7 +49,7 @@ export const fetchAssignedCameras = (scheduleId) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchAssignedCamerasAction(res.cameras)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -74,7 +77,7 @@ export const assignScheduleToCam = (cameraId, scheduleId, payload) => (dispatch)
                 );
             }
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -90,7 +93,7 @@ export const fetchSchedule = (id) => (dispatch) => {
         (res) => {
             dispatch(fetchScheduleAction(res.schedule));
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -108,7 +111,7 @@ export const createSchedule = (payload) => (dispatch) => {
             dispatch(fetchSchedules());
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -122,11 +125,10 @@ export const updateSchedule = (payload, id) => (dispatch) => {
 
     response.then(
         (res) => {
-            dispatch(updateScheduleAction(res.data));
-            dispatch(fetchSchedule(id));
+            dispatch(updateScheduleAction(res.schedule));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -138,6 +140,6 @@ export const deleteSchedule = (schedule_id) => (dispatch) => {
             dispatch(fetchSchedules());
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };

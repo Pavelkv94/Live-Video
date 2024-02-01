@@ -11,11 +11,12 @@ import { LiveTab } from "./LiveTab/LiveTab";
 import { PageHeader } from "@ant-design/pro-layout";
 import { ShareAltOutlined } from "@ant-design/icons";
 
-const CameraDetails = ({ t }) => {
+const CameraDetails = ({ t, isMobileSize }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const currentCamera = useSelector((state) => state.camerasReducer.currentCamera);
     const deleteCameraStatus = useSelector((state) => state.camerasReducer.deleteCameraStatus);
+    const user = useSelector((state) => state.authReducer.user);
 
     const [tab, setTab] = useState("1");
 
@@ -36,18 +37,18 @@ const CameraDetails = ({ t }) => {
     const items = [
         {
             key: "1",
-            label: t("onlineCameras.live"),
-            children: <LiveTab currentCamera={currentCamera} setTab={onChangeTab} t={t} />
+            label: t("live"),
+            children: <LiveTab currentCamera={currentCamera} setTab={onChangeTab} t={t} isMobileSize={isMobileSize}/>
         },
         {
             key: "2",
-            label: t("onlineCameras.cameraSchedules"),
-            children: <CameraSchedules t={t} />
+            label: t("camera_schedules"),
+            children: <CameraSchedules t={t} isMobileSize={isMobileSize}/>
         },
         {
             key: "3",
-            label: t("onlineCameras.history"),
-            children: <History t={t} />
+            label: t("history"),
+            children: <History t={t} isMobileSize={isMobileSize}/>
         }
     ];
 
@@ -58,9 +59,8 @@ const CameraDetails = ({ t }) => {
                     className="site-page-header"
                     onBack={() => window.history.back()}
                     title={currentCamera.name}
-                    // title={"Home"}
                 />
-                {currentCamera.shared_to && currentCamera.shared_to.length > 0 && (
+                {currentCamera.user_id !== user.id && (
                     <div className="shared-object">
                         <ShareAltOutlined />
                     </div>

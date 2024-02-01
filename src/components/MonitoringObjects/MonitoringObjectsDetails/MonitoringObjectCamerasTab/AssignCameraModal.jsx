@@ -34,7 +34,7 @@ const AssignCameraModal = ({ t, open, handleCancel, objId }) => {
     return (
         <GeneralModalWrapper
             t={t}
-            title={t("onlineCameras.assignCamera")}
+            title={t("assign_camera")}
             open={open}
             action={"assign"}
             handleSubmit={handleAssignCamera}
@@ -42,16 +42,16 @@ const AssignCameraModal = ({ t, open, handleCancel, objId }) => {
             disableButton={isEmpty}
         >
             {isEmpty ? (
-                <p>{t("onlineCameras.dontHaveFreeCameras")}</p>
+                <p>{t("dont_have_free_cameras")}</p>
             ) : (
                 <>
-                    <label>{t("onlineCameras.selectAvailableCameras")}:</label>
+                    <label>{t("select_available_cameras")}:</label>
                     <Select
                         allowClear
                         style={{
                             width: "100%"
                         }}
-                        placeholder={t("common.selectCamera")}
+                        placeholder={t("select_camera")}
                         defaultValue={null}
                         onChange={(value) => setCheckedCamera(value)}
                         options={optionsCameras}

@@ -17,6 +17,7 @@ function App() {
     const displayMode = {
         cameras: "cameras",
         camerasDetails: "camerasDetails",
+        camReports: "camReports",
         storages: "storages",
         storagesDetails: "storageDetails",
         schedules: "schedules",
@@ -31,27 +32,29 @@ function App() {
         trReportDetDay: "trReportDetDay",
         trReportInfoStops: "trReportInfoStops",
         trReportDetDayInfoStops: "trReportDetDayInfoStops",
-        camerasReports: "camerasReports",
         trackers: "trackers",
         routes: "routes",
         feedback: "feedback",
         tariffs: "tariffs",
         notifications: "notifications",
         adminUsers: "adminUsers",
-        adminTariffs: "adminTariffs",
+        adminTariffsTrackers: "adminTariffsTrackers",
+        adminTariffsCameras: "adminTariffsCameras",
         adminNotifications: "adminNotifications",
-        adminEquipments: "adminEquipments"
+        adminEquipments: "adminEquipments",
+        adminProfile: "adminProfile"
+
     };
 
     useEffect(() => {
         const localUser = localStorage.getItem("user");
         localUser && dispatch(setCurrentUserAction(JSON.parse(localUser)));
     }, []);
-
+    //! валюты сделат ьнастройкой у админа
     return (
-        <div>
+        <div style={{minWidth: "360px"}}>
             <Routes>
-                <Route element={<Blocked status="404" title="404" message={t("common.doesntExist")}/>} path="*" />
+                <Route element={<Blocked status="404" title="404" message={t("doesnt_exist")}/>} path="*" />
                 <Route element={<Login t={t} />} path="/" />
                 <Route element={<LoginAdmin t={t} />} path="/loginAdmin" />
                 <Route element={<Main mode={displayMode.cameras} t={t} />} path="/cameras" />
@@ -60,7 +63,7 @@ function App() {
                 <Route element={<Main mode={displayMode.storagesDetails} t={t} />} path="storages/details/:id" />
                 <Route element={<Main mode={displayMode.schedules} t={t} />} path="/schedules" />
                 <Route element={<Main mode={displayMode.schedulesDetails} t={t} />} path="/schedules/details/:id" />
-                <Route element={<Main mode={displayMode.camerasReports} t={t} />} path="/camerasReports" />
+                <Route element={<Main mode={displayMode.camReports} t={t} />} path="/camReports" />
                 <Route element={<Main mode={displayMode.monitoring} t={t} />} path="/monitoring" />
                 <Route element={<Main mode={displayMode.monitoringDetails} t={t} />} path="/monitoring/details/:id" />
                 <Route element={<Main mode={displayMode.profile} t={t} />} path="/profile" />
@@ -77,9 +80,12 @@ function App() {
                 <Route element={<Main mode={displayMode.tariffs} t={t} />} path="/tariffs" />
                 <Route element={<Main mode={displayMode.notifications} t={t} />} path="/notifications" />
                 <Route element={<Main mode={displayMode.adminUsers} t={t} />} path="/adminUsers" />
-                <Route element={<Main mode={displayMode.adminTariffs} t={t} />} path="/adminTariffs" />
+                <Route element={<Main mode={displayMode.adminTariffsTrackers} t={t} />} path="/adminTariffsTrackers" />
+                <Route element={<Main mode={displayMode.adminTariffsCameras} t={t} />} path="/adminTariffsCameras" />
                 <Route element={<Main mode={displayMode.adminNotifications} t={t} />} path="/adminNotifications" />
                 <Route element={<Main mode={displayMode.adminEquipments} t={t} />} path="/adminEquipments" />
+                <Route element={<Main mode={displayMode.adminProfile} t={t} />} path="/adminProfile" />
+
             </Routes>
         </div>
     );

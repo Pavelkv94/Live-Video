@@ -1,8 +1,8 @@
 import { Button, Card, Divider, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addCameraSharing, deleteCamera, deleteCameraSharing, updateCamera, updateCameraSharing } from "../../../../redux/camerasReducer";
-import { dateConvert } from "../../../../utils/dateConvert";
+import { addCameraSharing, deleteCamera, deleteCameraSharing, fetchCameraSharings, updateCamera } from "../../../../redux/camerasReducer";
+import { dateConvert, isDateExpired } from "../../../../utils/dateConvert";
 import { DeleteModal } from "../../../general/DeleteModal";
 import "./LiveTab.scss";
 import { useNavigate } from "react-router";
@@ -12,7 +12,7 @@ import GeneralSharedModal from "../../../general/GeneralSharedModal";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import GeneraPermissionsModal from "../../../general/GeneraPermissionsModal";
 
-export const LiveTab = ({ currentCamera, setTab, t }) => {
+export const LiveTab = ({ currentCamera, setTab, t, isMobileSize }) => {
     // const currentCamera = mockCameras[0];
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -30,9 +30,12 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
 
     const storage = useSelector((state) => state.storagesReducer.currentStorage);
     const bucket = useSelector((state) => state.storagesReducer.currentBucket);
+    const cameraSharings = useSelector((state) => state.camerasReducer.cameraSharings);
+    const user = useSelector((state) => state.authReducer.user);
 
     useEffect(() => {
         currentCamera && setCameraData(currentCamera);
+        currentCamera.user_id === user.id && currentCamera.id && dispatch(fetchCameraSharings(currentCamera.id));
     }, [currentCamera]);
 
     // useEffect(() => {
@@ -48,7 +51,7 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
         dispatch(
             updateCamera(
                 {
-                    ip: cameraData.ip,
+                    ip_address: cameraData.ip_address,
                     login: cameraData.login,
                     password: cameraData.password,
                     name: cameraData.name,
@@ -73,7 +76,7 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
     };
 
     const handleSubmitDeleteSharedModal = () => {
-        dispatch(deleteCameraSharing(sharedUser.id));
+        dispatch(deleteCameraSharing(sharedUser.camera_id, sharedUser.id));
         setIsModalVisible(false);
     };
 
@@ -84,23 +87,24 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
     };
 
     const handleAddSharedUser = () => {
-        dispatch(addCameraSharing(sharedCamera, sharedUser));
+        dispatch(addCameraSharing(sharedCamera, { email: sharedUser.email, camera_id: sharedCamera, permissions: {edit: sharedUser.edit} }));
         handleCancelShared();
     };
 
     const handleEditSharedUser = () => {
-        dispatch(
-            updateCameraSharing(
-                {
-                    schedules_access: sharedUser.schedules_access,
-                    storage_access: sharedUser.storage_access,
-                    broadcast_access: sharedUser.broadcast_access,
-                    change_access: sharedUser.change_access,
-                    recorded_videos_manage_access: sharedUser.recorded_videos_manage_access
-                },
-                sharedUser.id
-            )
-        );
+        //! будет на бэке позже
+        // dispatch(
+        // updateCameraSharing(
+        //         {
+        //             schedules_access: sharedUser.schedules_access,
+        //             storage_access: sharedUser.storage_access,
+        //             broadcast_access: sharedUser.broadcast_access,
+        //             change_access: sharedUser.change_access,
+        //             recorded_videos_manage_access: sharedUser.recorded_videos_manage_access
+        //         },
+        //         sharedUser.id
+        // )
+        // );
         handleCancelShared();
     };
 
@@ -110,48 +114,48 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
     };
 
     const paramsData = [
-        { title: "Ip: ", value: currentCamera.ip || "—" },
-        { title: "Device Name: ", value: currentCamera.device_name || "—" },
-        { title: "MAC Address: ", value: currentCamera.mac_address || "—" },
-        { title: "Model: ", value: currentCamera.model || "—" },
-        { title: "Login: ", value: currentCamera.login || "—" },
-        { title: "Password: ", value: currentCamera.password || "—" },
-        { title: "Serial Number: ", value: currentCamera.serial_number || "—" },
-        { title: "Status: ", value: currentCamera.status || "—" },
+        { title: `${t("ip")}:`, value: currentCamera.ip_address || "—" },
+        { title: `${t("model")}:`, value: currentCamera.model || "—" },
+        // { title: "MAC Address: ", value: currentCamera.mac_address || "—" },
+        { title: `${t("login")}:`, value: currentCamera.login || "—" },
+        { title: `${t("password")}:`, value: currentCamera.password || "—" },
+        // { title: "Serial Number: ", value: currentCamera.serial_number || "—" },
+        // { title: `${t("status")}:`, value: currentCamera.status || "—" },
         {
-            title: "Created: ",
+            title: `${t("created")}:`,
             value: dateConvert(currentCamera.created_at) || "—"
         },
         {
-            title: "Updated: ",
-            value: dateConvert(currentCamera.updated_at) || "—"
+            title: `${t("paid_up_to")}:`,
+            value: dateConvert(currentCamera.paid_till) || "—"
         },
-        { title: "Storage: ", value: storage ? storage.name : "—" },
-        { title: "Bucket: ", value: bucket ? bucket.name : "—" }
-        // { title: "Storage: ", value: "S3" },
-        // { title: "Bucket: ", value: "Home Records" }
+        { title: `${t("storage")}:`, value: storage ? storage.name : "—" },
+        { title: `${t("bucket")}:`, value: bucket ? bucket.name : "—" }
     ];
 
     const params = paramsData.map((el, index) => (
         <span key={index} className="params-row">
             <p>{el.title}</p>
-            <p>{el.value}</p>
+            <p>
+                {el.value}
+                {el.title === "Paid up to:" && isDateExpired(currentCamera.paid_till) && <i style={{ color: "red" }}>{` (${t("expired")})`}</i>}
+            </p>
         </span>
     ));
 
-    const dataShared = currentCamera?.shared_to?.map((el) => ({
+    const dataShared = cameraSharings?.map((el, i) => ({
         ...el,
-        key: el.id
+        key: i
     }));
 
     const columnsShared = [
         {
-            title: t("common.userEmail"),
+            title: t("user_email"),
             dataIndex: "email",
             key: "email"
         },
         {
-            title: t("common.permissions"),
+            title: t("permissions"),
             dataIndex: "permissions",
             key: "permissions",
             render: (el, params) => (
@@ -162,13 +166,13 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
                             setCheckedSharedUser(params);
                         }}
                     >
-                        {t("common.showPermissions")}
+                        {t("show_permissions")}
                     </Button>
                 </div>
             )
         },
         {
-            title: t("common.actions"),
+            title: t("actions"),
             dataIndex: "",
             key: "actions",
             render: (el, params) => (
@@ -206,7 +210,7 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
                     {params}
                     <div className="camera-actions">
                         <Button type="dashed" onClick={() => setOpenEditCamera(true)}>
-                            {t("onlineCameras.editCamera")}
+                            {t("edit_camera")}
                         </Button>
                         {/* <Button
                             onClick={() => {
@@ -214,29 +218,31 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
                                 setOpenSharedModal(true);
                             }}
                         >
-                            {t("common.share")}
+                            {t("share")}
                         </Button> */}
                         <Button onClick={() => setTab("2")}>Set Schedules</Button>
-                        <Button
-                            onClick={() => {
-                                setDeleteModalMode("camera");
-                                setIsModalVisible(true);
-                            }}
-                            danger
-                            type="primary"
-                        >
-                            {t("onlineCameras.deleteCamera")}{" "}
-                        </Button>
+                        {currentCamera.user_id === user.id && (
+                            <Button
+                                onClick={() => {
+                                    setDeleteModalMode("camera");
+                                    setIsModalVisible(true);
+                                }}
+                                danger
+                                type="primary"
+                            >
+                                {t("delete_camera")}{" "}
+                            </Button>
+                        )}
                     </div>
                 </section>
             </div>
             <Divider />
-            <div className="camera-details-second-block">
-                <section></section>
-                <section>
-                    {
+            {currentCamera.user_id === user.id && (
+                <div className="camera-details-second-block">
+                    <section></section>
+                    <section>
                         <Card
-                            title={t("monitoringObjects.sharedTo")}
+                            title={t("shared_to")}
                             extra={
                                 <Button
                                     type="primary"
@@ -246,15 +252,15 @@ export const LiveTab = ({ currentCamera, setTab, t }) => {
                                         setOpenSharedModal(true);
                                     }}
                                 >
-                                    {t("monitoringObjects.addUser")}
+                                    {t("add_user")}
                                 </Button>
                             }
                         >
-                            <Table pagination={false} bordered columns={columnsShared} dataSource={dataShared} />
+                            <Table pagination={false} bordered columns={columnsShared} dataSource={dataShared} size={isMobileSize ? "small" : "middle"} />
                         </Card>
-                    }
-                </section>
-            </div>
+                    </section>
+                </div>
+            )}
 
             {openEditCamera && (
                 <CameraModal

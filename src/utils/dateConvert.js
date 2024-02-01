@@ -1,3 +1,25 @@
+// export function dateConvert(dateString) {
+//     // Parse the date string to extract its components
+//     const dateObj = new Date(dateString);
+//     const year = dateObj.getUTCFullYear();
+//     const month = dateObj.getUTCMonth() + 1; // Months are 0-based
+//     const day = dateObj.getUTCDate();
+//     const hour = dateObj.getUTCHours();
+//     const minute = dateObj.getUTCMinutes();
+
+//     // Create a UTC date using Date.UTC
+//     const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+
+//     // Format the date and time components
+//     const dd = String(utcDate.getUTCDate()).padStart(2, "0");
+//     const mm = String(utcDate.getUTCMonth() + 1).padStart(2, "0");
+//     const yyyy = utcDate.getUTCFullYear();
+//     const hh = String(utcDate.getUTCHours()).padStart(2, "0");
+//     const min = String(utcDate.getUTCMinutes()).padStart(2, "0");
+
+//     return `${dd}-${mm}-${yyyy}, ${hh}:${min}`;
+// }
+
 export function dateConvert(date) {
     const dataObj = new Date(date);
     const dd = String(dataObj.getDate()).padStart(2, "0");
@@ -32,6 +54,26 @@ export function dateDifference(from, to) {
 export function isDateExpired(date) {
     const today = new Date();
     const inputDate = new Date(date);
-  
+
     return inputDate < today;
 }
+
+export const formatDateForQuery = (date) => {
+    const isoDate = new Date(date);
+
+    const options = {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    };
+
+    const formattedDate = isoDate.toLocaleDateString("en-GB", options).replace(/\//g, ".").replace(",", "");
+    return formattedDate;
+};
+
+export const formatDateToUTC = (date) => {
+    const defaultDate = new Date(date);
+    return defaultDate.toISOString();
+};

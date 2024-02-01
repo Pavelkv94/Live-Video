@@ -24,15 +24,15 @@ const AssignTrackerModal = ({ t, open, handleCancel, objId }) => {
     };
     const optionsTrackers = trackersList.filter(el => !el.shared)
         .filter((obj1) => {
-            return !monitoringObjectTrackers.find((obj2) => obj1.trobject_id === obj2.trobject_id);
+            return !monitoringObjectTrackers.find((obj2) => obj1.id === obj2.id);
         })
-        .map((el) => ({ value: el.trobject_id, label: el.trobject_name }));
+        .map((el) => ({ value: el.id, label: el.name }));
     const isEmpty = optionsTrackers.length === 0;
 
     return (
         <GeneralModalWrapper
             t={t}
-            title={t("trackerManagement.assignTracker")}
+            title={t("assign_tracker")}
             open={open}
             action={"assign"}
             handleSubmit={handleAssignTracker}
@@ -40,16 +40,16 @@ const AssignTrackerModal = ({ t, open, handleCancel, objId }) => {
             disableButton={isEmpty}
         >
             {isEmpty ? (
-                <p>{t("trackerManagement.dontHaveFreeTrackers")}</p>
+                <p>{t("dont_have_free_trackers")}</p>
             ) : (
                 <>
-                    <label>{t("trackerManagement.selectAvailableTrackers")}:</label>
+                    <label>{t("select_available_trackers")}:</label>
                     <Select
                         allowClear
                         style={{
                             width: "100%"
                         }}
-                        placeholder={t("common.selectTracker")}
+                        placeholder={t("select_tracker")}
                         defaultValue={null}
                         onChange={(value) => setCheckedTracker(value)}
                         options={optionsTrackers}

@@ -28,7 +28,7 @@ export const fetchVideos = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchVideosAction(res.videos)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -42,7 +42,7 @@ export const fetchVideo = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchVideoAction(res.data)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -61,7 +61,7 @@ export const updateVideo = (payload, id, userId) => (dispatch) => {
             dispatch(fetchVideos(userId));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -73,6 +73,6 @@ export const deleteVideo = (id, userId) => (dispatch) => {
             dispatch(fetchVideos(userId));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };

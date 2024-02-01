@@ -10,7 +10,7 @@ import { asignCameraSchedule, fetchCameras, unAssignCameraSchedule } from "../..
 import { PageHeader } from "@ant-design/pro-layout";
 import SchedulesModal from "../SchedulesList/SchedulesModal";
 
-const ScheduleDetails = React.memo(({ t }) => {
+const ScheduleDetails = React.memo(({ t, isMobileSize }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const currentSchedule = useSelector((state) => state.schedulesReducer.currentSchedule);
@@ -76,7 +76,7 @@ const ScheduleDetails = React.memo(({ t }) => {
     // const unAssignedCameras = mockCameras.slice(-1);
     const columns = [
         {
-            title: t("onlineCameras.camera"),
+            title: t("camera"),
             dataIndex: "name",
             key: "name",
             render: (text, params) => (
@@ -87,17 +87,17 @@ const ScheduleDetails = React.memo(({ t }) => {
             )
         },
         {
-            title: "IP",
-            dataIndex: "ip",
-            key: "ip"
+            title: t("ip"),
+            dataIndex: "ip_address",
+            key: "ip_address"
         },
         {
-            title: t("onlineCameras.login"),
+            title: t("login"),
             dataIndex: "login",
             key: "login"
         },
         {
-            title: t("onlineCameras.password"),
+            title: t("password"),
             dataIndex: "password",
             key: "password"
         },
@@ -107,7 +107,7 @@ const ScheduleDetails = React.memo(({ t }) => {
             key: "asign",
             render: (el, params) => (
                 <Button className="unassign-camera" onClick={() => dispatch(unAssignCameraSchedule(params.id, id))}>
-                    {t("onlineCameras.unassign")}
+                    {t("unassign")}
                 </Button>
             )
         }
@@ -115,22 +115,22 @@ const ScheduleDetails = React.memo(({ t }) => {
 
     const columns2 = [
         {
-            title: t("onlineCameras.camera"),
+            title: t("camera"),
             dataIndex: "name",
             key: "name"
         },
         {
-            title: "IP",
-            dataIndex: "ip",
-            key: "ip"
+            title: t("ip"),
+            dataIndex: "ip_address",
+            key: "ip_address"
         },
         {
-            title: t("onlineCameras.login"),
+            title: t("login"),
             dataIndex: "login",
             key: "login"
         },
         {
-            title: t("onlineCameras.password"),
+            title: t("password"),
             dataIndex: "password",
             key: "password"
         },
@@ -140,7 +140,7 @@ const ScheduleDetails = React.memo(({ t }) => {
             key: "asign",
             render: (el, params) => (
                 <Button className="assign-camera" onClick={() => dispatch(asignCameraSchedule(params.id, id))}>
-                    {t("onlineCameras.assign")}
+                    {t("assign")}
                 </Button>
             )
         }
@@ -167,18 +167,18 @@ const ScheduleDetails = React.memo(({ t }) => {
             <PageHeader className="site-page-header" onBack={() => window.history.back()} title={currentSchedule.name} />
             <div className="schedule-details">
                 <section>
-                    <h2>{t("onlineCameras.scheduleDetails")}</h2>
+                    <h2>{t("schedule_details")}</h2>
                     <Card>
                         <span>
-                            <p>{t("onlineCameras.duration")}:</p>
+                            <p>{t("duration")}:</p>
                             <p>{currentSchedule.duration}</p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.period")}:</p>
+                            <p>{t("period")}:</p>
                             <p>{currentSchedule.period}</p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.days")}:</p>
+                            <p>{t("days")}:</p>
                             <p>
                                 {currentSchedule.days
                                     ? currentSchedule.days.split(",").map((el, index) => (
@@ -190,15 +190,15 @@ const ScheduleDetails = React.memo(({ t }) => {
                             </p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.startHour")}:</p>
+                            <p>{t("start_hour")}:</p>
                             <p>{currentSchedule.start_hour || "—"}</p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.endHour")}:</p>
+                            <p>{t("end_hour")}:</p>
                             <p>{currentSchedule.end_hour || "—"}</p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.created")}:</p>
+                            <p>{t("created")}:</p>
                             <p>{dateConvert(currentSchedule.created_at)}</p>
                         </span>
                         <span>
@@ -210,7 +210,7 @@ const ScheduleDetails = React.memo(({ t }) => {
                                         // setCheckedElement(currentSchedule);
                                     }}
                                 >
-                                    {t("common.edit")}
+                                    {t("edit")}
                                 </Button>
                             </span>
                         </span>
@@ -218,14 +218,14 @@ const ScheduleDetails = React.memo(({ t }) => {
                 </section>
                 <section>
                     <div className="cameras-title">
-                        <h2>{t("onlineCameras.assignedCameras")}</h2>
+                        <h2>{t("assigned_cameras")}</h2>
                     </div>
-                    <Table columns={columns} dataSource={data} pagination={false} bordered />
+                    <Table columns={columns} dataSource={data} pagination={false} bordered size={isMobileSize ? "small" : "middle"}/>
                     <br />
                     <div className="cameras-title">
-                        <h2>{t("onlineCameras.unassignedCameras")}</h2>
+                        <h2>{t("unassigned_cameras")}</h2>
                     </div>
-                    <Table columns={columns2} dataSource={data2} pagination={false} bordered />
+                    <Table columns={columns2} dataSource={data2} pagination={false} bordered size={isMobileSize ? "small" : "middle"}/>
                 </section>
             </div>
 

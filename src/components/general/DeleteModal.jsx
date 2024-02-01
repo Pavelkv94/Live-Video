@@ -13,7 +13,7 @@ export const DeleteModal = ({ isModalVisible, setIsModalVisible, item, submitMod
             onOk={submitModal}
             onCancel={handleCancel}
         >
-            <p>{`${t("common.deleteThis")} ${item}? ${t("common.actionCannotUndone")}`}</p>
+            <p>{`${t("delete_this")} ${item}? ${t("action_cannot_undone")}`}</p>
         </Modal>
     );
 };

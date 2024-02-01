@@ -1,20 +1,20 @@
 import { Button, Card, Input, InputNumber, Radio, Select, Switch } from "antd";
 import React, { useState } from "react";
-import { initTariff, tariffDatafields } from "../../../general/initialData";
-import "./AdminCreateTariffTab.scss";
+import { initTrackerTariff, tariffTrackerDatafields } from "../../../general/initialData";
+import "./AdminCreateTariffTrackersTab.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { createTariff, createTariffAndAssign } from "../../../../redux/tariffsReducer";
+import { createTariffAndAssign, createTrackerTariff } from "../../../../redux/tariffsReducer";
 
 const AdminCreateTariffTab = ({ t }) => {
     const dispatch = useDispatch();
 
-    const [tariff, setTariff] = useState(initTariff);
+    const [tariff, setTariff] = useState(initTrackerTariff);
     const [tariffType, setTariffType] = useState("common");
     const [selectedUser, setSelectedUser] = useState(null);
 
     const users = useSelector((state) => state.usersReducer.usersList);
 
-    const options = users.map((el) => ({ label: el.user_name, value: el.user_id }));
+    const options = users.map((el) => ({ label: el.name, value: el.id }));
 
     const onChange = (value) => {
         setSelectedUser(value);
@@ -43,23 +43,23 @@ const AdminCreateTariffTab = ({ t }) => {
 
     const handleCreateTariff = () => {
         if (tariffType === "common") {
-            dispatch(createTariff(tariff));
+            dispatch(createTrackerTariff(tariff));
         } else {
             dispatch(createTariffAndAssign(selectedUser, tariff));
         }
         setSelectedUser(null);
-        setTariff(initTariff);
+        setTariff(initTrackerTariff);
     };
 
     const disableBtnCommon =
-        !tariff.tariffobj_name ||
-        !tariff.tariffobj_objdin ||
-        !tariff.tariffobj_objdin_cost ||
-        !tariff.tariffobj_history ||
-        !tariff.tariffobj_trekcountobj ||
-        !tariff.tariffobj_creditdays ||
-        !tariff.tariffobj_discount6m ||
-        !tariff.tariffobj_discount1y;
+        !tariff.name ||
+        !tariff.max_routes ||
+        !tariff.price ||
+        !tariff.history ||
+        !tariff.max_trackers ||
+        !tariff.credit_days ||
+        !tariff.discount6 ||
+        !tariff.discount12;
 
     const disableBtnInd = disableBtnCommon || (!selectedUser && selectedUser !== 0);
 
@@ -67,13 +67,13 @@ const AdminCreateTariffTab = ({ t }) => {
         <div className="create-tariff">
             <div className="create-tariff-type">
                 <Radio.Group value={tariffType} onChange={handleChangeTariffType}>
-                    <Radio value="common">{t("admin.commonTariff")}</Radio>
-                    <Radio value="individual">{t("admin.individualTariff")}</Radio>
+                    <Radio value="common">{t("common_tariff")}</Radio>
+                    <Radio value="individual">{t("individual_tariff")}</Radio>
                 </Radio.Group>
                 {tariffType === "individual" && (
                     <Select
                         showSearch
-                        placeholder={t("admin.selectUser")}
+                        placeholder={t("select_user")}
                         optionFilterProp="children"
                         onChange={onChange}
                         onSearch={onSearch}
@@ -83,12 +83,12 @@ const AdminCreateTariffTab = ({ t }) => {
                 )}
             </div>
             <Card>
-                {tariffDatafields.map((el, index) => (
+                {tariffTrackerDatafields.map((el, index) => (
                     <div key={index} className="tariff-form-item">
-                        <p>{t(`tariffs.${el.name}`)}</p>
+                        <p>{t(`${el.name}`)}</p>
                         <div className="tariff-form-item-input">
-                            {el.name === "tariffobj_name" ? (
-                                <Input value={tariff[el.name]} onChange={handleInputChange(el.name)} placeholder={t("common.enterName")} />
+                            {el.name === "name" ? (
+                                <Input value={tariff[el.name]} onChange={handleInputChange(el.name)} placeholder={t("enter_name")} />
                             ) : el.boolean ? (
                                 <Switch checked={tariff[el.name]} onChange={handleSwitchChange(el.name)} />
                             ) : (
@@ -103,7 +103,7 @@ const AdminCreateTariffTab = ({ t }) => {
                     disabled={tariffType === "common" ? disableBtnCommon : disableBtnInd}
                     onClick={handleCreateTariff}
                 >
-                    {t("admin.createTariff")}
+                    {t("create_tariff")}
                 </Button>
             </Card>
         </div>

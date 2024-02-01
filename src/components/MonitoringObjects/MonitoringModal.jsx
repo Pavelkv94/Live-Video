@@ -18,7 +18,7 @@ const MonitoringModal = ({ t, open, item, handleCancel, handleSubmit, setItem, m
     const onAvatarSelected = (e) => {
         if (e.target.files && e.target.files.length) {
             if(e.target.files[0].size > 3072000) {
-                message.error(t("monitoringObjects.imageSizeWarning"));
+                message.error(t("image_size_warning"));
             } else {
                 setFilename(e.target.files[0].name);
                 setItem({...item, picture: e.target.files[0]});
@@ -26,6 +26,8 @@ const MonitoringModal = ({ t, open, item, handleCancel, handleSubmit, setItem, m
         }
     };
 
+    const disabledBtn = !item.name || !item.description;
+    
     return (
         <GeneralModalWrapper
             t={t}
@@ -33,21 +35,21 @@ const MonitoringModal = ({ t, open, item, handleCancel, handleSubmit, setItem, m
             action={editMode ? "edit" : "create"}
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
-            disableButton={!item.name || !item.description || !item.picture}
+            disableButton={disabledBtn}
         >
-            <h2>{editMode ? t("monitoringObjects.editMonitoringObject") : t("monitoringObjects.createMonitoringObject")}</h2>
+            <h2>{editMode ? t("edit_monitoring_object") : t("create_monitoring_object")}</h2>
             <section>
-                <label>{t("common.name")}</label>
-                <Input value={item.name} onChange={handleInput("name", "create_object")} placeholder={t("common.enterName")} />
+                <label>{t("name")}</label>
+                <Input value={item.name} onChange={handleInput("name", "create_object")} placeholder={t("enter_name")} />
             </section>
             <section>
-                <label>{t("common.description")}</label>
-                <Input value={item.description} onChange={handleInput("description", "create_object")} placeholder={t("common.enterDescription")} />
+                <label>{t("description")}</label>
+                <Input value={item.description} onChange={handleInput("description", "create_object")} placeholder={t("enter_description")} />
             </section>
             {!editMode && <section>
-                <label>{t("common.choosePicture")}:</label>
+                <label>{t("choose_picture")}:</label>
                 <div onClick={() => avaRef.current.click()} className="photo-wrap">
-                    <Button icon={<UploadOutlined />}>{t("common.clickUpload")}</Button>
+                    <Button icon={<UploadOutlined />}>{t("click_upload")}</Button>
                 </div>
                 <p style={{opacity: 0.6, margin: 0}}>{filename}</p>
                 <input type="file" ref={avaRef} style={{ display: "none" }} onChange={onAvatarSelected} accept="image/jpeg,image/png" />

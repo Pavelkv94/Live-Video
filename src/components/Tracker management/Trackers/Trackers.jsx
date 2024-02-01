@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Trackers.scss";
-import { Button, Checkbox, Popover, Select, Table } from "antd";
+import { Button, Checkbox, Popover, Select, Spin, Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
     addSharingTracker,
@@ -10,7 +10,7 @@ import {
     deleteTracker,
     fetchTrackerModels,
     fetchTrackers,
-    updateSharingTracker,
+    // updateSharingTracker,
     updateTracker
 } from "../../../redux/trackersReducer";
 import { dateConvert, isDateExpired } from "../../../utils/dateConvert";
@@ -21,16 +21,29 @@ import TrackerEditModal from "./TrackerEditModal";
 import GlobalYandexMap from "../../general/GlobalYandexMap";
 import GlobalOSMap from "../../general/GlobalOSMap";
 import { updateUser } from "../../../redux/authReducer";
-import { fetchTariffs } from "../../../redux/tariffsReducer";
+import { fetchTrackersTariffs } from "../../../redux/tariffsReducer";
 import GeneralSharedModal from "../../general/GeneralSharedModal";
 import TrackerDetailsModal from "./TrackerDetailsModal";
 import GeneraPermissionsModal from "../../general/GeneraPermissionsModal";
 import { DeleteModal } from "../../general/DeleteModal";
+import { fetchData } from "../../../api/api";
+import { trackersAllUrl } from "../../../redux/AppConstants";
 
-const Trackers = ({ t }) => {
+const Trackers = ({
+    t,
+    isMobileSize,
+    monitoringObjectTrackers,
+    setOpenAssignTracker,
+    setOpenUnassignTracker,
+    handleCreateMonitoringObjectTracker,
+    fetchMonitoringObjectTrackersData
+}) => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.authReducer.user);
-    const trackersList = useSelector((state) => state.trackersReducer.trackersList);
+    const connected_user = useSelector(state => state.authReducer.connectedUser);
+
+    const trackers = useSelector((state) => state.trackersReducer.trackersList);
+    const trackersListStatus = useSelector((state) => state.trackersReducer.trackersFetchStatus);
 
     const [open, setOpen] = useState(false);
     const [openDetailsModal, setOpenDetailsModal] = useState(false);
@@ -38,7 +51,7 @@ const Trackers = ({ t }) => {
     const [tracker, setTracker] = useState(initalTracker);
     const [expandMap, setExpandMap] = useState(false);
     const [modalMode, setModalMode] = useState("create");
-    // const [trackersList, setTrackerList] = useState([]); //fake
+    const [trackersList, setTrackerList] = useState([]); //fake
     const [realTimeTrackers, setRealTimeTrackers] = useState([]);
     const [mapGoogleOptions, setMapGoogleOptions] = useState(initGoogleOptions);
     const [openSharedModal, setOpenSharedModal] = useState(false);
@@ -47,67 +60,67 @@ const Trackers = ({ t }) => {
     const [openPermissionsModal, setOpenPermissionsModal] = useState(false);
     const [checkedSharedUser, setCheckedSharedUser] = useState(null);
     const [sharedActionMode, setSharedActionMode] = useState("create");
+    const [polylinesVisible, setPolylinesVisible] = useState(null);
+    const [realtimeCheck, setRealtimeCheck] = useState(false);
 
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [deleteModalMode, setDeleteModalMode] = useState("shared user");
-    //! не меняется при смене карты
-    useEffect(() => {
-        setTimeout(() => {
-            setMapGoogleOptions({ ...mapGoogleOptions, zoom: 12 });
-        }, 300);
-    }, []);
-
-    // console.log(sharedUser);
-    // useEffect(() => {
-    //     fetch("http://localhost:5000/trackers", {
-    //         method: "GET"
-    //     })
-    //         .then((res) => res.json())
-    //         .then((resp) => setTrackerList(resp));
-    // }, []);
-
-    // useEffect(() => {
-    //     let intervalId;
-    //     if (realTimeTrackers.length > 0) {
-    //         intervalId = setInterval(() => {
-    //             fetch("http://localhost:5000/trackers", {
-    //                 method: "GET"
-    //             })
-    //                 .then((res) => res.json())
-    //                 .then((response) => {
-    //                     setRealTimeTrackers(
-    //                         realTimeTrackers.map((arr) => {
-    //                             const mergedArr = [
-    //                                 ...arr,
-    //                                 ...response
-    //                                     .filter((obj) => obj.trobject_id === arr[0].id)
-    //                                     .map((el) => ({ id: el.trobject_id, lat: el.trobject_latitude, lng: el.trobject_longitude, color: el.color }))
-    //                             ];
-    //                             return mergedArr;
-    //                         })
-    //                     );
-
-    //                     setTrackerList(
-    //                         trackersList.map((obj1) => {
-    //                             const obj2 = response.find((obj2) => obj2.trobject_id === obj1.trobject_id);
-    //                             return obj2 && realTimeTrackers.find((el) => el[0].id === obj1.trobject_id) ? { ...obj1, ...obj2 } : obj1;
-    //                         })
-    //                     );
-    //                 });
-    //         }, 6000);
-    //     }
-    //     // eslint-disable-next-line no-console
-    //     console.log("request every 10 sec");
-
-    //     return () => {
-    //         clearInterval(intervalId);
-    //     };
-    // }, [realTimeTrackers]);
 
     useEffect(() => {
-        dispatch(fetchTrackers(user.user_id));
+        setTrackerList(monitoringObjectTrackers || trackers);
+
+        setPolylinesVisible(
+            trackers.reduce((acc, curr) => {
+                acc[curr.id] = false;
+                return acc;
+            }, {})
+        );
+        setRealtimeCheck(
+            trackersList.reduce((acc, curr) => {
+                acc[curr.id] = false;
+                return acc;
+            }, {})
+        );
+    }, [trackers, monitoringObjectTrackers]);
+
+    useEffect(() => {
+        let intervalId;
+        if (realTimeTrackers.length > 0) {
+            intervalId = setInterval(() => {
+                const response = fetchData(trackersAllUrl(user.id), {}, {});
+                response.then((response) => {
+                    setRealTimeTrackers(
+                        realTimeTrackers.map((arr) => {
+                            const mergedArr = [
+                                ...arr,
+                                ...response
+                                    .filter((obj) => obj.id === arr[0].id)
+                                    .map((el) => ({ id: el.id, lat: el.latitude, lng: el.longitude, color: el.color }))
+                            ];
+                            return mergedArr;
+                        })
+                    );
+                    setTrackerList(
+                        trackersList.map((obj1) => {
+                            const obj2 = response.find((obj2) => obj2.id === obj1.id);
+                            return obj2 && realTimeTrackers.find((el) => el[0].id === obj1.id) ? { ...obj1, ...obj2 } : obj1;
+                        })
+                    );
+                });
+            }, 6000);
+        }
+        // eslint-disable-next-line no-console
+        console.log("request every 6 sec");
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [realTimeTrackers, trackersList]);
+
+    useEffect(() => {
+        !monitoringObjectTrackers && dispatch(fetchTrackers(user.id));
         dispatch(fetchTrackerModels());
-        dispatch(fetchTariffs());
+        dispatch(fetchTrackersTariffs());
     }, [dispatch]);
 
     const openEditModal = (data) => () => {
@@ -117,17 +130,20 @@ const Trackers = ({ t }) => {
     };
 
     const handleChangeVisible = (tracker_id) => (e) => {
+        if (!e.target.checked) {
+            setRealtimeCheck({ ...realtimeCheck, [tracker_id]: false });
+            setRealTimeTrackers([]);
+        }
         dispatch(changeTrackerVisibleAC(tracker_id, e.target.checked));
     };
-    // console.log(realTimeTrackers);
+
     const handleChangeRealtimeTracker = (tracker) => (e) => {
+        setRealtimeCheck({ ...realtimeCheck, [tracker.id]: e.target.checked });
         if (e.target.checked) {
-            setRealTimeTrackers([
-                ...realTimeTrackers,
-                [{ id: tracker.trobject_id, lat: tracker.trobject_latitude, lng: tracker.trobject_longitude, color: tracker.color }]
-            ]);
+            setRealTimeTrackers([...realTimeTrackers, [{ id: tracker.id, lat: tracker.latitude, lng: tracker.longitude, color: tracker.color }]]);
         } else {
-            setRealTimeTrackers(realTimeTrackers.filter((el) => el[0].id !== tracker.trobject_id));
+            setRealTimeTrackers(realTimeTrackers.filter((el) => el[0].id !== tracker.id));
+            setPolylinesVisible({ ...polylinesVisible, [tracker.id]: false });
         }
     };
 
@@ -138,107 +154,102 @@ const Trackers = ({ t }) => {
     };
 
     const handleAddSharedUser = () => {
-        dispatch(addSharingTracker(sharedTracker, sharedUser));
+        dispatch(addSharingTracker(sharedTracker, { email: sharedUser.email, tracker_id: sharedTracker, permissions: { edit: sharedUser.edit } }));
         handleCancelShared();
     };
 
     const handleChangeVisiblePolylines = (tracker) => (e) => {
-        if (e.target.checked) {
-            setRealTimeTrackers([]);
-        }
-        // eslint-disable-next-line no-console
-        console.log(tracker);
+        setPolylinesVisible({ ...polylinesVisible, [tracker.id]: e.target.checked });
     };
 
     const preferedMapOptions = [
-        { value: "google", label: t("common.google") },
-        { value: "yandex", label: t("common.yandex") },
-        { value: "osm", label: t("common.osm") }
+        { value: "google", label: t("google") },
+        { value: "yandex", label: t("yandex") },
+        { value: "osm", label: t("osm") }
     ];
 
-    const visiblePopup = <div>{t("trackerManagement.visibleOnMap")}</div>;
-    const movementPopup = <div>{t("trackerManagement.movementOnMap")}</div>;
-    const visiblePolylinesPopup = <div>{t("trackerManagement.visiblePolylines")}</div>;
+    const visiblePopup = <div>{t("visible_on_map")}</div>;
+    const movementPopup = <div>{t("movement_on_map")}</div>;
+    const visiblePolylinesPopup = <div>{t("visible_polylines")}</div>;
 
     const columns = [
         {
-            title: t("common.name"),
-            dataIndex: "trobject_name",
+            title: t("name"),
+            dataIndex: "name",
             key: "name",
             render: (text, params) => (
                 <div style={{ display: "flex" }}>
                     <span
-                        style={isDateExpired(params.trobject_oplacheno) ? {} : { color: "#1677ff", cursor: "pointer" }}
+                        style={isDateExpired(params.paid_till) ? {} : { color: "#1677ff", cursor: "pointer" }}
                         onClick={() =>
                             setMapGoogleOptions({
-                                center: { lat: params.trobject_latitude, lng: params.trobject_longitude },
-                                zoom: 18
+                                center: { lat: +params.latitude, lng: +params.longitude },
+                                zoom: 8
                             })
                         }
                     >
-                        {text} {isDateExpired(params.trobject_oplacheno) && <i style={{ color: "red" }}>({t("common.expired")})</i>}
+                        {text} {isDateExpired(params.paid_till) && <i style={{ color: "red" }}>({t("expired")})</i>}
                     </span>
-                    {params.shared && <ShareAltOutlined style={{ marginLeft: 5 }} />}
+                    {params.user_id !== user.id && <ShareAltOutlined style={{ marginLeft: 5 }} />}
                 </div>
             )
         },
         {
-            title: t("common.regDate"),
-            dataIndex: "trobject_regtime",
-            key: "trobject_regtime",
-            render: (text) => <p style={{ width: "120px" }}>{text}</p>
+            title: t("last_activity"),
+            dataIndex: "datetime",
+            key: "datetime",
+            align: "center",
+            render: (text) => <p style={{ width: "120px" }}>{text ? dateConvert(text) : "—"}</p>
         },
         {
-            title: t("common.speed"),
-            dataIndex: "trobject_speed",
+            title: `${t("speed")}, ${t("kmh")}`,
+            dataIndex: "speed",
             key: "Speed",
             align: "center",
-            render: (text) => (
-                <div>
-                    {text} {t("common.kmh")}
-                </div>
-            )
+            render: (text) => <div>{text || "—"}</div>
         },
         {
-            title: t("common.visible"),
+            title: t("visible"),
             dataIndex: "visible",
             key: "visible",
-            render: (text, params) => (
-                <div className="flex">
-                    <div className="indicator" style={{ background: params.color }}></div>
-                    <Popover content={visiblePopup}>
-                        <Checkbox
-                            onChange={handleChangeVisible(params.trobject_id)}
-                            checked={params.isVisibleOnMap}
-                        ></Checkbox>
-                    </Popover>
-                    <Popover content={movementPopup}>
-                        <Checkbox
-                            style={{ marginLeft: "10px" }}
-                            onChange={handleChangeRealtimeTracker(params)}
-                            disabled={isDateExpired(params.trobject_oplacheno)}
-                        ></Checkbox>
-                    </Popover>
-                    <Popover content={visiblePolylinesPopup}>
-                        <Checkbox
-                            style={{ marginLeft: "10px" }}
-                            onChange={handleChangeVisiblePolylines(params)}
-                            disabled={isDateExpired(params.trobject_oplacheno)}
-                        ></Checkbox>
-                    </Popover>
-                </div>
-            )
+            render: (text, params) => {
+                return (
+                    <div className="flex">
+                        <div className="indicator" style={{ background: params.color }}></div>
+                        <Popover content={visiblePopup}>
+                            <Checkbox onChange={handleChangeVisible(params.id)} checked={params.isVisibleOnMap}></Checkbox>
+                        </Popover>
+                        <Popover content={movementPopup}>
+                            <Checkbox
+                                checked={realtimeCheck[params.id]}
+                                style={{ marginLeft: "10px" }}
+                                onChange={handleChangeRealtimeTracker(params)}
+                                disabled={isDateExpired(params.paid_till) || !params.isVisibleOnMap}
+                            ></Checkbox>
+                        </Popover>
+                        <Popover content={visiblePolylinesPopup}>
+                            <Checkbox
+                                checked={polylinesVisible[params.id]}
+                                style={{ marginLeft: "10px" }}
+                                onChange={handleChangeVisiblePolylines(params)}
+                                disabled={isDateExpired(params.paid_till) || !realTimeTrackers.find((el) => el[0].id === params.id)}
+                            ></Checkbox>
+                        </Popover>
+                    </div>
+                );
+            }
         }
     ];
 
     const data = trackersList.map((el) => ({
         ...el,
-        key: el.trobject_id,
-        trobject_regtime: dateConvert(el.trobject_regtime)
+        key: el.id
     }));
 
     const handleCreateTracker = () => {
-        dispatch(createTracker(user.user_id, { ...tracker, trobject_ref_tariffobj: 5 }));
+        monitoringObjectTrackers
+            ? handleCreateMonitoringObjectTracker({ ...tracker, tracker_tariff_id: 5 })
+            : dispatch(createTracker(user.id, { ...tracker, tracker_tariff_id: 5 })); //! какой тариф?
         setTracker(initalTracker);
         setOpen(false);
     };
@@ -246,17 +257,17 @@ const Trackers = ({ t }) => {
     const handleUpdateTracker = () => {
         dispatch(
             updateTracker(
-                tracker.trobject_id,
+                tracker.id,
                 {
-                    trobject_name: tracker.trobject_name,
-                    trobject_imei: tracker.trobject_imei,
-                    trobject_phone: tracker.trobject_phone,
-                    trobject_public: tracker.trobject_public,
-                    trobject_info: tracker.trobject_info,
-                    trobject_srrashod: tracker.trobject_srrashod,
-                    trobject_ref_trmodel: tracker.trobject_ref_trmodel,
-                    trobject_timestop: tracker.trobject_timestop,
-                    trobject_timepark: tracker.trobject_timepark,
+                    name: tracker.name,
+                    imei: tracker.imei,
+                    phone: tracker.phone,
+                    public: tracker.tublic,
+                    info: tracker.info,
+                    average_consumption: tracker.average_consumption,
+                    tracker_model_id: tracker.tracker_model_id,
+                    stopping_time: tracker.stopping_time,
+                    parking_time: tracker.parking_time,
                     color: tracker.color
                 },
                 tracker.isVisibleOnMap
@@ -276,11 +287,7 @@ const Trackers = ({ t }) => {
         setTracker(initalTracker);
     };
 
-    const handleDeleteTracker = (tracker_id) => () => {
-        dispatch(deleteTracker(tracker_id));
-    };
-
-    const changeMap = (value) => dispatch(updateUser(user.user_id, { prefered_map: value }));
+    const changeMap = (value) => dispatch(updateUser(user.admin ? connected_user.id : user.id, { prefered_map: value }, user.admin));
 
     const handleOpenPermission = (user) => {
         setOpenPermissionsModal(true);
@@ -299,19 +306,20 @@ const Trackers = ({ t }) => {
     };
 
     const handleSubmitDeleteSharedUser = () => {
-        dispatch(deleteSharingTracker(checkedSharedUser.trobject_id));
+        dispatch(deleteSharingTracker(checkedSharedUser.tracker_id, checkedSharedUser.id));
         setCheckedSharedUser(null);
         setOpenDeleteModal(false);
+        // setTracker({ ...tracker, shared_to: tracker.shared_to.filter((el) => el.id !== checkedSharedUser.id) });
     };
 
     const handleSubmitDeleteTracker = () => {
-        dispatch(deleteTracker(tracker.tracker_id));
+        dispatch(deleteTracker(tracker.id));
         setOpenDeleteModal(false);
         setTracker(null);
     };
 
     const handleEditSharedUser = () => {
-        dispatch(updateSharingTracker( checkedSharedUser.trobject_id, sharedUser));
+        // dispatch(updateSharingTracker(checkedSharedUser.id, sharedUser));
     };
 
     const handleOpenSharedUser = (user) => {
@@ -321,44 +329,68 @@ const Trackers = ({ t }) => {
         setSharedActionMode("edit");
     };
 
+    const preferedMap = user?.admin ? connected_user?.prefered_map : user?.prefered_map;
     return (
         <div className="trackers">
             <section className="head-section">
                 <div className="head-section-title">
-                    <h2>{t("menuBar.trackers")}</h2>
-                    <Button
-                        shape="circle"
-                        icon={<PlusOutlined />}
-                        onClick={() => {
-                            setModalMode("create");
-                            setOpen(true);
-                        }}
-                    />
+                    {!monitoringObjectTrackers && <h2>{t("trackers")}</h2>}
+                    {monitoringObjectTrackers ? (
+                        <div>
+                            <Button
+                                onClick={() => {
+                                    setModalMode("create");
+                                    setOpen(true);
+                                }}
+                                type="primary"
+                                style={{ margin: "0" }}
+                            >
+                                {t("create_tracker")}
+                            </Button>
+                            <Button onClick={() => setOpenAssignTracker(true)} type="primary">
+                                {t("assign_tracker")}
+                            </Button>
+                            <Button style={{ margin: "0" }} onClick={() => setOpenUnassignTracker(true)}>
+                                {t("unassign_tracker")}
+                            </Button>
+                        </div>
+                    ) : (
+                        <Button
+                            shape="circle"
+                            icon={<PlusOutlined />}
+                            onClick={() => {
+                                setModalMode("create");
+                                setOpen(true);
+                            }}
+                        />
+                    )}
+                    {trackersListStatus === "pending" && <Spin style={{ marginLeft: "20px" }} />}
                 </div>
-                <div>
-                    <Button onClick={() => setRealTimeTrackers([])}>{t("trackerManagement.clearMap")}</Button>
+                <div className="head-section-actions">
                     <Button
-                        style={{ marginRight: 20 }}
-                        onClick={
-                            () =>
-                                // fetch("http://localhost:5000/trackers", {
-                                //     method: "GET"
-                                // }).then((res) => res.json())
-                            // .then((resp) => setTrackerList(resp))
-                                dispatch(fetchTrackers(user.user_id)) //! REAL DATA
-                        }
+                        onClick={() => setRealTimeTrackers([])}
+                        size={isMobileSize ? "small" : "middle"}
+                        style={monitoringObjectTrackers ? { margin: "0" } : {}}
                     >
-                        {t("trackerManagement.refreshMap")}
+                        {t("clear_map")}
+                    </Button>
+                    <Button
+                        size={isMobileSize ? "small" : "middle"}
+                        style={{ marginRight: 20 }}
+                        onClick={() => (monitoringObjectTrackers ? fetchMonitoringObjectTrackersData() : dispatch(fetchTrackers(user.id)))}
+                    >
+                        {t("refresh_map")}
                     </Button>
 
                     <Select
+                        size={isMobileSize ? "small" : "middle"}
                         allowClear
                         style={{
                             width: "200px",
                             float: "right"
                         }}
-                        placeholder={t("login.selectMap")}
-                        defaultValue={user.prefered_map}
+                        placeholder={t("select_map")}
+                        defaultValue={user?.admin ? connected_user?.prefered_map : user?.prefered_map}
                         onChange={changeMap}
                         options={preferedMapOptions}
                     />
@@ -381,44 +413,51 @@ const Trackers = ({ t }) => {
                                         setTracker(record);
                                     }}
                                 >
-                                    {t("common.showInfo")}
+                                    {t("show_info")}
                                 </Button>
 
-                                {!record.shared && <Button icon={<EditOutlined />} onClick={openEditModal(record)}>
-                                    {t("common.edit")}
-                                </Button>}
                                 {!record.shared && (
+                                    <Button icon={<EditOutlined />} onClick={openEditModal(record)}>
+                                        {t("edit")}
+                                    </Button>
+                                )}
+                                {record.user_id === user.id && (
                                     <Button
                                         icon={<ShareAltOutlined />}
                                         onClick={() => {
                                             setSharedActionMode("create");
-                                            setSharedTracker(record.trobject_id);
+                                            setSharedTracker(record.id);
                                             setOpenSharedModal(true);
                                         }}
                                     >
-                                        {t("common.share")}
+                                        {t("share")}
                                     </Button>
                                 )}
-                                {!record.shared && <Button danger icon={<DeleteOutlined />} onClick={() => {
-                                                                        setTracker(record);
-                                    setOpenDeleteModal(true);
-                                    setDeleteModalMode("tracker");
-
-                                    // handleDeleteTracker(record.trobject_id)
-                                }
-                                }>
-                                    {t("trackerManagement.deleteTracker")}
-                                </Button>}
+                                {record.user_id === user.id && (
+                                    <Button
+                                        danger
+                                        icon={<DeleteOutlined />}
+                                        onClick={() => {
+                                            setTracker(record);
+                                            setOpenDeleteModal(true);
+                                            setDeleteModalMode("tracker");
+                                            // handleDeleteTracker(record.id)
+                                        }}
+                                    >
+                                        {t("delete_tracker")}
+                                    </Button>
+                                )}
                             </div>
                         ),
                         rowExpandable: (record) => record.name !== "Not Expandable"
                     }}
                     columns={columns}
                     dataSource={data}
-                    pagination={data.length > 9}
+                    // pagination={data.length > 9}
+                    pagination={false}
                     className="trackers-table"
                 />
-                {user.prefered_map === "google" ? (
+                {preferedMap === "google" ? (
                     <GlobalGoogleMap
                         height={expandMap ? "calc(100vh - 240px)" : "60vh"}
                         setExpandMap={setExpandMap}
@@ -431,21 +470,27 @@ const Trackers = ({ t }) => {
                             // do your stuff before map is unmounted
                         }}
                         items={trackersList}
-                        realTimeTrackers={realTimeTrackers}
+                        realTimeTrackersForPolylines={realTimeTrackers.filter((item) => polylinesVisible[item[0].id])}
                         t={t}
                         mapOptions={mapGoogleOptions}
                         setMapOptions={setMapGoogleOptions}
                     />
-                ) : user.prefered_map === "yandex" ? (
+                ) : preferedMap === "yandex" ? (
                     <GlobalYandexMap
                         height={expandMap ? "calc(100vh - 240px)" : "60vh"}
                         setExpandMap={setExpandMap}
                         items={trackersList}
-                        realTimeTrackers={realTimeTrackers}
+                        realTimeTrackersForPolylines={realTimeTrackers.filter((item) => polylinesVisible[item[0].id])}
                         t={t}
                     />
                 ) : (
-                    <GlobalOSMap height={expandMap ? "calc(100vh - 240px)" : "60vh"} setExpandMap={setExpandMap} items={trackersList} t={t} />
+                    <GlobalOSMap
+                        height={expandMap ? "calc(100vh - 240px)" : "60vh"}
+                        setExpandMap={setExpandMap}
+                        items={trackersList}
+                        t={t}
+                        realTimeTrackersForPolylines={realTimeTrackers.filter((item) => polylinesVisible[item[0].id])}
+                    />
                 )}
             </section>
 

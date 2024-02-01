@@ -4,10 +4,20 @@ import "./GlobalMap.scss";
 import { ArrowsAltOutlined } from "@ant-design/icons";
 import { initGoogleOptions, paletteColorsSVGUrls } from "./initialData";
 import blackMarker from "../../assets/img/markers/svg/000000.svg";
-import { getAddress } from "../../utils/getAddress";
+import { getAddressGoogle } from "../../utils/getAddress";
 import { Spin } from "antd";
 
-const GlobalGoogleMap = ({ items, width = "100%", height = "100%", setExpandMap, realTimeTrackers, routes, mapOptions = initGoogleOptions, t, mode }) => {
+const GlobalGoogleMap = ({
+    items,
+    width = "100%",
+    height = "100%",
+    setExpandMap,
+    realTimeTrackersForPolylines,
+    routes,
+    mapOptions = initGoogleOptions,
+    t,
+    mode
+}) => {
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
         googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_API_KEY,
@@ -24,16 +34,13 @@ const GlobalGoogleMap = ({ items, width = "100%", height = "100%", setExpandMap,
 
     const routesMode = mode === "routes";
 
-    /* eslint-disable no-console */ //! unused var for tracker realtime
-    // console.log(realTimeTrackers);
-
     // eslint-disable-next-line no-unused-vars
     const [map, setMap] = useState(null);
     const [activeMarker, setActiveMarker] = useState(null);
     const [address, setAddress] = useState(null);
 
     useEffect(() => {
-        activeMarker && getAddress(activeMarker.trobject_latitude, activeMarker.trobject_longitude, setAddress);
+        activeMarker && getAddressGoogle(activeMarker.latitude, activeMarker.longitude, setAddress);
     }, [activeMarker]);
 
     const handleMarkerClick = (marker) => {
@@ -44,14 +51,12 @@ const GlobalGoogleMap = ({ items, width = "100%", height = "100%", setExpandMap,
         setActiveMarker(null);
     };
 
-    
-
     const markers = routesMode
         ? items.map((el, i) => (
             <Marker
                 key={i}
-                position={{ lat: +el.trobject_latitude, lng: +el.trobject_longitude }}
-                title={el.trobject_name}
+                position={{ lat: +el.latitude, lng: +el.longitude }}
+                title={el.name}
                 animation={2} // Bounce animation
                 onClick={() => handleMarkerClick(el)}
                 icon={{
@@ -68,8 +73,8 @@ const GlobalGoogleMap = ({ items, width = "100%", height = "100%", setExpandMap,
             .map((el, i) => (
                 <Marker
                     key={i}
-                    position={{ lat: +el.trobject_latitude, lng: +el.trobject_longitude }}
-                    title={el.trobject_name}
+                    position={{ lat: +el.latitude, lng: +el.longitude }}
+                    title={el.name}
                     animation={2} // Bounce animation
                     onClick={() => handleMarkerClick(el)}
                     icon={{
@@ -82,23 +87,35 @@ const GlobalGoogleMap = ({ items, width = "100%", height = "100%", setExpandMap,
                 />
             ));
 
-    const polylines = routes?.map((route, key) => (
-        <Polyline
-            key={key}
-            //path={arr.map((val) => ({ lat: val.lat, lng: val.lng }))} //! old
-            path={route.coordinates.map((val) => ({ lat: +val[0], lng: +val[1] }))}
-            options={{
-                strokeColor: route.color, //arr[0].color,
-                strokeOpacity: 1.0,
-                strokeWeight: 3
-            }}
-        />
-    ));
+    const polylines = routesMode
+        ? routes?.map((route, key) => (
+            <Polyline
+                key={key}
+                path={route.route_summary.coordinates.map((val) => ({ lat: +val[0], lng: +val[1] }))}
+                options={{
+                    strokeColor: route.tracker_color,
+                    strokeOpacity: 1.0,
+                    strokeWeight: 3
+                }}
+            />
+        ))
+        : realTimeTrackersForPolylines?.map((way, key) => (
+            <Polyline
+                key={key}
+                path={way.map((e) => ({ lat: +e.lat, lng: +e.lng }))}
+                options={{
+                    strokeColor: way[0].color,
+                    srokeOpacity: 1.0,
+                    strokeWeight: 3
+                }}
+            />
+        ));
 
     const onLoad = React.useCallback(function callback(map) {
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
-        const bounds = new window.google.maps.LatLngBounds(mapOptions.center);
-        map.fitBounds(bounds);
+        // const bounds = new window.google.maps.LatLngBounds(mapOptions.center);
+        // map.fitBounds(bounds);
+        map.setZoom(6);
 
         setMap(map);
     }, []);
@@ -117,27 +134,28 @@ const GlobalGoogleMap = ({ items, width = "100%", height = "100%", setExpandMap,
                 <GoogleMap mapContainerStyle={containerStyle} center={mapOptions.center} zoom={mapOptions.zoom} onLoad={onLoad} onUnmount={onUnmount}>
                     {markers}
                     {activeMarker && address && (
-                        <InfoWindow
-                            position={{ lat: +activeMarker.trobject_latitude, lng: +activeMarker.trobject_longitude }}
-                            onCloseClick={handleMarkerHoverExit}
-                        >
+                        <InfoWindow position={{ lat: +activeMarker.latitude, lng: +activeMarker.longitude }} onCloseClick={handleMarkerHoverExit}>
                             <div>
-                                <h3>
-                                    {activeMarker.trobject_name}
-                                    {routesMode && activeMarker.mode === "start" ? 
-                                        <i style={{color: "green"}}> ({t("common.start")})</i> 
-                                        : routesMode && activeMarker.mode === "finish" ?
-                                            <i style={{color: "orange"}}> ({t("common.finish")})</i> : ""}
+                                <h3 style={{ margin: "8px 0" }}>
+                                    {activeMarker[routesMode ? "name" : "name"]}
+                                    {routesMode && activeMarker.mode === "start" ? (
+                                        <i style={{ color: "green" }}> ({t("start")})</i>
+                                    ) : routesMode && activeMarker.mode === "finish" ? (
+                                        <i style={{ color: "orange" }}> ({t("finish")})</i>
+                                    ) : (
+                                        ""
+                                    )}
                                 </h3>
-                                <p>{address}</p>
-                                {activeMarker.trobject_gpsstatus ? t("common.gpsWorking") : t("common.gpsDisabled")}
-                                <p>
-                                    {activeMarker.trobject_speed} {t("common.kmh")}
-                                </p>
+                                <p style={{ margin: "0 0 6px 0" }}>{address}</p>
+                                {!activeMarker.mode && routesMode && `${t("gsm_signal_level")}: ${activeMarker.gsmsl || "-"}`}
+                                {!activeMarker.mode && <br />}
+                                {!activeMarker.mode && `${t("satellites")}: ${activeMarker.satellites || "-"}`}
+                                {!activeMarker.mode && <p style={{ margin: "0" }}>{`${t("speed")}: ${activeMarker.speed || "-"} ${t("kmh")}`}</p>}
+                                {activeMarker.mode && <i style={{ margin: "0", opacity: 0.5 }}>{t("point_more_info")}</i>}
                             </div>
                         </InfoWindow>
                     )}
-                    {/* /{realTimeTrackers && realTimeTrackers.length > 0 && polylines} */}
+                    {realTimeTrackersForPolylines && realTimeTrackersForPolylines.length > 0 && polylines}
                     {routes && routes.length > 0 && polylines}
 
                     {/* {<TrafficLayer autoUpdate />  }  */}

@@ -16,18 +16,18 @@ const TrackerModelModal = ({ t, open, item, handleCancel, handleSubmit, setItem,
             action={editMode ? "edit" : "create"}
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
-            disableButton={!item.trmodel_name || !item.trmodel_code}
-            title={editMode ? t("admin.editTrackerModel") : t("admin.createTrackerModel")}
+            disableButton={!item.name || !item.code}
+            title={editMode ? t("edit_tracker_model") : t("create_tracker_model")}
             width={600}
         >
             <div className="tracker-model-content">
                 <Input
-                    value={item.trmodel_name}
-                    onChange={handleInput("trmodel_name")}
-                    placeholder={t("admin.enterTrackerModelName")}
+                    value={item.name}
+                    onChange={handleInput("name")}
+                    placeholder={t("enter_tracker_model_name")}
                     style={{ marginBottom: 20 }}
                 />
-                <Input value={item.trmodel_code} onChange={handleInput("trmodel_code")} placeholder={t("admin.enterTrackerModelCode")} />
+                <Input value={item.code} onChange={handleInput("code")} placeholder={t("enter_tracker_model_code")} />
             </div>
         </GeneralModalWrapper>
     );

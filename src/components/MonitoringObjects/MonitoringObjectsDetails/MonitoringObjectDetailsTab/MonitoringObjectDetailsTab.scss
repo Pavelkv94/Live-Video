@@ -3,6 +3,23 @@
     grid-template-columns: 1fr 1fr;
     column-gap: 20px;
 
+    @media screen and (max-width: 1200px) {
+        grid-template-columns: 1fr;
+        row-gap: 20px;
+
+    }
+
+    .monitoring-details-actions {
+        @media screen and (max-width: 550px) {
+            justify-content: flex-start;
+            flex-wrap: wrap;
+
+            button:nth-child(1) {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
     .info {
         height: min-content;
     }
@@ -19,5 +36,9 @@
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
+
+        @media screen and (max-width: 550px) {
+        height: 200px;
+        }
     }
 }

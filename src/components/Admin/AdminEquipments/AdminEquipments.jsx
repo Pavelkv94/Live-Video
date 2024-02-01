@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./AdminEquipments.scss";
 import Blocked from "../../general/Blocked";
 import { useSelector } from "react-redux";
-import CamerasEquipmentsTab from "./CamerasEquipmentsTab/CamerasEquipmentsTab";
 import TrackersEquipmentsTab from "./TrackersEquipmentsTab/TrackersEquipmentsTab";
 import { Tabs } from "antd";
+import HostsManagementTab from "./HostsManagementTab/HostsManagementTab";
+import PortsManagementTab from "./PortsManagementTab/PortsManagementTab";
 
 const AdminEquipments = ({ t }) => {
     const user = useSelector((state) => state.authReducer.user);
@@ -18,24 +19,29 @@ const AdminEquipments = ({ t }) => {
     const items = [
         {
             key: "1",
-            label: t("admin.trackersEquipments"),
+            label: t("trackers_equipments"),
             children: <TrackersEquipmentsTab t={t} setTab={onChangeTab} />
         },
         {
             key: "2",
-            label: t("admin.camerasEquipments"),
-            children: <CamerasEquipmentsTab t={t} />
+            label: t("hosts_management"),
+            children: <HostsManagementTab t={t} setTab={onChangeTab} />
+        },
+        {
+            key: "3",
+            label: t("ports_management"),
+            children: <PortsManagementTab t={t} setTab={onChangeTab} />
         }
     ];
 
-    if (!user?.admin_name) {
-        return <Blocked status="403" title={t("common.accessDenied")} message={t("common.haventAccess")} />;
+    if (!user?.admin) {
+        return <Blocked status="403" title={t("access_denied")} message={t("havent_access")} />;
     }
 
     return (
         <div>
             <section className="head-section">
-                <h2>{t("admin.equipmentsManagement")}</h2>
+                <h2>{t("equipments_management")}</h2>
             </section>
             <Tabs defaultActiveKey="1" onChange={onChangeTab} activeKey={tab} items={items} />
         </div>

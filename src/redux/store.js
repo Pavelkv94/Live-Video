@@ -12,6 +12,7 @@ import { monitoringObjectsReducer } from "./monitoringObjectsReducer";
 import { notificationsReducer } from "./notificationsReducer";
 import { tariffsReducer } from "./tariffsReducer";
 import { balanceReducer } from "./balanceReducer";
+import { trackersSystemReducer } from "./trackersSystemReducer";
 
 
 const rootReducer = combineReducers({
@@ -25,7 +26,8 @@ const rootReducer = combineReducers({
     monitoringObjectsReducer,
     notificationsReducer,
     tariffsReducer,
-    balanceReducer
+    balanceReducer,
+    trackersSystemReducer
 });
 
 export const store = legacy_createStore(

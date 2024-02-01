@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import "./AdminTariffs.scss";
+import "./AdminTariffsCameras.scss";
 import { useDispatch, useSelector } from "react-redux";
 import Blocked from "../../general/Blocked";
 import { Tabs } from "antd";
-import AdminTariffsListTab from "./AdminTariffsListTab/AdminTariffsListTab";
-import AdminCreateTariffTab from "./AdminCreateTariffTab/AdminCreateTariffTab";
+import AdminTariffsCamerasListTab from "./AdminTariffsCamerasListTab/AdminTariffsCamerasListTab";
+import AdminCreateTariffCamerasTab from "./AdminCreateTariffCamerasTab/AdminCreateTariffCamerasTab";
 import { fetchAllUsers } from "../../../redux/usersReducer";
 
-const AdminTariffs = ({ t }) => {
+const AdminTariffsCameras = ({ t }) => {
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.authReducer.user);
@@ -25,28 +25,28 @@ const AdminTariffs = ({ t }) => {
     const items = [
         {
             key: "1",
-            label: t("admin.tariffsList"),
-            children: <AdminTariffsListTab setTab={onChangeTab} t={t} />
+            label: t("tariffs_list"),
+            children: <AdminTariffsCamerasListTab setTab={onChangeTab} t={t} />
         },
         {
             key: "2",
-            label: t("admin.createNewTariff"),
-            children: <AdminCreateTariffTab t={t} />
+            label: t("create_new_tariff"),
+            children: <AdminCreateTariffCamerasTab t={t} />
         }
     ];
 
-    if (!user?.admin_name) {
-        return <Blocked status="403" title={t("common.accessDenied")} message={t("common.haventAccess")} />;
+    if (!user?.admin) {
+        return <Blocked status="403" title={t("access_denied")} message={t("havent_access")} />;
     }
 
     return (
         <div className="tariffs">
             <section className="head-section">
-                <h2>{t("admin.tariffsManagement")}</h2>
+                <h2>{t("tariffs_cameras_management")}</h2>
             </section>
             <Tabs defaultActiveKey="1" onChange={onChangeTab} activeKey={tab} items={items} />
         </div>
     );
 };
 
-export default React.memo(AdminTariffs);
+export default React.memo(AdminTariffsCameras);

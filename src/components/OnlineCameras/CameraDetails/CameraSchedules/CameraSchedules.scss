@@ -1,4 +1,11 @@
 .camera-schedules {
+    display: grid;
+    row-gap: 20px;
+    column-gap: 20px;
+    flex-wrap: wrap;
+    grid-template-columns: repeat(auto-fill, 340px);
+
+
     .active-schedule {
         background: #f6ffed;
         border-color: #b7eb8f;
@@ -8,7 +15,7 @@
         border-color: #ffa39e;
     }
     .schedule-card {
-        min-width: 235px;
+        width: 340px;
         height: 100%;
     }
     .schedule-card p {
@@ -42,6 +49,7 @@
         align-items: center;
         justify-content: center !important;
         transition: 0.5s;
+        width: 340px;
     }
     .add-camera-schedule:hover {
         transform: scale(1.05);

@@ -42,31 +42,31 @@ const CamerasReports = ({ t }) => {
 
     const rangePresets = [
         {
-            label: t("trackerManagement.today"),
+            label: t("today"),
             value: [today, now]
         },
         {
-            label: t("trackerManagement.yesterday"),
+            label: t("yesterday"),
             value: [yesterdayStart, yesterdayEnd]
         },
         {
-            label: t("trackerManagement.beforeYesterday"),
+            label: t("before_yesterday"),
             value: [beforeYesterdayStart, beforeYesterdayEnd]
         },
         {
-            label: t("trackerManagement.currentWeek"),
+            label: t("current_week"),
             value: [currentWeek, now]
         },
         {
-            label: t("trackerManagement.previousWeek"),
+            label: t("previous_week"),
             value: [previousWeekStart, previousWeekEnd]
         },
         {
-            label: t("trackerManagement.currentMonth"),
+            label: t("current_month"),
             value: [currentMonth, now]
         },
         {
-            label: t("trackerManagement.previousMonth"),
+            label: t("previous_month"),
             value: [previousMonthStart, previousMonthEnd]
         }
 
@@ -76,15 +76,15 @@ const CamerasReports = ({ t }) => {
     return (
         <div className="common-list">
             <section className="head-section">
-                <h2>{t("menuBar.reports")}</h2>
+                <h2>{t("reports")}</h2>
             </section>
-            <h3>{t("trackerManagement.reportsTitle")}</h3>
+            <h3>{t("reports_title")}</h3>
             <div className="reports-form">
                 <Form
 
                     onFinish={onFinish}
                 >
-                    <Form.Item label={t("trackerManagement.object")} name="object">
+                    <Form.Item label={t("object")} name="object">
                         <Select style={{
                             width: 120
                         }}>
@@ -93,7 +93,7 @@ const CamerasReports = ({ t }) => {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item label={t("trackerManagement.selectDate")} name="date">
+                    <Form.Item label={t("select_date")} name="date">
                         <RangePicker
                             presets={rangePresets}
                             showTime
@@ -101,7 +101,7 @@ const CamerasReports = ({ t }) => {
                         />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">{t("common.submit")}</Button>
+                        <Button type="primary" htmlType="submit">{t("submit")}</Button>
                     </Form.Item>
                 </Form>
             </div>

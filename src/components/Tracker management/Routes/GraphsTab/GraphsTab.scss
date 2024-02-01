@@ -1,0 +1,9 @@
+.graph-wrapper {
+    width: 100%;
+    min-height: 400px;
+
+    canvas {
+        width: 100% !important;
+        // height: 500px !important;
+    }
+}

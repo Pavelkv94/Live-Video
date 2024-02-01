@@ -25,12 +25,17 @@ const TrackersEquipmentsTab = ({ t }) => {
 
     const columns = [
         {
-            title: t("admin.trackerModel"),
-            dataIndex: "trmodel_name",
-            key: "trmodel_name"
+            title: t("tracker_model"),
+            dataIndex: "name",
+            key: "name"
         },
         {
-            title: t("common.actions"),
+            title: t("tracker_code"),
+            dataIndex: "code",
+            key: "code"
+        },
+        {
+            title: t("actions"),
             dataIndex: "actions",
             key: "actions",
             render: (text, params) => (
@@ -58,7 +63,7 @@ const TrackersEquipmentsTab = ({ t }) => {
     ];
 
     const handleSubmitDeleteModal = () => {
-        dispatch(deleteTrackerModelAdmin(checkedModel.trmodel_id));
+        dispatch(deleteTrackerModelAdmin(checkedModel.id));
         setCheckedModel(null);
         setOpenDeleteModal(false);
     };
@@ -69,18 +74,18 @@ const TrackersEquipmentsTab = ({ t }) => {
     };
 
     const handleEditTrackerModel = () => {
-        dispatch(updateTrackerModelAdmin(trackerModel.trmodel_id, { trmodel_name: trackerModel.trmodel_name, trmodel_code: trackerModel.trmodel_code }));
+        dispatch(updateTrackerModelAdmin(trackerModel.id, { name: trackerModel.name, code: trackerModel.code }));
         handleCancelModal();
     };
 
     const handleCreateTrackerModel = () => {
-        dispatch(createTrackerModelAdmin({ trmodel_name: trackerModel.trmodel_name, trmodel_code: trackerModel.trmodel_code }));
+        dispatch(createTrackerModelAdmin({ name: trackerModel.name, code: trackerModel.code }));
         handleCancelModal();
     };
 
     const data = trackersModelsList.map((el) => ({
         ...el,
-        key: el?.trmodel_id
+        key: el?.id
     }));
 
     return (
@@ -93,7 +98,7 @@ const TrackersEquipmentsTab = ({ t }) => {
                 }}
                 style={{ marginBottom: 20 }}
             >
-                {t("admin.addtrackerModel")}
+                {t("addtracker_model")}
             </Button>
             <Table className="trackers-models" dataSource={data} columns={columns} pagination={false} size="small" />
 

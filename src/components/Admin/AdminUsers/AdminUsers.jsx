@@ -9,18 +9,25 @@ import { initialAdminUserItems, initialRegData } from "../../general/initialData
 import RegistrationModal from "../../Login/RegistrationModal";
 import { DeleteModal } from "../../general/DeleteModal";
 import Blocked from "../../general/Blocked";
+import { connectToUser, disconnectFromUser } from "../../../redux/authReducer";
+import { refillBalanceFromAdmin } from "../../../redux/balanceReducer";
+import RefillBalanceModal from "../../general/RefillBalanceModal";
 
 const AdminUsers = ({ t }) => {
     const dispatch = useDispatch();
 
     const users = useSelector((state) => state.usersReducer.usersList);
     const user = useSelector((state) => state.authReducer.user);
+    const connectedUser = useSelector((state) => state.authReducer.connectedUser);
+    // const connectedUser = JSON.parse(localStorage.getItem("selected_user"));
 
     const [isUsereModalVisible, setIsUserModalVisible] = useState(false);
     const [userData, setUserData] = useState(initialRegData);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [openRefillModal, setOpenRefillModal] = useState(false);
     const [checkedUser, setCheckedUser] = useState(null);
     const [userModalMode, setUserModalMode] = useState("create");
+    const [refillAmount, setRefillAmount] = useState(0);
 
     useEffect(() => {
         dispatch(fetchAllUsers());
@@ -37,59 +44,73 @@ const AdminUsers = ({ t }) => {
     };
 
     const handleEditUser = () => {
-        dispatch(editAsAdminUser(checkedUser.user_id, userData));
+        dispatch(editAsAdminUser(checkedUser.id, userData));
         handleCreateCancel();
     };
 
     const handleSubmitDeleteModal = () => {
-        dispatch(deleteUser(checkedUser.user_id));
+        dispatch(deleteUser(checkedUser.id));
         setCheckedUser(null);
         setOpenDeleteModal(false);
     };
 
+    const handleSubmitRefillModal = () => {
+        dispatch(refillBalanceFromAdmin(checkedUser.id, refillAmount, "fromAdminUsers"));
+        setCheckedUser(null);
+        setOpenRefillModal(false);
+    };
+
+    const handleCloseRefillModal = () => {
+        setRefillAmount(0);
+        setCheckedUser(null);
+        setOpenRefillModal(false);
+    };
+
     const handleEditMode = (params) => {
         setUserData({
-            user_name: params.user_name,
-            user_mail: params.user_mail,
-            user_info: params.user_info,
+            name: params.name,
+            second_name: params.second_name,
+            email: params.email,
+            info: params.info,
             prefered_map: params.prefered_map,
-            user_phone: params.user_phone,
-            user_uradress: params.user_uradress,
-            user_postadress: params.user_postadress,
-            user_fiz_ur: params.user_fiz_ur,
-            user_ynp: params.user_ynp,
-            user_bank: params.user_bank,
-            user_rschet: params.user_rschet
+            phone: params.phone,
+            legal_adress: params.legal_adress,
+            post_adress: params.post_adress,
+            business_type: params.business_type,
+            unp: params.unp,
+            bank_info: params.bank_info,
+            bank_account: params.bank_account
         });
         setCheckedUser(params);
 
         setUserModalMode("edit");
         setIsUserModalVisible(true);
     };
+
     const columnsUsers = [
         {
-            title: t("common.name"),
-            dataIndex: "user_name",
-            key: "user_name"
+            title: t("name"),
+            dataIndex: "name",
+            key: "name"
         },
         {
-            title: t("common.email"),
-            dataIndex: "user_mail",
-            key: "user_mail"
+            title: t("email"),
+            dataIndex: "email",
+            key: "email"
         },
         {
-            title: t("common.phone"),
-            dataIndex: "user_phone",
-            key: "user_phone"
+            title: t("phone"),
+            dataIndex: "phone",
+            key: "phone"
         },
         {
-            title: t("common.registered"),
-            dataIndex: "user_regtime",
-            key: "user_regtime",
-            render: (text, params) => dateConvert(params.user_regtime)
+            title: t("registered"),
+            dataIndex: "created_at",
+            key: "created_at",
+            render: (text, params) => dateConvert(params.created_at)
         },
         {
-            title: t("common.actions"),
+            title: t("actions"),
             dataIndex: "actions",
             key: "actions",
             width: 2,
@@ -104,34 +125,40 @@ const AdminUsers = ({ t }) => {
                             setCheckedUser(params);
                         }}
                     />
-                    <Button type="primary" onClick={() => {}}>
-                        {t("admin.connect")}
-                    </Button>
-                    <Button style={{ background: "#5cb85c", width: 120 }} type="primary" onClick={() => {}}>
-                        {t("admin.refillBalance")}
+                    {connectedUser?.id !== params.id ? (
+                        <Button type="primary" onClick={() => dispatch(connectToUser({ user_id: params.id }))}>
+                            {t("connect")}
+                        </Button>
+                    ) : (
+                        <Button type="primary" danger onClick={() => dispatch(disconnectFromUser())}>
+                            {t("disconnect")}
+                        </Button>
+                    )}
+                    <Button style={{ background: "#5cb85c", width: 120 }} type="primary" onClick={() => {setCheckedUser(params);setOpenRefillModal(true);}}>
+                        {t("refill_balance")}
                     </Button>
                 </div>
             )
         }
     ];
 
-    const data = users.map((el) => ({ ...el, key: el.user_id }));
+    const data = users.map((el) => ({ ...el, key: el.id }));
 
     const userItem = (user) =>
         initialAdminUserItems.map((el, i) => (
             <div key={i} className="admin-users-item">
-                <span>{t(`admin.${el}`)}:</span>
+                <span>{t(`${el}`)}:</span>
                 <span>
-                    {el === "user_mail_verif" ? (
+                    {el === "active" ? (
                         user[el] ? (
                             <CheckCircleOutlined style={{ color: "#0b8235" }} />
                         ) : (
                             <CloseCircleOutlined style={{ color: "#f81d22" }} />
                         )
-                    ) : el === "user_regtime" ? (
+                    ) : el === "created_at" ? (
                         dateConvert(user[el])
-                    ) : el === "user_fiz_ur" ? (
-                        t(user[el] ? "admin.entinity" : "admin.individual")
+                    ) : el === "business_type" ? (
+                        t(user[el] ? "entinity" : "individual")
                     ) : (
                         user[el] || "N/A"
                     )}
@@ -139,14 +166,14 @@ const AdminUsers = ({ t }) => {
             </div>
         ));
 
-    if (!user?.admin_name) {
-        return <Blocked status="403" title={t("common.accessDenied")} message={t("common.haventAccess")} />;
+    if (!user?.admin) {
+        return <Blocked status="403" title={t("access_denied")} message={t("havent_access")} />;
     }
 
     return (
         <div className="admin-users">
             <section className="head-section">
-                <h2>{t("admin.usersManagement")}</h2>
+                <h2>{t("users_management")}</h2>
                 <Button
                     shape="circle"
                     icon={<UserAddOutlined />}
@@ -165,13 +192,13 @@ const AdminUsers = ({ t }) => {
                         <div className="admin-users-info-wrap">
                             <div className="admin-users-info">{userItem(record)}</div>
                             <div className="admin-users-actions">
-                                <Button onClick={() => dispatch(resendActivationMail(record.user_mail))}>{t("admin.resendEmail")}</Button>
-                                <Button type="primary">{t("admin.selectUser")}</Button>
-                                <Button type="default" disabled={record.user_mail_verif}>
-                                    {t("admin.activateUser")}
+                                <Button onClick={() => dispatch(resendActivationMail(record.email))}>{t("resend_email")}</Button>
+                                {/* <Button type="primary" onClick={() => dispatch(connectToUser({user_id: record.id}))}>{t("select_user")}</Button> */}
+                                <Button type="default" disabled={record.active}>
+                                    {t("activate_user")}
                                 </Button>
-                                <Button type="default" danger disabled={!record.user_mail_verif}>
-                                    {t("admin.deactivateUser")}
+                                <Button type="default" danger disabled={!record.active}>
+                                    {t("deactivate_user")}
                                 </Button>
                             </div>
                         </div>
@@ -193,6 +220,17 @@ const AdminUsers = ({ t }) => {
 
             {openDeleteModal && (
                 <DeleteModal isModalVisible={openDeleteModal} setIsModalVisible={setOpenDeleteModal} submitModal={handleSubmitDeleteModal} item="user" t={t} />
+            )}
+
+            {openRefillModal && (
+                <RefillBalanceModal
+                    isModalVisible={openRefillModal}
+                    t={t}
+                    handleSubmit={handleSubmitRefillModal}
+                    handleCancel={handleCloseRefillModal}
+                    refillAmount={refillAmount}
+                    setRefillAmount={setRefillAmount}
+                />
             )}
         </div>
     );

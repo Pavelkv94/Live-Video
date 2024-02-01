@@ -11,7 +11,7 @@ import { CopyClipboard } from "../../general/CopyClipboard";
 import { CustomModal } from "../CustomModal";
 import { PageHeader } from "@ant-design/pro-layout";
 
-const StorageDetails = React.memo(({t}) => {
+const StorageDetails = React.memo(({t, isMobileSize}) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const ref = useRef();
@@ -55,7 +55,7 @@ const StorageDetails = React.memo(({t}) => {
 
     const columns = [
         {
-            title: t("common.name"),
+            title: t("name"),
             dataIndex: "name",
             key: "name",
             render: (text, params) =>
@@ -66,12 +66,12 @@ const StorageDetails = React.memo(({t}) => {
                 )
         }, // <p>{text}</p>
         {
-            title: t("common.created"),
+            title: t("created"),
             dataIndex: "created_at",
             key: "created_at"
         },
         {
-            title: t("common.actions"),
+            title: t("actions"),
             dataIndex: "edit",
             key: "edit",
             render: (el, params) => (
@@ -136,10 +136,10 @@ const StorageDetails = React.memo(({t}) => {
             <PageHeader className="site-page-header" onBack={() => window.history.back()} title={currentStorage.name} />
             <div className="storage-details">
                 <section>
-                    <h2>{t("onlineCameras.storageDetails")}</h2>
+                    <h2>{t("storage_details")}</h2>
                     <Card>
                         <span>
-                            <p>{t("onlineCameras.storageType")}:</p>
+                            <p>{t("storage_type")}:</p>
                             <p>{currentStorage.storage_type}</p>
                         </span>
                         <span>
@@ -147,21 +147,21 @@ const StorageDetails = React.memo(({t}) => {
                             <p>{currentStorage.url}</p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.accesskey")}:</p>
+                            <p>{t("access_key")}:</p>
                             <p className="access-key">
                                 {currentStorage.aws_access_key_id}
                                 <CopyClipboard value={currentStorage.aws_access_key_id} />
                             </p>
                         </span>
                         <span>
-                            <p>{t("onlineCameras.secretAccessKey")}:</p>
+                            <p>{t("secret_access_key")}:</p>
                             <p className="access-key">
                                 {currentStorage.aws_secret_access_key}
                                 <CopyClipboard value={currentStorage.aws_secret_access_key} />
                             </p>
                         </span>
                         <span>
-                            <p>{t("common.created")}:</p>
+                            <p>{t("created")}:</p>
                             <p>{dateConvert(currentStorage.created_at)}</p>
                         </span>
                         <span>
@@ -174,7 +174,7 @@ const StorageDetails = React.memo(({t}) => {
                                         setCheckedElement(currentStorage);
                                     }}
                                 >
-                                    {t("common.edit")}
+                                    {t("edit")}
                                 </Button>
                                 <Button
                                     danger
@@ -184,7 +184,7 @@ const StorageDetails = React.memo(({t}) => {
                                         setDeleteType("storage");
                                     }}
                                 >
-                                    {t("onlineCameras.deleteStorage")}
+                                    {t("delete_storage")}
                                 </Button>
                             </span>
                         </span>
@@ -192,10 +192,10 @@ const StorageDetails = React.memo(({t}) => {
                 </section>
                 <section>
                     <div className="bucket-title">
-                        <h2>{t("onlineCameras.buckets")}</h2>
+                        <h2>{t("buckets")}</h2>
                         <Button shape="circle" icon={<PlusOutlined />} onClick={() => showModal("create_bucket")} />
                     </div>
-                    <Table columns={columns} dataSource={data} pagination={false} bordered />
+                    <Table columns={columns} dataSource={data} pagination={false} bordered size={isMobileSize ? "small" : "middle"}/>
                 </section>
             </div>
 

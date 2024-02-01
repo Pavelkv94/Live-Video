@@ -1,0 +1,28 @@
+.create-tariff {
+    .create-tariff-type {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+
+        label {
+            align-items: center;
+            height: 32px;
+        }
+    }
+    .ant-card {
+        max-width: 800px;
+        min-width: 320px;
+        .tariff-form-item {
+            display: flex;
+            min-height: 44px;
+            align-items: center;
+
+            p {
+                width: 400px;
+            }
+            .tariff-form-item-input {
+                max-width: 200px;
+            }
+        }
+    }
+}

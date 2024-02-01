@@ -1,7 +1,10 @@
 .trackers-tariffs {
-
     .tariffs-content {
         display: flex;
+
+        @media screen and (max-width: 800px) {
+            overflow-x: scroll;
+        }
 
         .tariffs-item-wrap {
             width: 100%;
@@ -16,7 +19,17 @@
                 justify-content: center;
                 width: 100%;
                 border-bottom: 1px solid #f0f0f0;
+                min-width: 60px;
 
+            
+                @media screen and (max-width: 800px) {
+                    font-size: 12px;
+                    line-height: 14px;
+
+                    p {
+                        margin: 8px 0;
+                    }
+                }
             }
         }
     }

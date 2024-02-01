@@ -13,15 +13,15 @@ export const GeneralModalWrapper = React.memo(({ open, title, children, handleSu
             onCancel={handleCancel}
             footer={[
                 <Button key="cancel" onClick={handleCancel}>
-                    {t("common.close")}
+                    {t("close")}
                 </Button>,
                 <Button key="ok" onClick={handleSubmit} type="primary" disabled={disableButton}>
-                    {t(`common.${action}`)}
+                    {t(`${action}`)}
                 </Button>
             ]}
             width={width}
         >
-            <div>{children}</div>
+            <div className="modal-body-wrapper">{children}</div>
         </Modal>
     );
 });

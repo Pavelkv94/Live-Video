@@ -61,25 +61,27 @@ import SVGcolor29 from "../../assets/img/markers/svg/C0C0FF.svg";
 import SVGcolor30 from "../../assets/img/markers/svg/FFC0FF.svg";
 
 export const initialRegData = {
-    user_session_lifetime: "600000",
-    user_name: "",
-    user_mail: "",
-    user_info: "",
+    name: "",
+    second_name: "",
+    email: "",
+    info: "",
     prefered_map: "google",
-    user_phone: "",
-    user_pass: "",
-    user_pass_confirmation: "",
+    phone: "",
+    password: "",
+    password_confirmation: "",
     // user_balance: "",
-    user_uradress: "",
-    user_postadress: "",
-    user_fiz_ur: "",
-    user_ynp: "",
-    user_bank: "",
-    user_rschet: ""
+    legal_adress: "",
+    post_adress: "",
+    business_type: 0,
+    unp: "",
+    bank_info: "",
+    bank_account: ""
+    
 };
 
 export const initialCamera = {
     ip: "",
+    model: "",
     login: "",
     password: "",
     name: "",
@@ -87,14 +89,13 @@ export const initialCamera = {
     bucket_id: null
 };
 export const initialStorage = {
-    storage_type: "",
+    type: "",
     url: "",
     name: "",
     aws_access_key_id: "",
-    aws_secret_access_key: "",
-    login: "",
-    password: ""
+    aws_secret_access_key: ""
 };
+
 export const initialSchedule = {
     duration: "0",
     period: "0",
@@ -108,33 +109,46 @@ export const initialSchedule = {
 export const initialBucket = { name: "" };
 
 export const cameraFields = [
-    { label: "name", key: "name", placeholder: "enterName" },
-    { label: "ip", key: "ip", placeholder: "enterIp" },
-    { label: "login", key: "login", placeholder: "enterLogin" },
-    { label: "password", key: "password", placeholder: "enterPassword" },
-    { label: "storage", key: "storage_id", placeholder: "selectStorage" },
-    { label: "bucket", key: "bucket_id", placeholder: "selectBucket" }
+    { label: "name", key: "name", placeholder: "enter_name" },
+    { label: "model", key: "model", placeholder: "enter_model" },
+    { label: "ip", key: "ip_address", placeholder: "enter_ip" },
+    { label: "login", key: "login", placeholder: "enter_login" },
+    { label: "password", key: "password", placeholder: "enter_password" },
+    { label: "storage", key: "storage_id", placeholder: "select_storage" },
+    { label: "bucket", key: "bucket_id", placeholder: "select_bucket" }
 ];
 
 export const scheduleFields = [
-    { label: "name", key: "name", placeholder: "enterName" },
-    { label: "durationS", key: "duration", placeholder: "3600" },
-    { label: "periodS", key: "period", placeholder: "3600" },
+    { label: "name", key: "name", placeholder: "enter_name" },
+    { label: "duration_s", key: "duration", placeholder: "3600" },
+    { label: "period_s", key: "period", placeholder: "3600" },
     { label: "days", key: "days" },
-    { label: "startHour", key: "start_hour", placeholder: "enterTime" },
-    { label: "endHour", key: "end_hour", placeholder: "enterTime" },
+    { label: "start_hour", key: "start_hour", placeholder: "enter_time" },
+    { label: "end_hour", key: "end_hour", placeholder: "enter_time" },
     { label: "cameras", key: "cameras" }
 ];
 
-export const createStorageFields = [
-    { label: "name", key: "name", placeholder: "enterName" },
-    { label: "storageType", key: "storage_type" },
-    { label: "url", key: "url", placeholder: "enterUrl" },
-    { label: "accesskey", key: "aws_access_key_id", placeholder: "enterAccessKey" },
-    { label: "secretAccessKey", key: "aws_secret_access_key", placeholder: "enterSecretAccessKey" },
-    { label: "login", key: "login", placeholder: "enterLogin" },
-    { label: "password", key: "password", placeholder: "enterPassword" }
+export const createStorageFieldsAWS = [
+    { label: "name", key: "name", placeholder: "enter_name" },
+    { label: "storage_type", key: "type" },
+    { label: "url", key: "url", placeholder: "enter_url" },
+    { label: "access_key", key: "aws_access_key_id", placeholder: "enter_access_key" },
+    { label: "secret_access_key", key: "aws_secret_access_key", placeholder: "enter_secret_access_key" }
 ];
+
+export const createStorageFieldsIbaS3 = [
+    { label: "name", key: "name", placeholder: "enter_name" },
+    { label: "storage_type", key: "type" },
+    { label: "url", key: "url", placeholder: "enter_url" },
+    { label: "access_key", key: "aws_access_key_id", placeholder: "enter_access_key" },
+    { label: "secret_access_key", key: "aws_secret_access_key", placeholder: "enter_secret_access_key" },
+    { label: "login", key: "login", placeholder: "enter_login" },
+    { label: "password", key: "password", placeholder: "enter_password" },
+    { label: "account", key: "account", placeholder: "enter_account" },
+    { label: "role", key: "role", placeholder: "enter_role" }
+
+];
+
 
 export const editStorageFields = [
     { label: "Name", key: "name" },
@@ -145,41 +159,43 @@ export const editStorageFields = [
 
 export const regFields = [
     [
-        { label: "common.name", key: "user_name", placeholder: "common.enterName" },
-        { label: "common.email", key: "user_mail", placeholder: "common.enterEmail" },
-        { label: "login.info", key: "user_info", placeholder: "login.enterInfo" },
-        { label: "login.preferedMap", key: "prefered_map", placeholder: "login.selectMap" },
-        { label: "common.phone", key: "user_phone", placeholder: "common.enterPhone" },
-        { label: "login.password", key: "user_pass", placeholder: "login.enterPass" },
-        { label: "login.confirmPass", key: "user_pass_confirmation", placeholder: "login.confirmPass" }
+        { label: "name", key: "name", placeholder: "enter_name" },
+        { label: "second_name", key: "second_name", placeholder: "enter_second_name" },
+        { label: "email", key: "email", placeholder: "enter_email" },
+        { label: "info", key: "info", placeholder: "enter_info" },
+        { label: "prefered_map", key: "prefered_map", placeholder: "select_map" },
+        { label: "phone", key: "phone", placeholder: "enter_phone" },
+        { label: "password", key: "password", placeholder: "enter_password" },
+        { label: "confirm_pass", key: "password_confirmation", placeholder: "confirm_pass" }
     ],
     [
-        { label: "login.urAdress", key: "user_uradress", placeholder: "login.enterUrAdress" },
-        { label: "login.postAdress", key: "user_postadress", placeholder: "login.enterPostAdress" }
+        { label: "legal_address", key: "legal_address", placeholder: "enter_legal_address" },
+        { label: "post_adress", key: "post_address", placeholder: "enter_post_adress" }
     ],
     [
-        { label: "login.ynp", key: "user_ynp", placeholder: "login.enterYnp" },
-        { label: "login.bank", key: "user_bank", placeholder: "login.enterBank" },
-        { label: "login.rschet", key: "user_rschet", placeholder: "login.enterRschet" }
+        { label: "ynp", key: "unp", placeholder: "enter_ynp" },
+        { label: "bank", key: "bank_info", placeholder: "enter_bank" },
+        { label: "rschet", key: "bank_account", placeholder: "enter_bank_account" }
     ]
 ];
 
 export const editFields = [
     [
-        { label: "common.name", key: "user_name", placeholder: "common.enterName" },
-        { label: "common.email", key: "user_mail", placeholder: "common.enterEmail" },
-        { label: "login.info", key: "user_info", placeholder: "login.enterInfo" },
-        { label: "login.preferedMap", key: "prefered_map", placeholder: "login.selectMap" },
-        { label: "common.phone", key: "user_phone", placeholder: "common.enterPhone" }
+        { label: "name", key: "name", placeholder: "enter_name" },
+        { label: "second_name", key: "second_name", placeholder: "enter_second_name" },
+        { label: "email", key: "email", placeholder: "enter_email" },
+        { label: "info", key: "info", placeholder: "enter_info" },
+        { label: "prefered_map", key: "prefered_map", placeholder: "select_map" },
+        { label: "phone", key: "phone", placeholder: "enter_phone" }
     ],
     [
-        { label: "login.urAdress", key: "user_uradress", placeholder: "login.enterUrAdress" },
-        { label: "login.postAdress", key: "user_postadress", placeholder: "login.enterPostAdress" }
+        { label: "legal_address", key: "legal_address", placeholder: "enter_legal_address" },
+        { label: "post_adress", key: "post_address", placeholder: "enter_post_adress" }
     ],
     [
-        { label: "login.ynp", key: "user_ynp", placeholder: "login.enterYnp" },
-        { label: "login.bank", key: "user_bank", placeholder: "login.enterBank" },
-        { label: "login.rschet", key: "user_rschet", placeholder: "login.enterRschet" }
+        { label: "ynp", key: "unp", placeholder: "enter_ynp" },
+        { label: "bank", key: "bank_info", placeholder: "enter_bank" },
+        { label: "rschet", key: "bank_account", placeholder: "enter_bank_account" }
     ]
 ];
 
@@ -260,41 +276,41 @@ export const initialCheckedDays = [
 ];
 
 export const initalTracker = {
-    trobject_name: "",
-    trobject_imei: "",
-    trobject_phone: "",
-    trobject_public: "",
-    trobject_info: "",
-    trobject_srrashod: "",
-    trobject_ref_trmodel: "",
-    trobject_timestop: "",
-    trobject_timepark: "",
+    name: "",
+    imei: "",
+    phone: "",
+    port: "5000",
+    info: "",
+    average_consumption: "",
+    tracker_model_id: "",
+    stopping_time: "",
+    parking_time: "",
     color: ""
 };
 
 export const trackerDetails = {
-    trobject_imei: "tr_imei",
-    trobject_phone: "tr_phone",
-    trobject_public: "tr_public",
-    trobject_info: "tr_info",
-    trobject_srrashod: "tr_srrashod",
-    trobject_ref_trmodel: "tr_ref_trmodel",
-    trobject_timestop: "tr_timestop",
-    trobject_timepark: "tr_timepark",
-    trobject_oplacheno: "tr_paid",
-    color: "trackerColor"
+    imei: "tracker_imei",
+    phone: "tracker_phone",
+    port: "port",
+    info: "tracker_info",
+    average_consumption: "tracker_average_consumption",
+    tracker_model_id: "tracker_model",
+    stopping_time: "tracker_stopping_time",
+    parking_time: "tracker_parking_time",
+    paid_till: "paid_up_to",
+    color: "tracker_color"
 };
 
 export const initalTrackerFields = [
-    { name: "trobject_name", label: "trackerManagement.tr_name", placeholder: "trackerManagement.enter_tr_name" },
-    { name: "trobject_public", label: "trackerManagement.tr_public", placeholder: "trackerManagement.enter_tr_public" },
-    { name: "trobject_imei", label: "trackerManagement.tr_imei", placeholder: "trackerManagement.enter_tr_imei" },
-    { name: "trobject_phone", label: "trackerManagement.tr_phone", placeholder: "trackerManagement.enter_tr_phone" },
-    { name: "trobject_info", label: "trackerManagement.tr_info", placeholder: "trackerManagement.enter_tr_info" },
-    { name: "trobject_srrashod", label: "trackerManagement.tr_srrashod", placeholder: "trackerManagement.enter_tr_srrashod" },
-    { name: "trobject_timestop", label: "trackerManagement.tr_timestop", placeholder: "trackerManagement.enter_tr_timestop" },
-    { name: "trobject_timepark", label: "trackerManagement.tr_timepark", placeholder: "trackerManagement.enter_tr_timepark" },
-    { name: "trobject_ref_trmodel", label: "trackerManagement.tr_ref_trmodel", placeholder: "trackerManagement.enter_tr_ref_trmodel" }
+    { name: "name", label: "tracker_name", placeholder: "enter_tracker_name" },
+    { name: "tracker_model_id", label: "tracker_model", placeholder: "enter_tracker_model" },
+    { name: "imei", label: "tracker_imei", placeholder: "enter_tr_imei" },
+    { name: "phone", label: "tracker_phone", placeholder: "enter_tracker_phone" },
+    { name: "port", label: "port", placeholder: "enter_port" },
+    { name: "average_consumption", label: "tracker_average_consumption", placeholder: "enter_tracker_average_consuption" },
+    { name: "stopping_time", label: "tracker_stopping_time", placeholder: "enter_tracker_stopping_time" },
+    { name: "info", label: "tracker_info", placeholder: "enter_tracker_info" },
+    { name: "parking_time", label: "tracker_parking_time", placeholder: "enter_tracker_parking_time" }
 ];
 
 export const initMonitoringObj = {
@@ -305,56 +321,58 @@ export const initMonitoringObj = {
 
 export const initSharedObjectUser = {
     email: "",
-    change_tro_access: false,
-    reports_access: false,
-    routes_creating_access: false,
-    realtime_check_access: false,
-    schedules_access: false,
-    storage_access: false,
-    broadcast_access: false,
-    change_cam_access: false,
-    recorded_videos_manage_access: false
+    mon_object_edit: false,
+    camera_edit: false,
+    tracker_edit: false
+
+    // change_tro_access: false,
+    // reports_access: false,
+    // routes_creating_access: false,
+    // realtime_check_access: false,
+    // schedules_access: false,
+    // storage_access: false,
+    // broadcast_access: false,
+    // change_cam_access: false,
+    // recorded_videos_manage_access: false
 };
 
 export const initSharedTrackerUser = {
     email: "",
-    change_access: false,
-    reports_access: false,
-    routes_creating_access: false,
-    realtime_check_access: false
+    edit: false
 };
 
 export const initSharedCameraUser = {
     email: "",
-    schedules_access: false,
-    storage_access: false,
-    broadcast_access: false,
-    change_access: false,
-    recorded_videos_manage_access: false
+    edit: false
 };
 
 export const initObjectSharingFields = [
-    "change_tro_access",
-    "reports_access",
-    "routes_creating_access",
-    "realtime_check_access",
-    "schedules_access",
-    "storage_access",
-    "broadcast_access",
-    "change_cam_access",
-    "recorded_videos_manage_access",
-    "show_access"
+    ["access_to_edit_mon_object", "mon_object_edit"],
+    ["access_to_edit_camera", "camera_edit"],
+    ["access_to_edit_tracker", "tracker_edit"]
+
+    
+    // "change_tracker_access",
+    // "reports_access",
+    // "routes_creating_access",
+    // "realtime_check_access",
+    // "schedules_access",
+    // "storage_access",
+    // "broadcast_access",
+    // "change_camera_access",
+    // "recorded_videos_manage_access",
+    // "show_access"
 ];
 
-export const initTrackerSharingFields = ["change_access", "reports_access", "routes_creating_access", "realtime_check_access", "show_access"];
+export const initTrackerSharingFields = [["access_to_edit_tracker", "edit"]];
 
 export const initCameraSharingFields = [
-    "schedules_access",
-    "storage_access",
-    "broadcast_access",
-    "change_access",
-    "recorded_videos_manage_access",
-    "show_access"
+    // "schedules_access",
+    // "storage_access",
+    // "broadcast_access",
+    ["access_to_edit_camera", "edit"]
+    // "recorded_videos_manage_access",
+    // "show_access"
 ];
 
 export const paletteColors = [
@@ -464,128 +482,140 @@ export const initialNotification = {
 };
 
 export const initialAdminUserItems = [
-    "user_name", //common
-    "user_fiz_ur", //common
-    "user_mail", //common
-    "user_mail_verif", //common
-    "user_phone", //common
-    "user_info", //common
-    "user_balance", //common
+    "name", //common
+    "business_type", //common
+    "email", //common
+    "active", //common
+    "phone", //common
+    "info", //common
+    "balance", //common
     // "user_vip", //old
-    "user_uradress", //ur &
-    "user_postadress", //ur &
-    "user_ynp", //ur
-    "user_rschet", //ur
-    "user_bank", //ur
-    "user_regtime", //common
+    "legal_adress", //ur &
+    "post_adress", //ur &
+    "unp", //ur
+    "bank_account", //ur
+    "bank_info", //ur
+    "created_at", //common
     "prefered_map" //common
 ];
 
-export const initTestTariff = {
-    tariffobj_active: 1,
-    tariffobj_publicspec: 1,
-    tariffobj_ref_user: 4,
-    tariffobj_sort: 1,
-    tariffobj_name: "Tariff name",
-    tariffobj_objstat: 1,
-    tariffobj_objdin: 1,
-    tariffobj_publicobj: 1,
-    tariffobj_objstat_cost: 1,
-    tariffobj_objdin_cost: 1,
-    tariffobj_public_cost: 1,
-    tariffobj_trekcountobj: 1,
-    tariffobj_probeg: 1,
-    tariffobj_history: 1,
-    tariffobj_trekvideo: 1,
-    tariffobj_toplivo: 1,
-    tariffobj_geozone: 1,
-    tariffobj_simcard: 1,
-    tariffobj_stops: 1,
-    tariffobj_reportprobeg: 1,
-    tariffobj_reportprobeggr: 1,
-    tariffobj_discount6m: 1,
-    tariffobj_discount1y: 1,
-    tariffobj_phonelogin: 1,
-    tariffobj_realtime: 1,
-    tariffobj_creditdays: 1
-};
-
 export const updateUserFields = [
     [
-        { label: "common.name", key: "user_name", placeholder: "common.enterName" },
-        { label: "common.email", key: "user_mail", placeholder: "common.enterEmail" },
-        { label: "login.preferedMap", key: "prefered_map", placeholder: "login.selectMap" },
-        { label: "login.info", key: "user_info", placeholder: "login.enterInfo" },
-        { label: "common.phone", key: "user_phone", placeholder: "common.enterPhone" },
-        { label: "login.urAdress", key: "user_uradress", placeholder: "login.enterUrAdress" }
+        { label: "name", key: "name", placeholder: "enter_name" },
+        { label: "second_name", key: "second_name", placeholder: "enter_second_name" },
+        { label: "email", key: "email", placeholder: "enter_email" },
+        { label: "prefered_map", key: "prefered_map", placeholder: "select_map" },
+        { label: "info", key: "info", placeholder: "enter_info" },
+        { label: "phone", key: "phone", placeholder: "enter_phone" },
+        { label: "legal_address", key: "legal_address", placeholder: "enter_legal_address" }
     ],
-    [{ label: "login.postAdress", key: "user_postadress", placeholder: "login.enterPostAdress" }],
+    [{ label: "post_adress", key: "post_address", placeholder: "enter_post_adress" }],
     [
-        { label: "login.ynp", key: "user_ynp", placeholder: "login.enterYnp" },
-        { label: "login.bank", key: "user_bank", placeholder: "login.enterBank" },
-        { label: "login.rschet", key: "user_rschet", placeholder: "login.enterRschet" }
+        { label: "ynp", key: "unp", placeholder: "enter_ynp" },
+        { label: "bank", key: "bank_info", placeholder: "enter_bank" },
+        { label: "rschet", key: "bank_account", placeholder: "enter_bank_account" }
     ]
 ];
 
-export const tariffsDescriptions = [
+export const tariffsTrackersDescriptions = [
     "",
-    "tariffs.tariffobj_objdin",
-    "tariffs.tariffobj_objdin_cost",
-    "tariffs.tariffobj_history",
-    "tariffs.tariffobj_probeg",
-    "tariffs.tariffobj_toplivo",
-    "tariffs.tariffobj_stops",
-    "tariffs.tariffobj_trekcountobj",
-    "tariffs.tariffobj_realtime",
-    "tariffs.tariffobj_reportprobeg",
-    "tariffs.tariffobj_creditdays",
-    "tariffs.tariffobj_discount6m",
-    "tariffs.tariffobj_discount1y"
+    "max_routes",
+    "price",
+    "history",
+    "mileage_calculation",
+    "consumption_calculation",
+    "stops_summary",
+    "max_trackers",
+    "realtime_mode",
+    "mileage_summary",
+    "credit_days",
+    "discount6",
+    "discount12"
 ];
 
-export const tariffDatafields = [
-    { name: "tariffobj_name", boolean: false },
-    { name: "tariffobj_objdin", boolean: false },
-    { name: "tariffobj_objdin_cost", boolean: false },
-    { name: "tariffobj_history", boolean: false },
-    { name: "tariffobj_probeg", boolean: true },
-    { name: "tariffobj_toplivo", boolean: true },
-    { name: "tariffobj_stops", boolean: true },
-    { name: "tariffobj_trekcountobj", boolean: false },
-    { name: "tariffobj_realtime", boolean: true },
-    { name: "tariffobj_reportprobeg", boolean: true },
-    { name: "tariffobj_creditdays", boolean: false },
-    { name: "tariffobj_discount6m", boolean: false },
-    { name: "tariffobj_discount1y", boolean: false }
+export const tariffTrackerDatafields = [
+    { name: "name", boolean: false },
+    { name: "max_routes", boolean: false },
+    { name: "price", boolean: false },
+    { name: "history", boolean: false },
+    { name: "mileage_calculation", boolean: true },
+    { name: "consumption_calculation", boolean: true },
+    { name: "stops_summary", boolean: true },
+    { name: "max_trackers", boolean: false },
+    { name: "realtime_mode", boolean: true },
+    { name: "mileage_summary", boolean: true },
+    { name: "credit_days", boolean: false },
+    { name: "discount6", boolean: false },
+    { name: "discount12", boolean: false }
 ];
 
-export const initTariff = {
-    tariffobj_name: "",
-    tariffobj_objdin: "",
-    tariffobj_objdin_cost: "",
-    tariffobj_history: "",
-    tariffobj_probeg: false,
-    tariffobj_toplivo: false,
-    tariffobj_stops: false,
-    tariffobj_trekcountobj: "",
-    tariffobj_realtime: false,
-    tariffobj_reportprobeg: false,
-    tariffobj_creditdays: "",
-    tariffobj_discount6m: "",
-    tariffobj_discount1y: ""
+export const tariffsCamerasDescriptions = [
+    "",
+    "price",
+    "schedules",
+    "max_cameras",
+    "realtime_mode",
+    "credit_days",
+    "discount6",
+    "discount12"
+];
+
+export const tariffCameraDatafields = [
+    { name: "name", boolean: false },
+    { name: "price", boolean: false },
+    { name: "schedules_right", boolean: true },
+    { name: "max_cameras", boolean: false },
+    { name: "realtime_mode", boolean: true },
+    { name: "credit_days", boolean: false },
+    { name: "discount6", boolean: false },
+    { name: "discount12", boolean: false }
+];
+
+export const initTrackerTariff = {
+    name: "",
+    max_routes: "",
+    price: "",
+    history: "",
+    mileage_calculation: false,
+    consumption_calculation: false,
+    stops_summary: false,
+    max_trackers: "",
+    realtime_mode: false,
+    mileage_summary: false,
+    credit_days: "",
+    discount6: "",
+    discount12: ""
+};
+
+export const initCameraTariff = {
+    name: "",
+    price: "",
+    schedules: false,
+    max_cameras: "",
+    realtime_mode: false,
+    credit_days: "",
+    discount6: "",
+    discount12: ""
 };
 
 export const initGoogleOptions = {
     center: { lat: 53.902235, lng: 27.561828 },
-    zoom: 10
+    zoom: 6
 };
 
 export const initTrackerModel = {
-    trmodel_name: "",
-    trmodel_code: ""
+    name: "",
+    code: ""
 };
 
 export const initialProlongTracker = {
-    tariff_id: "",
+    tracker_tariff_id: null,
+    tracker_id: "",
+    month_amount: 1
+};
+
+export const initialProlongCamera = {
+    camera_tariff_id: null,
+    camera_id: "",
     month_amount: 1
 };

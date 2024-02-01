@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { Button, Card, Col, Row } from "antd";
+import { Button, Card } from "antd";
 import "./CameraSchedules.scss";
 import addIcon from "../../../../assets/img/add-circle.svg";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import { assignScheduleToCam } from "../../../../redux/schedulesReducer";
 import { daysOfWeek } from "../../../general/initialData";
 import { dateConvert } from "../../../../utils/dateConvert";
 
-export const CameraSchedules = () => {
+export const CameraSchedules = ({ t, isMobileSize }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const camerasSchedules = useSelector((state) => state.camerasReducer.camerasSchedules);
@@ -37,7 +37,7 @@ export const CameraSchedules = () => {
                 cameras: [cameraId]
             })
         );
-    const unAssignFromCamera = (scheduleId) =>  dispatch(unAssignCameraSchedule(id, scheduleId));
+    const unAssignFromCamera = (scheduleId) => dispatch(unAssignCameraSchedule(id, scheduleId));
 
     // const scheduleParams = [
     //     { title: "Job Name:", value: "job_name" },
@@ -64,79 +64,83 @@ export const CameraSchedules = () => {
 
     const displayCameraSchedules = [...camerasSchedules, { id: "empty", name: "empty_rec" }].map((el) =>
         el.name === "empty_rec" ? (
-            <Col span={6} key={el.id} style={{ margin: "10px 0" }}>
-                <Card className="add-camera-schedule">
-                    <img src={addIcon} alt="addIcon" onClick={() => setOpenAddModal(true)} />
-                </Card>
-            </Col>
+            <Card key={el.id} className="add-camera-schedule">
+                <img src={addIcon} alt="addIcon" onClick={() => setOpenAddModal(true)} />
+            </Card>
         ) : (
-            <Col span={6} key={el.id} style={{ margin: "10px 0" }}>
-                <Card
-                    title={el.name}
-                    className={`schedule-card ${el.status ? "active-schedule" : "inactive-schedule"}`}
-                    extra={<p className="schedule-status">{el.status ? "Active" : "Inactive"}</p>}
-                    actions={[
-                        <Button key={0} type="primary" disabled={el.status} onClick={() => enableCamera(id, el.id)}>
-                            Enable
-                        </Button>,
-                        <Button key={1} danger disabled={!el.status} onClick={() => disableCamera(id, el.id)}>
-                            Disable
-                        </Button>,
-                        <Button key={2} danger type="primary" onClick={() => unAssignFromCamera(el.id)}>
-                            Unassign
-                        </Button>
-                    ]}
-                >
-                    <span>
-                        <p>Job Name:</p>
-                        <p>{el.job_name}</p>
-                    </span>
-                    <span>
-                        <p>Duration:</p>
-                        <p>{el.duration}</p>
-                    </span>
-                    <span>
-                        <p>Period:</p>
-                        <p>{el.period}</p>
-                    </span>
-                    <span>
-                        <p>Start Hour:</p>
-                        <p>{el.start_day ? daysOfWeek[el.start_day] : "—"}</p>
-                    </span>
-                    <span>
-                        <p>Days:</p>
-                        <p>
-                            {el.days
-                                ? el.days.split(",").map((el, index) => (
-                                    <i key={index}>
-                                        {daysOfWeek[el]} <br />
-                                    </i>
-                                ))
-                                : "—"}
-                        </p>
-                    </span>
+            <Card
+                key={el.id}
+                title={el.name}
+                className={`schedule-card ${el.status ? "active-schedule" : "inactive-schedule"}`}
+                extra={<p className="schedule-status">{el.status ? "Active" : "Inactive"}</p>}
+                actions={[
+                    <Button key={0} type="primary" disabled={el.status} onClick={() => enableCamera(id, el.id)}>
+                        {t("enable")}
+                    </Button>,
+                    <Button key={1} danger disabled={!el.status} onClick={() => disableCamera(id, el.id)}>
+                        {t("disable")}
+                    </Button>,
+                    <Button key={2} danger type="primary" onClick={() => unAssignFromCamera(el.id)}>
+                        {t("unassign")}
+                    </Button>
+                ]}
+            >
+                <span>
+                    <p>{t("job_name")}:</p>
+                    <p>{el.job_name}</p>
+                </span>
+                <span>
+                    <p>{t("duration")}:</p>
+                    <p>{el.duration}</p>
+                </span>
+                <span>
+                    <p>{t("period")}:</p>
+                    <p>{el.period}</p>
+                </span>
+                <span>
+                    <p>{t("start_hour")}:</p>
+                    <p>{el.start_day ? daysOfWeek[el.start_day] : "—"}</p>
+                </span>
+                <span>
+                    <p>{t("days")}:</p>
+                    <p>
+                        {el.days
+                            ? el.days.split(",").map((el, index) => (
+                                <i key={index}>
+                                    {daysOfWeek[el]} <br />
+                                </i>
+                            ))
+                            : "—"}
+                    </p>
+                </span>
 
-                    <span>
-                        <p>End Hour:</p>
-                        <p>{el.end_hour || "—"}</p>
-                    </span>
-                    <span>
-                        <p>Created:</p>
-                        <p>{dateConvert(el.created_at)}</p>
-                    </span>
-                    <span>
-                        <p>Updated:</p>
-                        <p>{dateConvert(el.updated_at)}</p>
-                    </span>
-                </Card>
-            </Col>
+                <span>
+                    <p>{t("end_hour")}:</p>
+                    <p>{el.end_hour || "—"}</p>
+                </span>
+                <span>
+                    <p>{t("created")}:</p>
+                    <p>{dateConvert(el.created_at)}</p>
+                </span>
+                <span>
+                    <p>{t("updated")}:</p>
+                    <p>{dateConvert(el.updated_at)}</p>
+                </span>
+            </Card>
         )
     );
 
     return (
         <div className="camera-schedules">
-            <Row gutter={16}>{displayCameraSchedules}</Row>
-            {openAddModal && <AddModalSchedule openAddModal={openAddModal} setOpenAddModal={setOpenAddModal} camerasSchedulesId={camerasSchedulesId} />}
+            {displayCameraSchedules}
+            {openAddModal && (
+                <AddModalSchedule
+                    openAddModal={openAddModal}
+                    setOpenAddModal={setOpenAddModal}
+                    camerasSchedulesId={camerasSchedulesId}
+                    isMobileSize={isMobileSize}
+                />
+            )}
         </div>
     );
 };

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/authReducer";
 import "./Login.scss";
 import { Navigate } from "react-router";
+import packageJson from "../../../package.json";
 
 export const LoginAdmin = ({ t }) => {
     const dispatch = useDispatch();
@@ -12,27 +13,28 @@ export const LoginAdmin = ({ t }) => {
     const authStatus = useSelector((state) => state.authReducer.authStatus);
 
     const onFinish = (values) => {
-        dispatch(loginUser({...values, admin: true})); //for admin
+        dispatch(loginUser({...values, admin: true, remember: false})); //for admin //todo remember: false
     };
 
     if (user) {
-        return <Navigate to={"/monitoring"} />;
+        return <Navigate to={"/adminUsers"} />;
     }
 
     return (
         <div className="login-page">
-            <h2>{t("login.logIn")} Admin</h2>
+            <h2>{t("login").toUpperCase()} Admin</h2>
+            <br/>
             <Card>
                 <Form name="basic" initialValues={{ remember: true }} onFinish={onFinish} autoComplete="off">
                     <Form.Item
                         className="field"
-                        label={t("common.email")}
+                        label={t("email")}
                         name="email"
                         rules={[
                             {
                                 required: true,
                                 type: "email",
-                                message: t("login.pleaseEnterEmail")
+                                message: t("please_enter_email")
                             }
                         ]}
                     >
@@ -41,12 +43,12 @@ export const LoginAdmin = ({ t }) => {
 
                     <Form.Item
                         className="field"
-                        label={t("login.password")}
+                        label={t("password")}
                         name="password"
                         rules={[
                             {
                                 required: true,
-                                message: t("login.pleaseEnterPass")
+                                message: t("please_enter_pass")
                             }
                         ]}
                     >
@@ -54,7 +56,7 @@ export const LoginAdmin = ({ t }) => {
                     </Form.Item>
                     <div className="login-actions">
                         <Button type="primary" htmlType="submit">
-                            {t("login.signIn")}
+                            {t("sign_in")}
                         </Button>
                     </div>
                 </Form>
@@ -64,6 +66,8 @@ export const LoginAdmin = ({ t }) => {
                     </div>
                 )}
             </Card>
+            <p style={{ color: "white" }}>v{packageJson.version}</p>
+
         </div>
     );
 };

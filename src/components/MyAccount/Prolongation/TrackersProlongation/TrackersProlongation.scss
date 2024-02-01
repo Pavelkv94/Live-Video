@@ -1,5 +1,4 @@
 .trackers-prolongation {
-
     .red-cell {
         width: max-content;
         padding: 5px;
@@ -9,5 +8,11 @@
 
     .radio-pay {
         min-width: 56px;
+    }
+
+    .ant-table-wrapper {
+        @media screen and (max-width: 800px) {
+            overflow-x: scroll;
+        }
     }
 }

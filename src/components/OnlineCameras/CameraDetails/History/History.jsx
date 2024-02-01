@@ -11,7 +11,7 @@ import { dateConvert } from "../../../../utils/dateConvert";
 import { DeleteModal } from "../../../general/DeleteModal";
 import "./History.scss";
 
-export const History = () => {
+export const History = ({isMobileSize}) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const videos = useSelector((state) => state.videosReducer.videosList);
@@ -80,6 +80,7 @@ export const History = () => {
 
     return (
         <Table
+            size={isMobileSize ? "small" : "middle"}
             columns={columns}
             dataSource={data}
             expandable={{

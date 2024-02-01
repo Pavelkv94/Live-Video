@@ -15,7 +15,7 @@
         top: 55%;
         z-index: 999;
         border-radius: 0 10px 10px 0px;
-        
+
         ymaps {
             width: 100%;
         }
@@ -28,9 +28,12 @@
             fill: white;
             font-size: 32px;
         }
+
+        @media screen and (max-width: 800px) {
+            display: none;
+        }
     }
 }
 .marker-label {
     color: red; /* Change the color here */
-  }
-
+}

@@ -3,21 +3,75 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        @media screen and (max-width: 950px) {
+            button {
+                margin-left: 0;
+                margin-right: 5px;
+            }
+
+            h2 {
+                margin-right: 10px;
+            }
+
+            .ant-select {
+                margin-bottom: 5px;
+                margin-right: 5px;
+            }
+        }
+
         .head-section-title {
             display: flex;
             align-items: center;
         }
 
+        .head-section-actions {
+            display: flex;
+            flex-wrap: wrap;
+
+            @media screen and (max-width: 950px) {
+                button:nth-child(1) {
+                    order: 1;
+                }
+
+                button:nth-child(2) {
+                    order: 1;
+                }
+            }
+        }
     }
 
     .trackers-content {
         display: flex;
 
+        @media screen and (max-width: 1080px) {
+            flex-direction: column;
+        }
+
         .trackers-table {
+            order: 0;
             margin-right: 20px;
+
+            @media screen and (max-width: 550px) {
+                overflow-x: scroll;
+            }
+
+            @media screen and (max-width: 1080px) {
+                order: 1;
+                margin-right: 0;
+            }
+
             .ant-spin-nested-loading {
                 width: 550px;
 
+                @media screen and (max-width: 1080px) {
+                    width: 100%;
+                    margin-top: 20px;
+                }
+
+                @media screen and (max-width: 550px) {
+                    width: 550px;
+                }
             }
 
             .sub-row-item {
@@ -39,7 +93,16 @@
                 }
             }
         }
+
+        .map-wrapper {
+            order: 1;
+
+            @media screen and (max-width: 1080px) {
+                order: 0;
+            }
+        }
     }
+
     .map-content {
         height: calc(60vh);
         width: 100%;
@@ -61,12 +124,12 @@
         column-gap: 20px;
         row-gap: 6px;
         margin-bottom: 20px;
+
         .tracker-details-item {
             display: flex;
         }
     }
 
     .tracker-shared {
-        
     }
 }

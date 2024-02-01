@@ -27,6 +27,8 @@ const Feedback = ({ t }) => {
         }
     };
 
+    const phoneRegex = /^(\+\d{11}|\d{11})$/;
+
     const onFinish = (values) => {
         dispatch(sendFeedback(values));
     };
@@ -34,65 +36,88 @@ const Feedback = ({ t }) => {
     return (
         <div className="feedback">
             <section className="head-section">
-                <h2>{t("menuBar.feedback")}</h2>
+                <h2>{t("feedback")}</h2>
             </section>
             <section className="feedback-content">
                 <Card>
                     <Form {...layout} name="nest-messages" onFinish={onFinish} validateMessages={validateMessages}>
                         <div>
-                            <Form.Item name={["formrequest_name"]} label={t("common.name")}>
-                                <Input placeholder={t("common.enterName")} />
-                            </Form.Item>
                             <Form.Item
-                                name={["formrequest_email"]}
-                                label={t("common.email")}
+                                name={["sender_name"]}
+                                label={t("name")}
                                 rules={[
                                     {
-                                        type: "email"
+                                        required: true
                                     }
                                 ]}
                             >
-                                <Input placeholder={t("common.enterEmail")} />
+                                <Input placeholder={t("enter_name")} />
                             </Form.Item>
                             <Form.Item
-                                name={["formrequest_tel"]}
-                                label={t("common.phone")}
+                                name={["sender_email"]}
+                                label={t("email")}
                                 rules={[
                                     {
-                                        type: "phone"
+                                        type: "email",
+                                        required: true
                                     }
                                 ]}
                             >
-                                <Input placeholder={t("common.enterPhone")} />
+                                <Input placeholder={t("enter_email")} />
                             </Form.Item>
-                            <Form.Item name={["formrequest_message"]} label={t("common.message")}>
-                                <Input.TextArea rows={8} placeholder={t("common.enterMessage")} />
+                            <Form.Item
+                                name={["sender_phone"]}
+                                label={t("phone")}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: "Phone number is required!"
+                                    },
+                                    {
+                                        pattern: phoneRegex,
+                                        message: "Please enter a valid phone number!"
+                                    }
+                                ]}
+                            >
+                                <Input placeholder={t("enter_phone")} />
+                            </Form.Item>
+                            <Form.Item
+                                name={["text"]}
+                                label={t("message")}
+                                rules={[
+                                    {
+                                        type: "phone",
+                                        required: true
+                                    }
+                                ]}
+                            >
+                                <Input.TextArea rows={8} placeholder={t("enter_message")} />
                             </Form.Item>
                         </div>
 
                         <Form.Item
                             wrapperCol={{
                                 ...layout.wrapperCol,
-                                offset: 4
+                                offset: 0
                             }}
                         >
                             <Button type="primary" htmlType="submit">
-                                {t("common.submit")}
+                                {t("submit")}
                             </Button>
                         </Form.Item>
                     </Form>
                 </Card>
-                <Card type="inner" title={t("feedback.contacts")}>
+                <Card type="inner" title={t("contacts")}>
                     <b>Online Monitoring System</b>
                     <br />
                     <br />
-                    <b>Phone Number:</b> 123123123
+                    <b>{t("phone_number")}:</b> 123123123
                     <br />
                     <br />
-                    <b>Email:</b> <a href="#">test@gmail.com</a>
+                    <b>{t("email")}:</b> <a href="#">test@gmail.com</a>
                     <br />
                     <br />
-                    <b>Skype:</b> <a href="#">oms@skype</a>
+                    <b>{t("skype")}:</b> <a href="#">oms@skype</a>
                 </Card>
             </section>
         </div>

@@ -1,0 +1,64 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media print {
+        display: none;
+    }
+
+    .connectedUser {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        img {
+            margin-right: 10px;
+        }
+        .blinking-logo {
+            transition: filter 0.5s ease; /* Adjust the transition duration and timing function as needed */
+          }
+          
+          .blinking-logo.white {
+            filter: brightness(100%);
+          }
+          
+          .blinking-logo.blue {
+            filter: brightness(50%);
+          }
+          button {
+            margin: 0 10px;
+          }
+    }
+    .logout {
+        min-width: 400px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+
+        button {
+            margin-left: 10px;
+        }
+        @media screen and (max-width: 800px) {
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+
+            h2 {
+                margin: 0;
+                font-size: 20px;
+                line-height: 16px;
+            }
+        }
+
+        h2 {
+            color: white;
+        }
+    }
+
+    @media screen and (max-width: 800px) {
+        justify-content: space-between;
+        align-items: center;
+        padding-inline: 10px;
+    }
+}

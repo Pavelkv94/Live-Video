@@ -4,6 +4,7 @@ import { Input, Select } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { cameraFields } from "../../general/initialData";
 import { fetchBuckets, fetchStorages } from "../../../redux/storagesReducer";
+import "./CamersList.scss";
 
 const CameraModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mode }) => {
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const CameraModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mode 
                     style={{
                         width: "100%"
                     }}
-                    placeholder={t(`common.${el.placeholder}`)}
+                    placeholder={t(`${el.placeholder}`)}
                     defaultValue={editMode ? (el.key === "storage_id" ? storage.name : bucket.name) : null}
                     onChange={(value) => setItem({ ...item, [el.key]: value })
                     }
@@ -51,7 +52,7 @@ const CameraModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mode 
                 <Input
                     value={item[el.key]}
                     onChange={handleInput(el.key)}
-                    placeholder={t(`common.${el.placeholder}`)}
+                    placeholder={t(`${el.placeholder}`)}
                 />
             );
     };
@@ -64,11 +65,11 @@ const CameraModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mode 
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
             disableButton={!item.name}
-            title={editMode ? t("onlineCameras.editCamera") : t("onlineCameras.createCamera")}
+            title={editMode ? t("edit_camera") : t("create_camera")}
         >
             {cameraFields.map((el, index) => (
-                <div key={index} className="register-field">
-                    <p>{t(`common.${el.label}`)}</p>
+                <div key={index} className="camera-field">
+                    <p>{t(`${el.label}`)}</p>
                     {buildCamerasFields(el)}
                 </div>
             ))}

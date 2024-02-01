@@ -45,7 +45,7 @@ const SchedulesModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mo
                         width: "100%"
                     }}
                     className="cameras-select"
-                    placeholder={t("common.select")}
+                    placeholder={t("select")}
                     defaultValue={item[el.key]}
                     onChange={(value) =>
                         setItem({
@@ -99,7 +99,7 @@ const SchedulesModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mo
             return (
                 <Input
                     value={item[el.key]}
-                    placeholder={t(`onlineCameras.${el.placeholder}`)}
+                    placeholder={t(`${el.placeholder}`)}
                     onChange={(e) => {
                         setItem({
                             ...item,
@@ -118,15 +118,15 @@ const SchedulesModal = ({ t, open, item, handleCancel, handleSubmit, setItem, mo
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
             disableButton={!item.name}
-            title={editMode ? t("onlineCameras.editSchedule") : t("onlineCameras.createSchedule")}
+            title={editMode ? t("edit_schedule") : t("create_schedule")}
         >
             {fields.map((el, index) => (
                 <div key={index} className="register-field">
-                    <p>{t(`onlineCameras.${el.label}`)}</p>
+                    <p>{t(`${el.label}`)}</p>
                     {buildScedulesFields(el)}
                 </div>
             ))}
-            <p className="help">{t("onlineCameras.modalDescription")}</p>
+            <p className="help">{t("modal_description")}</p>
         </GeneralModalWrapper>
     );
 };

@@ -17,9 +17,9 @@ export function usersReducer(state = initialState, action) {
     case ActionTypes.CREATE_USER:
         return { ...state, usersList: [...state.usersList, action.payload] };
     case ActionTypes.DELETE_USER:
-        return { ...state, usersList: state.usersList.filter((el) => el.user_id !== action.user_id) };
+        return { ...state, usersList: state.usersList.filter((el) => el.id !== action.user_id) };
     case ActionTypes.ADMIN_EDIT_USER:
-        return { ...state, usersList: state.usersList.map((el) => el.user_id === action.payload.user_id ? action.payload : el) };
+        return { ...state, usersList: state.usersList.map((el) => el.id === action.payload.id ? action.payload : el) };
 
     default:
         return state;
@@ -41,7 +41,7 @@ export const fetchAllUsers = () => async (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchAllUsersAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -58,9 +58,8 @@ export const createUser = (payload) => (dispatch) => {
             dispatch(createUserAction(res.data));
             message.success("Success!");
         },
-        (err) => {
-            message.error(err.response.data.message ? err.response.data.message : "Error");
-        }
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+
     );
 };
 
@@ -79,9 +78,8 @@ export const updateUser = (user_id, payload) => (dispatch) => {
             dispatch(updateUserAction(res));
             message.success("Success!");
         },
-        (err) => {
-            message.error(err.response.data.message ? err.response.data.message : "Error");
-        }
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+
     );
 };
 
@@ -91,7 +89,7 @@ export const sendFeedback = (payload) => async (dispatch) => {
 
     response.then(
         () => message.success("Success!"),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -108,7 +106,7 @@ export const deleteUser = (user_id) => (dispatch) => {
             dispatch(deleteUserAction(user_id));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -119,7 +117,7 @@ export const resendActivationMail = (email) => (dispatch) => {
         () => {
             message.success("Success! Check your mail.");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -137,8 +135,7 @@ export const editAsAdminUser = (user_id, payload) => (dispatch) => {
             dispatch(editAsAdminUserAction(res));
             message.success("Success!");
         },
-        (err) => {
-            message.error(err.response.data.message ? err.response.data.message : "Error");
-        }
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+
     );
 };

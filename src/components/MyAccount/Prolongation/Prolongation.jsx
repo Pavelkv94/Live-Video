@@ -5,7 +5,7 @@ import CamerasProlongation from "./CamerasProlongation/CamerasProlongation";
 import TrackersProlongation from "./TrackersProlongation/TrackersProlongation";
 
 
-const Prolongation = ({ t }) => {
+const Prolongation = ({ t, isMobileSize }) => {
     const [tab, setTab] = useState("1");
 
     const onChangeTab = (key) => {
@@ -15,19 +15,19 @@ const Prolongation = ({ t }) => {
     const items = [
         {
             key: "1",
-            label: t("myAccount.trackersPayments"),
-            children: <TrackersProlongation t={t} />
+            label: t("trackers_payments"),
+            children: <TrackersProlongation t={t} isMobileSize={isMobileSize}/>
         },
         {
             key: "2",
-            label: t("myAccount.camerasPayments"),
-            children: <CamerasProlongation t={t} />
+            label: t("cameras_payments"),
+            children: <CamerasProlongation t={t} isMobileSize={isMobileSize}/>
         }
     ];
     return (
         <div className="prolongation">
             <section className="head-section">
-                <h2>{t("menuBar.payments")}</h2>
+                <h2>{t("payments")}</h2>
             </section>
             <Tabs defaultActiveKey="1" onChange={onChangeTab} activeKey={tab} items={items} />
             

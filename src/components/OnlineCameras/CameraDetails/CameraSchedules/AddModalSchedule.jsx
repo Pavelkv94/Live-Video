@@ -7,7 +7,7 @@ import { asignCameraSchedule } from "../../../../redux/camerasReducer";
 import { fetchSchedules } from "../../../../redux/schedulesReducer";
 import { dateConvert } from "../../../../utils/dateConvert";
 
-export const AddModalSchedule = ({ openAddModal, setOpenAddModal, camerasSchedulesId }) => {
+export const AddModalSchedule = ({ openAddModal, setOpenAddModal, camerasSchedulesId, isMobileSize }) => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.authReducer.user);
@@ -84,6 +84,7 @@ export const AddModalSchedule = ({ openAddModal, setOpenAddModal, camerasSchedul
             onCancel={handleOk}
         >
             <Table
+                size={isMobileSize ? "small" : "middle"}
                 pagination={data.length > 9}
                 columns={columns}
                 dataSource={data}

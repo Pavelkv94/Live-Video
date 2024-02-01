@@ -1,13 +1,16 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Layout, Spin } from "antd";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { MenuBar } from "./MenuBar";
-import { LogoutOutlined } from "@ant-design/icons";
-import { logoutUser } from "../../redux/authReducer";
+import { DisconnectOutlined, LogoutOutlined, MenuOutlined, UserOutlined } from "@ant-design/icons";
+import { connectToUserAction, disconnectFromUser, logoutUser } from "../../redux/authReducer";
 import { YMaps } from "@pbe/react-yandex-maps";
 import { fetchNotifications } from "../../redux/notificationsReducer";
 import Geocode from "react-geocode";
+import "./Main.scss";
+import connectSvg from "../../assets/img/connect.svg";
+import logo from "../../assets/img/CompanyLogo.png";
 
 const { Header, Content, Sider } = Layout;
 const CamerasList = React.lazy(() => import("../OnlineCameras/CamerasList/CamersList"));
@@ -28,9 +31,12 @@ const TrackersReportDetDayInfoStops = React.lazy(() => import("../Tracker manage
 
 const Trackers = React.lazy(() => import("../Tracker management/Trackers/Trackers"));
 const AdminUsers = React.lazy(() => import("../Admin/AdminUsers/AdminUsers"));
-const AdminTariffs = React.lazy(() => import("../Admin/AdminTariffs/AdminTariffs"));
+const AdminTariffsTrackers = React.lazy(() => import("../Admin/AdminTariffsTrackers/AdminTariffsTrackers"));
+const AdminTariffsCameras = React.lazy(() => import("../Admin/AdminTariffsCameras/AdminTariffsCameras"));
 const AdminNotifications = React.lazy(() => import("../Admin/AdminNotifications/AdminNotifications"));
 const AdminEquipments = React.lazy(() => import("../Admin/AdminEquipments/AdminEquipments"));
+const AdminProfile = React.lazy(() => import("../Admin/AdminProfile/AdminProfile"));
+
 const Routes = React.lazy(() => import("../Tracker management/Routes/Routes"));
 const Tariffs = React.lazy(() => import("../Tariffs/Tariffs"));
 const Feedback = React.lazy(() => import("../Feedback/Feedback"));
@@ -38,128 +44,189 @@ const Notifications = React.lazy(() => import("../Notifications/Notifications"))
 const MonitoringObjectsDetails = React.lazy(() => import("../MonitoringObjects/MonitoringObjectsDetails/MonitoringObjectsDetails"));
 const Prolongation = React.lazy(() => import("../MyAccount/Prolongation/Prolongation"));
 
-
 export const Main = ({ mode, t }) => {
-    
     Geocode.setApiKey(import.meta.env.VITE_GOOGLE_MAP_API_KEY);
     Geocode.setLanguage("en"); //! change lang
 
+    const navigate = useNavigate();
+
+    const [activeMenu, setActiveMenu] = useState(false);
+    const [screenSize, setScreenSize] = useState(undefined);
     const [collapsed, setCollapse] = useState(false);
     const user = localStorage.getItem("user");
     const currentuser = useSelector((state) => state.authReducer.user);
+    const connectedUser = useSelector((state) => state.authReducer.connectedUser);
+
     const dispatch = useDispatch();
 
+    const isMobileSize = screenSize < 800;
+
+    const [blinkColor, setBlinkColor] = useState("white");
+
     useEffect(() => {
-        if (currentuser && !currentuser.admin_name) {
-            dispatch(fetchNotifications(currentuser.user_id));
-            const interval = setInterval(() => {dispatch(fetchNotifications(currentuser.user_id));}, import.meta.env.VITE_NOTIFICATION_FREQUENCY || 60000);
+        const intervalId = setInterval(() => {
+            setBlinkColor((prevColor) => (prevColor === "white" ? "blue" : "white"));
+        }, 500); // Adjust the interval duration as needed
+
+        return () => clearInterval(intervalId); // Cleanup the interval on component unmount
+    }, []);
+    
+
+    useEffect(() => {
+        const handleResize = () => setScreenSize(window.innerWidth);
+
+        window.addEventListener("resize", handleResize);
+
+        handleResize();
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    useEffect(() => {
+        if (currentuser && !currentuser.admin) {
+            dispatch(fetchNotifications(currentuser.id));
+            const interval = setInterval(() => {
+                dispatch(fetchNotifications(currentuser.id));
+            }, import.meta.env.VITE_NOTIFICATION_FREQUENCY || 60000);
             return () => clearInterval(interval);
         }
     }, [dispatch, currentuser]);
 
+    useEffect(() => {
+        currentuser?.admin && localStorage.getItem("selected_user") && dispatch(connectToUserAction(JSON.parse(localStorage.getItem("selected_user"))));
+    }, [dispatch, currentuser]);
+
     const logout = () => {
+        currentuser?.admin && dispatch(disconnectFromUser());
         dispatch(logoutUser());
     };
 
     const currentWindow = (mode) => {
         switch (mode) {
         case "cameras":
-            return <Suspense fallback={<Spin size="large"/>}><CamerasList t={t} /></Suspense>;
+            return <CamerasList t={t} isMobileSize={isMobileSize} />;
         case "camerasDetails":
-            return <Suspense fallback={<Spin size="large"/>}><CameraDetails t={t} /></Suspense>;
+            return <CameraDetails t={t} isMobileSize={isMobileSize} />;
         case "storages":
-            return <Suspense fallback={<Spin size="large"/>}><StoragesList t={t} /></Suspense>;
+            return <StoragesList t={t} isMobileSize={isMobileSize} />;
         case "storageDetails":
-            return <Suspense fallback={<Spin size="large"/>}><StorageDetails t={t} /></Suspense>;
+            return <StorageDetails t={t} isMobileSize={isMobileSize} />;
         case "schedules":
-            return <Suspense fallback={<Spin size="large"/>}><SchedulesList t={t} /></Suspense>;
+            return <SchedulesList t={t} isMobileSize={isMobileSize} />;
         case "scheduleDetails":
-            return <Suspense fallback={<Spin size="large"/>}><ScheduleDetails t={t} /></Suspense>;
+            return <ScheduleDetails t={t} isMobileSize={isMobileSize} />;
         case "monitoring":
-            return <Suspense fallback={<Spin size="large"/>}><MonitoringObjects t={t} /></Suspense>;
-        case "camerasReports":
-            return <Suspense fallback={<Spin size="large"/>}><CamerasReports t={t} /></Suspense>;
+            return <MonitoringObjects t={t} />;
+        case "camReports":
+            return <CamerasReports t={t} />;
         case "monitoringDetails":
-            return <Suspense fallback={<Spin size="large"/>}><MonitoringObjectsDetails t={t} /></Suspense>;
+            return <MonitoringObjectsDetails t={t} isMobileSize={isMobileSize} />;
         case "profile":
-            return <Suspense fallback={<Spin size="large"/>}><Profile t={t} /></Suspense>;
+            return <Profile t={t} />;
         case "balance":
-            return <Suspense fallback={<Spin size="large"/>}><Balance t={t} /></Suspense>;
+            return <Balance t={t} isMobileSize={isMobileSize} />;
         case "prolongation":
-            return <Suspense fallback={<Spin size="large"/>}><Prolongation t={t} /></Suspense>;
+            return <Prolongation t={t} isMobileSize={isMobileSize} />;
         case "trReports":
-            return <Suspense fallback={<Spin size="large"/>}><TrackersReports t={t} /></Suspense>;
+            return <TrackersReports t={t} isMobileSize={isMobileSize} />;
         case "trReportShort":
-            return <Suspense fallback={<Spin size="large"/>}><TrackersReportShort t={t} /></Suspense>;   
+            return <TrackersReportShort t={t} />;
         case "trReportDetDay":
-            return <Suspense fallback={<Spin size="large"/>}><TrackersReportDetDay t={t} /></Suspense>;  
+            return <TrackersReportDetDay t={t} />;
         case "trReportInfoStops":
-            return <Suspense fallback={<Spin size="large"/>}><TrackersReportInfoStops t={t} /></Suspense>;              
+            return <TrackersReportInfoStops t={t} />;
         case "trReportDetDayInfoStops":
-            return <Suspense fallback={<Spin size="large"/>}><TrackersReportDetDayInfoStops t={t} /></Suspense>;  
+            return <TrackersReportDetDayInfoStops t={t} />;
         case "trackers":
-            return <Suspense fallback={<Spin size="large"/>}><Trackers t={t} /></Suspense>;
+            return <Trackers t={t} isMobileSize={isMobileSize} />;
         case "adminUsers":
-            return <Suspense fallback={<Spin size="large"/>}><AdminUsers t={t} /></Suspense>;
-        case "adminTariffs":
-            return <Suspense fallback={<Spin size="large"/>}><AdminTariffs t={t} /></Suspense>;
+            return <AdminUsers t={t} />;
+        case "adminTariffsTrackers":
+            return <AdminTariffsTrackers t={t} />;
+        case "adminTariffsCameras":
+            return <AdminTariffsCameras t={t} />;
         case "adminNotifications":
-            return <Suspense fallback={<Spin size="large"/>}><AdminNotifications t={t} /></Suspense>;
+            return <AdminNotifications t={t} />;
         case "adminEquipments":
-            return <Suspense fallback={<Spin size="large"/>}><AdminEquipments t={t} /></Suspense>;  
+            return <AdminEquipments t={t} />;
+        case "adminProfile":
+            return <AdminProfile t={t} />;
         case "routes":
-            return <Suspense fallback={<Spin size="large"/>}><Routes t={t} /></Suspense>;
+            return <Routes t={t} isMobileSize={isMobileSize} />;
         case "feedback":
-            return <Suspense fallback={<Spin size="large"/>}><Feedback t={t} /></Suspense>;
+            return <Feedback t={t} />;
         case "tariffs":
-            return <Suspense fallback={<Spin size="large"/>}><Tariffs t={t} /></Suspense>;
+            return <Tariffs t={t} isMobileSize={isMobileSize} />;
         case "notifications":
-            return <Suspense fallback={<Spin size="large"/>}><Notifications t={t} /></Suspense>;
+            return <Notifications t={t} isMobileSize={isMobileSize} />;
         default:
-            return <Suspense fallback={<Spin size="large"/>}><CamerasList t={t} /></Suspense>;
+            return <CamerasList t={t} isMobileSize={isMobileSize} />;
         }
     };
 
     if (!user) {
         return <Navigate to={"/"} />;
-    } 
+    }
     return (
         <Layout>
             <Header className="header">
+                <img src={logo} height={40}/>
                 <div className="logout">
-                    <h2>{currentuser?.user_mail || currentuser?.admin_mail}</h2>
-                    <Button key={1} onClick={logout}>
+                    {connectedUser && (
+                        <div className="connectedUser">
+                            <img src={connectSvg} width={24} className={`blinking-logo ${blinkColor === "white" ? "white" : "blue"}`} />
+                            <h2 style={{color: "#cae0ff"}}>{connectedUser.email}</h2>
+                            <Button danger icon={<DisconnectOutlined />} onClick={() => {
+                                dispatch(disconnectFromUser());
+                                if(window.location.pathname.slice(1,6) !== "admin") {
+                                    navigate("/adminUsers");
+                                }
+                            }}/>
+                            <h2>|</h2>|
+                        </div>
+                    ) }
+                    <h2><UserOutlined /> {currentuser?.email || currentuser?.admin_mail}</h2>
+                    <Button key={1} onClick={logout} size={isMobileSize ? "small" : "middle"}>
                         <LogoutOutlined style={{ marginRight: "10px" }} />
-                        LOGOUT
+                        {t("logout").toUpperCase()}
                     </Button>
                 </div>
+                {isMobileSize && (
+                    <Button className="menu-control-container" onClick={() => setActiveMenu(!activeMenu)}>
+                        <MenuOutlined />
+                    </Button>
+                )}
             </Header>
             <Layout>
-                <Sider width={220} className="site-layout-background" collapsed={collapsed} collapsible onCollapse={() => setCollapse(!collapsed)}>
-                    <MenuBar t={t} collapsed={collapsed}/>
-                </Sider>
+                {!isMobileSize && (
+                    <Sider width={220} className="site-layout-background" collapsed={collapsed} collapsible onCollapse={() => setCollapse(!collapsed)}>
+                        <MenuBar t={t} collapsed={collapsed} />
+                    </Sider>
+                )}
+                {isMobileSize && activeMenu && <MenuBar t={t} collapsed={collapsed} />}
+
                 <Layout
                     style={{
-                        padding: "24px",
+                        padding: isMobileSize ? "10px" : "24px",
                         minHeight: "100%"
                     }}
                 >
                     <Content
                         className="site-layout-background"
                         style={{
-                            padding: 24,
+                            padding: isMobileSize ? 10 : 24,
                             margin: 0,
-                            minHeight: "calc(100vh - 112px)"
+                            minHeight: isMobileSize ? "calc(100vh - 84px)" : "calc(100vh - 112px)"
                         }}
                     >
                         <YMaps
                             query={{
                                 ns: "use-load-option",
                                 load: "Map,Placemark,control.ZoomControl,control.FullscreenControl,geoObject.addon.balloon",
-                                apikey: import.meta.env.VITE_GOOGLE_MAP_API_KEY
+                                apikey: import.meta.env.VITE_YANDEX_MAP_API_KEY
                             }}
                         >
-                            {currentWindow(mode)}
+                            <Suspense fallback={<Spin size="large" />}>{currentWindow(mode)}</Suspense>
                         </YMaps>
                     </Content>
                 </Layout>

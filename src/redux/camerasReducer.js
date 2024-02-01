@@ -1,5 +1,5 @@
 import { message } from "antd";
-import { createData, deleteData, fetchData, patchData, updateData } from "../api/api.js";
+import { createData, deleteData, fetchData, updateData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 import { fetchAssignedCameras } from "./schedulesReducer.js";
 import { fetchBucket, fetchStorage } from "./storagesReducer.js";
@@ -7,6 +7,7 @@ import { fetchBucket, fetchStorage } from "./storagesReducer.js";
 const initialState = {
     camerasList: [],
     currentCamera: {},
+    cameraSharings: [],
     deleteCameraStatus: "",
     camerasSchedules: [],
     checkedCameraSchedule: {},
@@ -16,13 +17,7 @@ const initialState = {
 export function camerasReducer(state = initialState, action) {
     switch (action.type) {
     case ActionTypes.FETCH_CAMERAS:
-        // return { ...state, camerasList: action.payload };
-        return {
-            ...state,
-            camerasList: action.payload.cameras
-                .map((el) => ({ ...el, shared: false }))
-                .concat(action.payload.shared_cameras.map((el) => ({ ...el, shared: true })))
-        };
+        return { ...state, camerasList: action.payload };
     case ActionTypes.FETCH_CAMERA:
         return { ...state, currentCamera: action.payload };
     case ActionTypes.CREATE_CAMERA:
@@ -37,17 +32,21 @@ export function camerasReducer(state = initialState, action) {
         return { ...state, checkedCameraSchedule: action.payload };
     case ActionTypes.DELETE_CAMERA_SCHEDULE:
         return { ...state, unAssignScheduleStatus: action.payload };
+        
+    case ActionTypes.FETCH_CAMERA_SHARINGS:
+        return { ...state, cameraSharings: action.payload };
     case ActionTypes.ADD_CAMERA_SHARING:
-        return { ...state, currentCamera:  {...state.currentCamera, shared_to: [...state.currentCamera.shared_to, action.payload]}};
-    case ActionTypes.UPDATE_CAMERA_SHARING:
-        return {
-            ...state,
-            currentCamera: 
-                {...state.currentCamera, shared_to: state.currentCamera.shared_to
-                    .map(item => item.id === action.payload.id ? action.payload : item)} };
+        return { ...state, cameraSharings:  [...state.cameraSharings, action.payload]};
+
+        // case ActionTypes.UPDATE_CAMERA_SHARING:
+        //     return {
+        //         ...state,
+        //         currentCamera: 
+        //             {...state.currentCamera, shared_to: state.currentCamera.shared_to
+        //                 .map(item => item.id === action.payload.id ? action.payload : item)} };
         
     case ActionTypes.DELETE_CAMERA_SHARING:
-        return { ...state, currentCamera: {...state.currentCamera, shared_to: state.currentCamera.shared_to.filter(el => el.id !== +action.share_id)} };
+        return { ...state, cameraSharings: state.cameraSharings.filter(el => el.id !== action.sharing_id)};
         
     default:
         return state;
@@ -65,7 +64,7 @@ export const fetchCameras = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchCamerasAction(res)),
-        () => message.error("Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -79,15 +78,15 @@ export const fetchCamera = (id) => (dispatch) => {
 
     response
         .then(
-            (res) => dispatch(fetchCameraAction(res.camera)),
-            () => message.error("Error")
+            (res) => dispatch(fetchCameraAction(res)),
+            (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
         )
         .then(
             (res) => {
                 dispatch(fetchStorage(res.payload.storage_id));
                 dispatch(fetchBucket(res.payload.bucket_id));
             },
-            () => message.error("Error")
+            (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
         );
 };
 
@@ -104,7 +103,7 @@ export const createCamera = (payload, id) => (dispatch) => {
             dispatch(createCameraAction(res.data.camera));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -121,7 +120,7 @@ export const updateCamera = (payload, cameraId) => (dispatch) => {
             dispatch(updateCameraAction(res.camera));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -142,7 +141,7 @@ export const deleteCamera = (id) => (dispatch) => {
         },
         (err) => {
             dispatch(deleteCameraAction("rejected"));
-            message.error(err.response.data ? err.response.data.data.message : "Error");
+            err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error");
         }
     );
 };
@@ -159,7 +158,7 @@ export const fetchCameraSchedules = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchCameraSchedulesAction(res.schedules)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -173,7 +172,7 @@ export const fetchCameraSchedule = (id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchCameraScheduleAction(res.data)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -192,7 +191,7 @@ export const asignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
             dispatch(fetchCameraSchedules(cameraId));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -212,63 +211,78 @@ export const unAssignCameraSchedule = (cameraId, scheduleId) => (dispatch) => {
             dispatch(fetchAssignedCameras(scheduleId));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
 //CAMERA SHARINGS
+const fetchCameraSharingsAction = (payload) => ({
+    type: ActionTypes.FETCH_CAMERA_SHARINGS,
+    payload
+});
+
+export const fetchCameraSharings = (cam_id) => (dispatch) => {
+    const response = fetchData(ActionTypes.cameraSharingUrl(cam_id), {}, {});
+
+    response.then(
+        (res) => {
+            dispatch(fetchCameraSharingsAction(res));
+        },
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+    );
+};
+
 const addCameraSharingAction = (payload) => ({
     type: ActionTypes.ADD_CAMERA_SHARING,
     payload
 });
 
 export const addCameraSharing = (cam_id, payload) => (dispatch) => {
-    const response = createData(ActionTypes.cameraSharingCreateUrl(cam_id), {}, payload);
+    const response = createData(ActionTypes.cameraSharingUrl(cam_id), {}, payload);
 
     response.then(
         (res) => {
             dispatch(addCameraSharingAction(res.data));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-const updateCameraSharingAction = (payload) => ({
-    type: ActionTypes.UPDATE_CAMERA_SHARING,
-    payload
-});
+// const updateCameraSharingAction = (payload) => ({
+//     type: ActionTypes.UPDATE_CAMERA_SHARING,
+//     payload
+// });
 
-export const updateCameraSharing = (payload, sharing_id) => (dispatch) => {
-    const response = patchData(ActionTypes.cameraSharingUrl(sharing_id), {}, payload);
+// export const updateCameraSharing = (payload, sharing_id) => (dispatch) => {
+//     const response = patchData(ActionTypes.cameraSharingUrl(sharing_id), {}, payload);
 
-    response.then(
-        (res) => {
-            dispatch(updateCameraSharingAction(res));
-            message.success("Success!");
-        },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
-    );
-};
+//     response.then(
+//         (res) => {
+//             dispatch(updateCameraSharingAction(res));
+//             message.success("Success!");
+//         },
+//         (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+//     );
+// };
 
-export const deleteCameraSharingAction = (share_id) => ({
+export const deleteCameraSharingAction = (sharing_id) => ({
     type: ActionTypes.DELETE_CAMERA_SHARING,
-    share_id
+    sharing_id
 });
 
-export const deleteCameraSharing = (id) => (dispatch) => {
+export const deleteCameraSharing = (cam_id, sharing_id) => (dispatch) => {
     deleteCameraAction("pending");
-    const response = deleteData(ActionTypes.cameraSharingUrl(id), {});
+    const response = deleteData(ActionTypes.cameraSharingUpdateUrl(cam_id, sharing_id), {});
 
     response.then(
         () => {
-            dispatch(deleteCameraSharingAction(id));
-            // dispatch(fetchCameras());
+            dispatch(deleteCameraSharingAction(sharing_id));
             message.success("Success!");
         },
         (err) => {
             dispatch(deleteCameraAction("rejected"));
-            message.error(err.response.data ? err.response.data.data.message : "Error");
+            err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error");
         }
     );
 };

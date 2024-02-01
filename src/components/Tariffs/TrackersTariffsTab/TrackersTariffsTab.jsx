@@ -2,22 +2,26 @@ import React, { useEffect } from "react";
 import "./TrackersTariffsTab.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
-import { fetchTariffs } from "../../../redux/tariffsReducer";
-import { tariffDatafields, tariffsDescriptions } from "../../general/initialData";
+import { fetchTrackersTariffs } from "../../../redux/tariffsReducer";
+import { tariffTrackerDatafields, tariffsTrackersDescriptions } from "../../general/initialData";
 
-const TrackersTariffsTab = ({ t }) => {
+const TrackersTariffsTab = ({ t, isMobileSize }) => {
     const dispatch = useDispatch();
 
-    const tariffs = useSelector(state => state.tariffsReducer.tariffsList);
+    const tariffs = useSelector(state => state.tariffsReducer.trackersTariffsList);
 
     useEffect(() => {
-        dispatch(fetchTariffs());
+        dispatch(fetchTrackersTariffs());
     }, [dispatch]);
 
     const tariffsItems = tariffs.map((el, i) => (
         <div key={i} className="tariffs-item-wrap">
-            {tariffDatafields.map((field, key) => (
-                <div className="tariffs-item" key={key} style={key === 0 ? { background: "#fafafa", fontWeight: 600, height: 45 } : { height: 51 }}>
+            {tariffTrackerDatafields.map((field, key) => (
+                <div
+                    className="tariffs-item"
+                    key={key}
+                    style={key === 0 ? { background: "#fafafa", fontWeight: 600, height: 45 } : { height: isMobileSize ? 45 : 51 }}
+                >
                     {field.boolean ? (
                         <div>
                             {el[field.name] ? (
@@ -36,11 +40,15 @@ const TrackersTariffsTab = ({ t }) => {
 
     const tariffsDescriptionsFields = (
         <div className="tariffs-item-wrap">
-            {tariffsDescriptions.map((field, key) => (
+            {tariffsTrackersDescriptions.map((field, key) => (
                 <div
                     className="tariffs-item"
                     key={key}
-                    style={key === 0 ? { background: "#fafafa", fontWeight: 600, height: 45 } : { justifyContent: "flex-start", minWidth: 350 }}
+                    style={
+                        key === 0
+                            ? { background: "#fafafa", fontWeight: 600, height: 45 }
+                            : { justifyContent: "flex-start", minWidth: isMobileSize ? 190 : 350, height: isMobileSize ? 45 : 51 }
+                    }
                 >
                     <p>{t(field)}</p>
                 </div>

@@ -12,9 +12,9 @@ import { initialRegData } from "../general/initialData";
 import { fetchData } from "../../api/api";
 import * as ActionTypes from "../../redux/AppConstants";
 import RegistrationModal from "./RegistrationModal";
+import packageJson from "../../../package.json";
 
 export const Login = ({ t }) => {
-
     const { search } = useLocation();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.authReducer.user);
@@ -29,14 +29,16 @@ export const Login = ({ t }) => {
     useEffect(() => {
         const token = new URLSearchParams(search).get("token");
 
-        if(token) {
+        if (token) {
             const request = fetchData(ActionTypes.passwordRecoveryToken(token), {}, {});
-            request.then(() => {
-                setToken(token);
-                setIsRestorePassModalVisible(true);
-            }, () => message.error(t("login.somthingError")));
+            request.then(
+                () => {
+                    setToken(token);
+                    setIsRestorePassModalVisible(true);
+                },
+                () => message.error(t("somthing_error"))
+            );
         }
-        
     }, [token]);
 
     const onFinish = (values) => {
@@ -68,7 +70,7 @@ export const Login = ({ t }) => {
     };
 
     const handleSendLink = () => {
-        dispatch(sendLinkToEmail({...restoreCred, source_page: "login"}));
+        dispatch(sendLinkToEmail({ ...restoreCred, source_page: "login" }));
         handleSendLinkCancel();
     };
 
@@ -88,18 +90,19 @@ export const Login = ({ t }) => {
 
     return (
         <div className="login-page">
-            <h2>{t("login.logIn")}</h2>
+            <h2>{t("login").toUpperCase()}</h2>
+            <br/>
             <Card>
                 <Form name="basic" initialValues={{ remember: true }} onFinish={onFinish} autoComplete="off">
                     <Form.Item
                         className="field"
-                        label={t("common.email")}
+                        label={t("email")}
                         name="email"
                         rules={[
                             {
                                 required: true,
                                 type: "email",
-                                message: t("login.pleaseEnterEmail")
+                                message: t("please_enter_email")
                             }
                         ]}
                     >
@@ -108,12 +111,12 @@ export const Login = ({ t }) => {
 
                     <Form.Item
                         className="field"
-                        label={t("login.password")}
+                        label={t("password")}
                         name="password"
                         rules={[
                             {
                                 required: true,
-                                message: t("login.pleaseEnterPass")
+                                message: t("please_enter_pass")
                             }
                         ]}
                     >
@@ -121,13 +124,13 @@ export const Login = ({ t }) => {
                     </Form.Item>
                     <div className="login-actions">
                         <Button type="primary" onClick={showRestoreModal}>
-                            {t("login.forgotPass")}
+                            {t("forgot_pass")}
                         </Button>
                         <Button type="primary" onClick={showCreateModal}>
-                            {t("login.signUp")}
+                            {t("sign_up")}
                         </Button>
                         <Button type="primary" htmlType="submit">
-                            {t("login.signIn")}
+                            {t("sign_in")}
                         </Button>
                     </div>
                 </Form>
@@ -137,7 +140,9 @@ export const Login = ({ t }) => {
                     </div>
                 )}
             </Card>
+            <p style={{ color: "white" }}>v{packageJson.version}</p>
 
+            <a className="goToAdmin" href="/loginAdmin">Are you an admin?</a>
             {isCreateModalVisible && (
                 <RegistrationModal
                     t={t}

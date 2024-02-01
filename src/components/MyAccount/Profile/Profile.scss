@@ -4,21 +4,26 @@
         .fields-container {
             display: flex;
             justify-content: space-around;
+            flex-wrap: wrap;
 
-            .buttons {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 15px;
+            @media screen and (max-width: 800px) {
+                flex-direction: column;
+            }
+            
+        }
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
 
-                button:first-child {
-                    margin-right: 20px;
-                }
+            button:first-child {
+                margin-right: 20px;
             }
         }
-
         section {
             margin-top: 15px;
             min-width: 260px;
+            max-width: 320px;
 
             input {
                 margin-top: 5px;
@@ -27,7 +32,6 @@
         }
 
         .fields-wrapper {
-            width: 25%;
 
             label {
                 margin-right: 20px;

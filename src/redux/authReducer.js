@@ -7,7 +7,8 @@ const initialState = {
     authStatus: "",
     registerStatus: "",
     emailStatus: "",
-    recoveryStatus: ""
+    recoveryStatus: "",
+    connectedUser: null
 };
 
 export function authReducer(state = initialState, action) {
@@ -16,7 +17,10 @@ export function authReducer(state = initialState, action) {
         return { ...state, registerStatus: action.payload };
 
     case ActionTypes.SET_USER:
-        return { ...state, user: action.payload };
+        return { ...state, [state.user?.admin ? "connectedUser" : "user"]: action.payload };
+
+    case ActionTypes.SET_LOGOUT_USER:
+        return { ...state, user: null, connectedUser: null};
 
     case ActionTypes.SET_AUTH_STATUS:
         return { ...state, authStatus: action.payload };
@@ -26,6 +30,12 @@ export function authReducer(state = initialState, action) {
 
     case ActionTypes.SET_RECOVERY_STATUS:
         return { ...state, recoveryStatus: action.payload };
+
+    case ActionTypes.ADMIN_CONNECT_TO_USER:
+        return { ...state, connectedUser: action.user };
+
+    case ActionTypes.ADMIN_DISCONNECT_FROM_USER:
+        return { ...state, connectedUser: null };
 
     default:
         return state;
@@ -57,6 +67,10 @@ export const setCurrentUserAction = (payload) => ({
     payload
 });
 
+const setlogoutUserAction = () => ({
+    type: ActionTypes.SET_LOGOUT_USER
+});
+
 export const registerUser = (payload) => (dispatch) => {
     dispatch(setStatus("pending"));
     const response = createData(ActionTypes.usersUrl(), {}, payload);
@@ -68,7 +82,7 @@ export const registerUser = (payload) => (dispatch) => {
         },
         (err) => {
             dispatch(setStatus("rejected"));
-            message.error(err.response.data.message ? err.response.data.message : "Error");
+            err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error");
         }
     );
 };
@@ -84,7 +98,7 @@ export const sendLinkToEmail = (payload) => (dispatch) => {
         },
         (err) => {
             dispatch(setEmailStatus("rejected"));
-            message.error(err.response.data.message ? err.response.data.message : "Error");
+            err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error");
         }
     );
 };
@@ -100,7 +114,7 @@ export const restorePassword = (token, payload) => (dispatch) => {
         },
         (err) => {
             dispatch(setRecoveryStatus("rejected"));
-            message.error(err.response.data.message ? err.response.data.message : "Error");
+            err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error");
         }
     );
 };
@@ -111,9 +125,10 @@ export const loginUser = (payload) => (dispatch) => {
     response.then(
         (res) => {
             dispatch(setAuthStatus("fulfilled"));
+            const savedData = res.data.phone ? {...res.data, admin: false} : {...res.data, admin: true};
+            localStorage.setItem("user", JSON.stringify(savedData));
 
-            localStorage.setItem("user", JSON.stringify(res.data));
-            dispatch(setCurrentUserAction(res.data));
+            dispatch(setCurrentUserAction(savedData));
         },
         (err) => {
             dispatch(setAuthStatus("rejected"));
@@ -130,27 +145,96 @@ export const logoutUser = () => (dispatch) => {
 
     response.then(
         () => {
-            dispatch(setCurrentUserAction(null));
+            dispatch(setlogoutUserAction());
             localStorage.removeItem("user");
+            localStorage.removeItem("selected_user");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-export const updateUser = (id, payload) => (dispatch) => {
+export const updateUser = (id, payload, fromAdmin) => (dispatch) => {
     dispatch(setAuthStatus("pending"));
     const response = patchData(ActionTypes.userUrl(id), {}, payload);
     response.then(
         (res) => {
             dispatch(setAuthStatus("fulfilled"));
             // localStorage.removeItem("user");
-            localStorage.setItem("user", JSON.stringify(res));
+            localStorage.setItem(fromAdmin ? "selected_user" : "user", JSON.stringify(res));
             dispatch(setCurrentUserAction(res));
             message.success("Success!");
         },
         (err) => {
             dispatch(setAuthStatus("rejected"));
 
+            if (err.response.status === 500) {
+                message.error("Something Wrong");
+            } else message.error(err.response.data.message ? err.response.data.message : "Error");
+        }
+    );
+};
+
+//ADMIN CONNECT USERS
+export const connectToUserAction = (user) => ({
+    type: ActionTypes.ADMIN_CONNECT_TO_USER,
+    user
+});
+
+
+export const connectToUser = (payload) => (dispatch) => {
+    const response = patchData(ActionTypes.selectUserAdminUrl(), {}, payload);
+
+    response.then(
+        (res) => {
+            localStorage.setItem("selected_user", JSON.stringify(res));
+            dispatch(connectToUserAction(res));
+            message.success("Success!");
+        },
+        (err) => {
+            if (err.response.status === 500) {
+                message.error("Something Wrong");
+            } else message.error(err.response.data.message ? err.response.data.message : "Error");
+        }
+    );
+
+};
+const disconnectFromUserAction = () => ({
+    type: ActionTypes.ADMIN_DISCONNECT_FROM_USER
+});
+
+export const disconnectFromUser = () => (dispatch) => {
+    const response = deleteData(ActionTypes.selectUserAdminUrl(), {});
+
+    response.then(
+        (res) => {
+            localStorage.removeItem("selected_user");
+            dispatch(disconnectFromUserAction(res));
+            message.success("Success!");
+        },
+        (err) => {
+            if (err.response.status === 500) {
+                message.error("Something Wrong");
+            } else message.error(err.response.data.message ? err.response.data.message : "Error");
+        }
+    );
+
+};
+
+
+const updateAdminProfileAction = (payload) => ({
+    type: ActionTypes.ADMIN_PROFILE_UPDATE,
+    payload
+});
+
+export const updateAdminProfile =  (id, payload) => (dispatch) => {
+    const response = patchData(ActionTypes.adminsUrl(id), {}, payload);
+
+    response.then(
+        (res) => {
+            dispatch(updateAdminProfileAction(res));
+            message.success("Success!");
+        },
+        (err) => {
             if (err.response.status === 500) {
                 message.error("Something Wrong");
             } else message.error(err.response.data.message ? err.response.data.message : "Error");

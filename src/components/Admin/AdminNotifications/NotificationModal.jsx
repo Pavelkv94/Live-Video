@@ -13,7 +13,7 @@ const NotificationModal = ({ t, open, item, handleCancel, handleSubmit, setItem,
     const [isAll, setIsAll] = useState(false);
 
     useEffect(() => {
-        !editMode && (isAll ? setItem({ ...item, users: users.map((el) => el.user_id) }) : setItem({ ...item, users: [] }));
+        !editMode && (isAll ? setItem({ ...item, users: users.map((el) => el.id) }) : setItem({ ...item, users: [] }));
     }, [isAll]);
 
     const handleInput = (field) => (e) => {
@@ -24,7 +24,7 @@ const NotificationModal = ({ t, open, item, handleCancel, handleSubmit, setItem,
         setItem({ ...item, users: value });
     };
 
-    const options = users.map((el) => ({ label: el.user_name, value: el.user_id }));
+    const options = users.map((el) => ({ label: el.name, value: el.id }));
 
     return (
         <GeneralModalWrapper
@@ -35,35 +35,35 @@ const NotificationModal = ({ t, open, item, handleCancel, handleSubmit, setItem,
             handleCancel={handleCancel}
             disableButton={!item.text || !item.title ||  item.users.length === 0}
         >
-            <h2>{editMode ? t("notifications.editNotification") : t("notifications.createNotification")}</h2>
+            <h2>{editMode ? t("edit_notification") : t("create_notification")}</h2>
             <section>
-                <label>{t("common.type")}:</label>
+                <label>{t("type")}:</label>
                 <br />
                 <Radio.Group name="radiogroup" defaultValue={editMode ? item.type : "info"} onChange={e => setItem({...item, type: e.target.value})}>
                     <Radio value={"info"}>
-                        <span style={{ color: "#1677ff" }}>{t("notifications.info")}</span>
+                        <span style={{ color: "#1677ff" }}>{t("info")}</span>
                     </Radio>
                     <Radio value={"warning"}>
-                        <span style={{ color: "#faad14" }}>{t("notifications.warning")}</span>
+                        <span style={{ color: "#faad14" }}>{t("warning")}</span>
                     </Radio>
                     <Radio value={"error"}>
-                        <span style={{ color: "#ff4d4f" }}>{t("notifications.error")}</span>
+                        <span style={{ color: "#ff4d4f" }}>{t("error")}</span>
                     </Radio>
                 </Radio.Group>
             </section>
             <section>
-                <label>{t("common.title")}:</label>
-                <Input value={item.title} onChange={handleInput("title")} placeholder={t("common.enterTitle")} />
+                <label>{t("title")}:</label>
+                <Input value={item.title} onChange={handleInput("title")} placeholder={t("enter_title")} />
             </section>
             <section>
-                <label>{t("common.text")}:</label>
-                <TextArea value={item.text} onChange={handleInput("text")} placeholder={t("common.enterText")} rows={6} />
+                <label>{t("text")}:</label>
+                <TextArea value={item.text} onChange={handleInput("text")} placeholder={t("enter_text")} rows={6} />
             </section>
             <section>
-                <label>{t("common.users")}:</label>
+                <label>{t("users")}:</label>
                 <div className="select-all">
                     <Switch checked={isAll} onChange={(checked) => setIsAll(checked)} />
-                    {t("notifications.selectAll")}
+                    {t("select_all")}
                 </div>
 
                 <Select

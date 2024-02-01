@@ -10,26 +10,26 @@ const RestorePasswordModal = ({ t, open, handleCancel, handleSubmit, item, setIt
 
     const inputs = [
         {
-            name: "login.newPass",
+            name: "new_pass",
             field: "user_pass",
-            placeholder: "login.enterPass"
+            placeholder: "enter_password"
         },
         {
-            name: "login.confirmNewPass",
+            name: "confirm_new_pass",
             field: "user_pass_confirmation",
-            placeholder: "login.confirmPass"
+            placeholder: "confirm_pass"
         }
     ];
     return (
         <GeneralModalWrapper
             t={t}
             open={open}
-            action={"restorePass"}
+            action={"restore_pass"}
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
             disableButton={!item.user_pass || !item.user_pass_confirmation}
         >
-            <h2>{t("login.restorePassword")}</h2>
+            <h2>{t("restore_password")}</h2>
             {inputs.map(input => (
                 <section key={input.name}>
                     <label>{t(input.name)}</label>

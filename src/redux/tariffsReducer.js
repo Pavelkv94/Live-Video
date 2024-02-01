@@ -3,49 +3,100 @@ import { createData, fetchData } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
 
 const initialState = {
-    tariffsList: []
+    trackersTariffsList: [],
+    camerasTariffsList: []
 };
 
 export function tariffsReducer(state = initialState, action) {
     switch (action.type) {
-    case ActionTypes.FETCH_TARIFFS:
-        return { ...state, tariffsList: action.payload };
-    case ActionTypes.CREATE_TARIFF:
-        return { ...state, tariffsList: [...state.tariffsList, action.payload] };
+    case ActionTypes.FETCH_TRACKERS_TARIFFS:
+        return { ...state, trackersTariffsList: action.payload };
+    case ActionTypes.CREATE_TRACKERS_TARIFF:
+        return { ...state, trackersTariffsList: [...state.trackersTariffsList, action.payload] };
 
+    case ActionTypes.FETCH_CAMERAS_TARIFFS:
+        return { ...state, camerasTariffsList: action.payload };
+    case ActionTypes.CREATE_CAMERAS_TARIFF:
+        return { ...state, camerasTariffsList: [...state.camerasTariffsList, action.payload] };
+    
     default:
         return state;
     }
 }
 
-const fetchTariffsAction = (payload) => ({
-    type: ActionTypes.FETCH_TARIFFS,
+const fetchTrackersTariffsAction = (payload) => ({
+    type: ActionTypes.FETCH_TRACKERS_TARIFFS,
     payload
 });
 
-export const fetchTariffs = () => (dispatch) => {
-    const response = fetchData(ActionTypes.tariffsUrl(), {}, {});
+export const fetchTrackersTariffs = () => (dispatch) => {
+    const response = fetchData(ActionTypes.trackerTariffsUrl(), {}, {});
 
     response.then(
-        (res) => dispatch(fetchTariffsAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (res) => dispatch(fetchTrackersTariffsAction(res)),
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-const createTariffAction = (payload) => ({
-    type: ActionTypes.CREATE_TARIFF,
+const fetchCamerasTariffsAction = (payload) => ({
+    type: ActionTypes.FETCH_CAMERAS_TARIFFS,
     payload
 });
 
-export const createTariff = (payload) => (dispatch) => {
-    const response = createData(ActionTypes.tariffsUrl(), {}, payload);
+export const fetchCamerasTariffs = () => (dispatch) => {
+    const response = fetchData(ActionTypes.cameraTariffsUrl(), {}, {});
+
+    response.then(
+        (res) => dispatch(fetchCamerasTariffsAction(res)),
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+    );
+};
+
+const createTrackerTariffAction = (payload) => ({
+    type: ActionTypes.CREATE_TRACKERS_TARIFF,
+    payload
+});
+
+export const createTrackerTariff = (payload) => (dispatch) => {
+    const response = createData(ActionTypes.trackerTariffsUrl(), {}, payload);
 
     response.then(
         (res) => {
-            dispatch(createTariffAction(res.data.tariff));
+            dispatch(createTrackerTariffAction(res.data.tariff));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+    );
+};
+
+const createCameraTariffAction = (payload) => ({
+    type: ActionTypes.CREATE_CAMERAS_TARIFF,
+    payload
+});
+
+export const createCameraTariff = (payload) => (dispatch) => {
+    const response = createData(ActionTypes.cameraTariffsUrl(), {}, payload);
+
+    response.then(
+        (res) => {
+            dispatch(createCameraTariffAction(res.data.tariff));
+            message.success("Success!");
+        },
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
+    );
+};
+
+const createCameraTariffAndAssignAction = (payload) => ({
+    type: ActionTypes.CREATE_CAMERA_TARIFF_AND_ASSIGN,
+    payload
+});
+
+export const createCameraTariffAndAssign = (user_id, payload) => (dispatch) => {
+    const response = createData(ActionTypes.cameraTariffsAssignUrl(user_id), {}, payload);
+
+    response.then(
+        (res) => dispatch(createCameraTariffAndAssignAction(res.data.tariff)),
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -59,6 +110,6 @@ export const createTariffAndAssign = (user_id, payload) => (dispatch) => {
 
     response.then(
         (res) => dispatch(createTariffAndAssignAction(res.data.tariff)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };

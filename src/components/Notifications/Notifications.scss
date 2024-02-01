@@ -3,6 +3,14 @@
         display: flex;
         justify-content: space-between;
         .main-actions {
+            @media screen and (max-width: 440px) {
+                display: flex;
+                flex-direction: column;
+
+                button:last-child {
+                    margin-top: 10px;
+                }
+            }
         }
     }
 

@@ -1,86 +1,74 @@
-import React, { useEffect } from "react";
-import { mockTrackersReports } from "../../general/mockData";
+import React from "react";
 import { Button, Card } from "antd";
-import { PageHeader } from "@ant-design/pro-layout";
 import "./TrackersReports.scss";
-import { useDispatch } from "react-redux";
-import { fetchTrackersReports } from "../../../redux/trackersReducer";
 import { dateConvert } from "../../../utils/dateConvert";
 import html2pdf from "html2pdf.js";
 
-const TrackersReportShort = ({ t }) => {
-    const dispatch = useDispatch();
+const TrackersReportShort = ({ t, reports }) => {
 
-    useEffect(() => {
-        dispatch(fetchTrackersReports("21.06.2023", "27.06.2023"));
-    }, [dispatch]);
-
-    // const reports = useSelector((state) => state.trackersReducer.reports);
-    // const reports = mockTrackersReports;
     const downloadAsPdf = () => {
         const element = document.getElementById("reports-short-tables");
-        html2pdf().from(element).save("table.pdf");
+        html2pdf().from(element).save(`${t("tracker_route_summary")}: ${reports.map(el => el.tracker_name).join(", ")}.pdf`);
     };
 
     return (
         <div className="reports-short">
-            <PageHeader className="site-page-header" onBack={() => window.history.back()} title={t("common.reportPreview")} />
             <Card style={{ background: "#f5f5f5", margin: "10px 0" }}>
-                <Button onClick={downloadAsPdf}>{t("common.saveAsPdf")}</Button>
-                <Button onClick={() => window.print()}>{t("common.viewAndPrint")}</Button>
+                <Button onClick={downloadAsPdf}>{t("save_as_pdf")}</Button>
+                <Button onClick={() => window.print()}>{t("view_and_print")}</Button>
             </Card>
             <div id="reports-short-tables">
-                <h3>{t("common.trReportShort")}</h3>
-                {mockTrackersReports.map((report, i) => (
+                <h3>{t("tracker_route_summary")}</h3>
+                {reports.map((report, i) => (
                     <table className="reports-item" key={i}>
                         <thead>
                             <tr className="table-head">
-                                <th colSpan={2}>{t("common.trackerInformation")}:</th>
+                                <th colSpan={2}>{t("tracker_information")}:</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{t("common.tracker")}</td>
-                                <td>{report.object}</td>
+                                <td>{t("tracker")}</td>
+                                <td>{report.tracker_name}</td>
                             </tr>
                             <tr>
-                                <td>{t("common.averageFuelConsumption")}</td>
+                                <td>{t("average_fuel_consumption")}</td>
                                 <td>
                                     {report.average_consumption}
-                                    {t("common.l")}
+                                    {t("l")}
                                 </td>
                             </tr>
                             <tr>
-                                <td>{t("common.paidUpTo")}</td>
+                                <td>{t("paid_up_to")}</td>
                                 <td>{dateConvert(report.paid_till)}</td>
                             </tr>
                         </tbody>
                         <thead>
                             <tr className="table-head">
-                                <th colSpan={2}>{t("common.routeInformation")}:</th>
+                                <th colSpan={2}>{t("route_information")}:</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{t("common.startDate")}</td>
-                                <td>{dateConvert(report.route_info.start_date)}</td>
+                                <td>{t("start_date")}</td>
+                                <td>{dateConvert(report.route_summary.start_datetime)}</td>
                             </tr>
                             <tr>
-                                <td>{t("common.endDate")}</td>
-                                <td>{dateConvert(report.route_info.end_date)}</td>
+                                <td>{t("end_date")}</td>
+                                <td>{dateConvert(report.route_summary.end_datetime)}</td>
                             </tr>
                             <tr>
-                                <td>{t("common.distance")}</td>
+                                <td>{t("distance")}</td>
                                 <td>
-                                    {report.route_info.distance}
-                                    {t("common.km")}
+                                    {report.route_summary.distance.toFixed(3)}
+                                    {t("km")}
                                 </td>
                             </tr>
                             <tr>
-                                <td>{t("common.routeFuelConsumption")}</td>
+                                <td>{t("route_fuel_consumption")}</td>
                                 <td>
-                                    {report.route_info.consumption}
-                                    {t("common.l")}
+                                    {report.route_summary.consumption.toFixed(2)}
+                                    {t("l")}
                                 </td>
                             </tr>
                         </tbody>

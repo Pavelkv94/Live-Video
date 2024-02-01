@@ -1,0 +1,11 @@
+.adminProfile {
+    section {
+        width: 300px;
+        margin-top: 20px;
+        display: grid;
+        row-gap: 4px;
+        .ant-input, .ant-input-password {
+            margin: 4px 0 4px 0;
+        }
+    }
+}

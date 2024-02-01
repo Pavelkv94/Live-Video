@@ -14,10 +14,7 @@
 .site-layout-background {
     background: #fff;
 }
-.header {
-    display: flex;
-    justify-content: flex-end;
-}
+
 h2 {
     margin: 0;
 }
@@ -46,17 +43,6 @@ h2 {
 }
 .ant-page-header {
     padding: 0px;
-}
-.logout {
-    width: 400px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.logout h2 {
-    color: white;
 }
 
 section.head-section {
@@ -106,9 +92,33 @@ section.head-section button {
     height: 100%;
 }
 
-
 @media print {
-    .ant-layout-header, .ant-layout-sider, .reports-short .ant-page-header,.reports-short .ant-card {
+    .ant-layout-header,
+    .ant-layout-sider,
+    .reports-short .ant-page-header,
+    .reports-short .ant-card {
         display: none;
     }
+}
+
+@media screen and (max-width: 800px) {
+    .ant-table-content table th,
+    .ant-table-content table td {
+        font-size: 12px;
+    }
+}
+
+.green-text {
+    color: green;
+}
+.orange-text {
+    color: orange;
+}
+.opacity-half {
+    opacity: 0.5;
+}
+
+.leaflet-control-attribution.leaflet-control a:first-child,
+.leaflet-control-attribution.leaflet-control span {
+    display: none;
 }

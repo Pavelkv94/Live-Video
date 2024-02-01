@@ -41,11 +41,11 @@ export const CustomModal = React.memo(({ open, setOpen, flag, setFlag, checkedEl
                   .includes(el.num)
           }))
       );
-        flag === "create_schedule" && dispatch(fetchCameras(user.user_id));
+        flag === "create_schedule" && dispatch(fetchCameras(user.id));
     }, [flag]);
 
     useEffect(() => {
-        dispatch(fetchStorages(user.user_id));
+        dispatch(fetchStorages(user.id));
     }, []);
 
     useEffect(() => {
@@ -58,9 +58,9 @@ export const CustomModal = React.memo(({ open, setOpen, flag, setFlag, checkedEl
         } else if (flag === "edit_camera") {
             dispatch(updateCamera(cameraData, cameraData.id));
         } else if (flag === "create_storage") {
-            dispatch(createStorage({...storageData, user_id: user.user_id}));
+            dispatch(createStorage({...storageData, user_id: user.id}));
         } else if (flag === "edit_storage") {
-            dispatch(updateStorage(storageData, storageData.id, user.user_id));
+            dispatch(updateStorage(storageData, storageData.id, user.id));
         } else if (flag === "create_schedule") {
             dispatch(
                 createSchedule(
@@ -151,7 +151,7 @@ export const CustomModal = React.memo(({ open, setOpen, flag, setFlag, checkedEl
                         width: "100%"
                     }}
                     className="cameras-select"
-                    placeholder={t("common.select")}
+                    placeholder={t("select")}
                     defaultValue={scheduleData[key]}
                     onChange={(value) =>
                         setScheduleData({
@@ -212,7 +212,7 @@ export const CustomModal = React.memo(({ open, setOpen, flag, setFlag, checkedEl
                     style={{
                         width: "100%"
                     }}
-                    placeholder={t("common.select")}
+                    placeholder={t("select")}
                     defaultValue={flag === "edit_camera" && (key === "storage_id" ? storage.name : bucket.name)}
                     onChange={(value) => {
                         setCameraData({
@@ -246,7 +246,7 @@ export const CustomModal = React.memo(({ open, setOpen, flag, setFlag, checkedEl
                     style={{
                         width: "100%"
                     }}
-                    placeholder={t("common.select")}
+                    placeholder={t("select")}
                     defaultValue={cameraData[key]}
                     onChange={(value) => {
                         setStorageData({
@@ -309,7 +309,7 @@ export const CustomModal = React.memo(({ open, setOpen, flag, setFlag, checkedEl
                     </div>
                 ))}
                 {(flag === "create_schedule" || flag === "edit_schedule") && (
-                    <p className="help">{t("onlineCameras.modalDescription")}</p>
+                    <p className="help">{t("modal_description")}</p>
                 )}
             </>
         </Modal>

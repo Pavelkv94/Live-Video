@@ -4,7 +4,7 @@ import { Tabs } from "antd";
 import TrackersTariffsTab from "./TrackersTariffsTab/TrackersTariffsTab";
 import CamerasTariffsTab from "./CamerasTariffsTab/CamerasTariffsTab";
 
-const Tariffs = ({ t }) => {
+const Tariffs = ({ t, isMobileSize }) => {
     const [tab, setTab] = useState("1");
 
     const onChangeTab = (key) => {
@@ -14,19 +14,19 @@ const Tariffs = ({ t }) => {
     const items = [
         {
             key: "1",
-            label: t("tariffs.trackersTariffs"),
-            children: <TrackersTariffsTab t={t} />
+            label: t("trackers_tariffs"),
+            children: <TrackersTariffsTab t={t} isMobileSize={isMobileSize}/>
         },
         {
             key: "2",
-            label: t("tariffs.camerasTariffs"),
-            children: <CamerasTariffsTab t={t} />
+            label: t("cameras_tariffs"),
+            children: <CamerasTariffsTab t={t} isMobileSize={isMobileSize}/>
         }
     ];
     return (
         <div className="tariffs">
             <section className="head-section">
-                <h2>{t("menuBar.tariffs")}</h2>
+                <h2>{t("tariffs")}</h2>
             </section>
             <Tabs defaultActiveKey="1" onChange={onChangeTab} activeKey={tab} items={items} />
         </div>

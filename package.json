@@ -1,7 +1,7 @@
 {
   "name": "oms_front",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.27",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -34,7 +34,9 @@
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
     "sass": "^1.62.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "chartjs-plugin-zoom": "^2.0.1",
+    "react-chartjs-2": "^5.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

@@ -1,6 +1,7 @@
 import { message } from "antd";
 import {createData, deleteData, fetchData, patchData  } from "../api/api.js";
 import * as ActionTypes from "./AppConstants.js";
+import { logoutUser } from "./authReducer.js";
 
 const initialState = {
     notificationsList: [],
@@ -44,7 +45,13 @@ export const fetchNotifications = (user_id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchNotificationsAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => {
+            err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error");
+            // const localUser = localStorage.getItem("user");
+            if(err.response.status === 401) {
+                dispatch(logoutUser());
+            }
+        } 
     );
 };
 
@@ -58,7 +65,7 @@ export const viewNotification = (note_id) => (dispatch) => {
 
     response.then(
         () => dispatch(viewNotificationAction(note_id)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -71,7 +78,7 @@ export const viewAllNotifications = (user_id) => (dispatch) => {
 
     response.then(
         () => dispatch(viewAllNotificationsAction()),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -85,7 +92,7 @@ export const deleteNotifications = (note_id) => (dispatch) => {
 
     response.then(
         () => dispatch(deleteNotificationsAction(note_id)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -102,7 +109,7 @@ export const deleteAllNotifications = (user_id) => (dispatch) => {
             dispatch(deleteAllNotificationsAction());
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -117,7 +124,7 @@ export const fetchAdminNotifications = () => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchAdminNotificationsAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -135,7 +142,7 @@ export const createAdminNotifications = (payload) => (dispatch) => {
             message.success("Success!");
 
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -153,7 +160,7 @@ export const updateAdminNotifications = (note_id, payload) => (dispatch) => {
             message.success("Success!");
 
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -166,7 +173,10 @@ export const deleteAdminNotification = (note_id) => (dispatch) => {
     const response = deleteData(ActionTypes.notificationAdminUrl(note_id), {}, {});
 
     response.then(
-        () => dispatch(deleteAdminNotificationAction(note_id)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        () => {
+            message.success("Success!");
+            dispatch(deleteAdminNotificationAction(note_id));
+        },
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };

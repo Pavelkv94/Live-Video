@@ -4,7 +4,7 @@ import * as ActionTypes from "./AppConstants.js";
 
 const initialState = {
     monitoringObjectsList: [],
-    sharedMonitoringObjectsList: [],
+    monitoringObjectSharings: [],
     monitoringObject: null,
     monitoringObjectCameras: [],
     monitoringObjectTrackers: []
@@ -22,29 +22,18 @@ export function monitoringObjectsReducer(state = initialState, action) {
         return { ...state, monitoringObject: action.payload };
     case ActionTypes.DELETE_MONITORING_OBJECT:
         return { ...state, monitoringObject: null,  monitoringObjectsList: state.monitoringObjectsList.filter(el => el.id !== +action.obj_id)};
-        
-    case ActionTypes.RESET_MONITORING_OBJECT:
-        return { ...state, monitoringObject: null };
+    
+    case ActionTypes.FETCH_MONITORING_OBJECT_SHARINGS:
+        return { ...state, monitoringObjectSharings: action.payload };
+    case ActionTypes.ADD_MONITORING_OBJECT_SHARINGS:
+        return { ...state, monitoringObjectSharings: [...state.monitoringObjectSharings, action.payload]};
+    case ActionTypes.DELETE_MONITORING_OBJECT_SHARINGS:
+        return { ...state, monitoringObjectSharings: state.monitoringObjectSharings.filter(el => el.id !== action.sharing_id)};  
 
-    case ActionTypes.FETCH_SHARED_MONITORING_OBJECTS:
-        return { ...state, sharedMonitoringObjectsList: action.payload };
-    case ActionTypes.DELETE_SHARED_MONITORING_OBJECTS:
-        return {
-            ...state,
-            monitoringObject: { ...state.monitoringObject, shared_to: state.monitoringObject.shared_to.filter((el) => el.id !== action.obj_id) }
-        };
-    case ActionTypes.ADD_SHARED_USER:
-        return { ...state, monitoringObject: action.payload };
-    case ActionTypes.CHANGE_ACCESS_LEVEL:
-        return {
-            ...state,
-            monitoringObject: {
-                ...state.monitoringObject,
-                shared_to: state.monitoringObject.shared_to.map((el) =>
-                    el.id === action.payload.id ? action.payload : el
-                )
-            }
-        };
+        
+        // case ActionTypes.RESET_MONITORING_OBJECT:
+        //     return { ...state, monitoringObject: null };
+
     case ActionTypes.FETCH_MONITORING_OBJECT_CAMERAS:
         return { ...state, monitoringObjectCameras: action.payload };
     case ActionTypes.CREATE_MONITORING_OBJECT_CAMERAS:
@@ -56,16 +45,16 @@ export function monitoringObjectsReducer(state = initialState, action) {
     case ActionTypes.FETCH_MONITORING_OBJECT_TRACKERS:
         return { ...state, monitoringObjectTrackers: action.payload.map((el) => ({ ...el, isVisibleOnMap: true })) };
     case ActionTypes.CREATE_MONITORING_OBJECT_TRACKERS:
-        return { ...state, monitoringObjectTrackers: [...state.monitoringObjectTrackers, action.payload] };
+        return { ...state, monitoringObjectTrackers: [...state.monitoringObjectTrackers, {...action.payload, isVisibleOnMap: true}] };
     case ActionTypes.ASSIGN_MONITORING_OBJECT_TRACKER:
         return { ...state, monitoringObjectTrackers: [...state.monitoringObjectTrackers, { ...action.payload, isVisibleOnMap: true }] };
     case ActionTypes.UNASSIGN_MONITORING_OBJECT_TRACKER:
-        return { ...state, monitoringObjectTrackers: state.monitoringObjectTrackers.filter((el) => el.trobject_id !== action.tr_id) };
+        return { ...state, monitoringObjectTrackers: state.monitoringObjectTrackers.filter((el) => el.id !== action.tr_id) };
     case ActionTypes.CHANGE_MONITORING_TRACKER_VISIBLE:
         return {
             ...state,
             monitoringObjectTrackers: state.monitoringObjectTrackers.map((el) =>
-                el.trobject_id === action.tracker_id ? { ...el, isVisibleOnMap: action.isVisible } : el
+                el.id === action.tracker_id ? { ...el, isVisibleOnMap: action.isVisible } : el
             )
         };
     default:
@@ -83,7 +72,7 @@ export const fetchMonitoringObjects = (user_id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchMonitoringObjectsAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -97,7 +86,7 @@ export const fetchMonitoringObject = (obj_id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchMonitoringObjectAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -114,7 +103,7 @@ export const createMonitoringObject = (user_id, payload) => (dispatch) => {
             dispatch(createMonitoringObjectAction(res));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -131,7 +120,7 @@ export const updateMonitoringObject = (obj_id, paylaod) => (dispatch) => {
             dispatch(updateMonitoringObjectAction(res));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -143,7 +132,7 @@ export const updateMonitoringObjectImage = (obj_id, paylaod) => (dispatch) => {
             dispatch(updateMonitoringObjectAction(res));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -167,70 +156,57 @@ export const deleteMonitoringObject = (obj_id) => (dispatch) => {
             dispatch(deleteMonitoringObjectAction(obj_id));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-//SHARED
+//SHARING
+
 const fetchSharedMonitoringObjectsAction = (payload) => ({
-    type: ActionTypes.FETCH_SHARED_MONITORING_OBJECTS,
+    type: ActionTypes.FETCH_MONITORING_OBJECT_SHARINGS,
     payload
 });
 
-export const fetchSharedMonitoringObjects = (user_id) => (dispatch) => {
-    const response = fetchData(ActionTypes.sharedMonitoringObjectUrl(user_id), {}, {});
+export const fetchSharedMonitoringObjects = (obj_id) => (dispatch) => {
+    const response = fetchData(ActionTypes.monitoringObjectSharingsUrl(obj_id), {}, {});
 
     response.then(
         (res) => dispatch(fetchSharedMonitoringObjectsAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-const addSharedUserAction = (payload) => ({
-    type: ActionTypes.ADD_SHARED_USER,
+const addMonitoringObjectSharingAction = (payload) => ({
+    type: ActionTypes.ADD_MONITORING_OBJECT_SHARINGS,
     payload
 });
 
-export const addSharedUser = (obj_id, paylaod) => (dispatch) => {
-    const response = createData(ActionTypes.sharedUserUrl(obj_id), {}, paylaod);
+export const addMonitoringObjectSharing = (obj_id, paylaod) => (dispatch) => {
+    const response = createData(ActionTypes.monitoringObjectSharingsUrl(obj_id), {}, paylaod);
 
     response.then(
         (res) => {
-            dispatch(addSharedUserAction(res.data));
+            dispatch(addMonitoringObjectSharingAction(res.data));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-const changeAccessLevelAction = (payload) => ({
-    type: ActionTypes.CHANGE_ACCESS_LEVEL,
-    payload
+const deleteSharedMonitoringObjectsAction = (sharing_id) => ({
+    type: ActionTypes.DELETE_MONITORING_OBJECT_SHARINGS,
+    sharing_id
 });
 
-export const changeAccessLevel = (obj_id, paylaod) => (dispatch) => {
-    const response = patchData(ActionTypes.sharingsUrl(obj_id), {}, paylaod);
+export const deleteMonitoringObjectSharings = (obj_id, sharing_id) => (dispatch) => {
+    const response = deleteData(ActionTypes.monitoringObjectSharingsUpdateUrl(obj_id, sharing_id), {}, {});
 
     response.then(
-        (res) => {
-            dispatch(changeAccessLevelAction(res));
+        () => {
+            dispatch(deleteSharedMonitoringObjectsAction(sharing_id));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
-    );
-};
-
-const deleteSharedMonitoringObjectsAction = (obj_id) => ({
-    type: ActionTypes.DELETE_SHARED_MONITORING_OBJECTS,
-    obj_id
-});
-
-export const deleteSharedMonitoringObjects = (obj_id) => (dispatch) => {
-    const response = deleteData(ActionTypes.sharingsUrl(obj_id), {}, {});
-
-    response.then(
-        () => dispatch(deleteSharedMonitoringObjectsAction(obj_id)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -245,7 +221,7 @@ export const fetchMonitoringObjectCameras = (obj_id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchMonitoringObjectCamerasAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -262,7 +238,7 @@ export const createMonitoringObjectCameras = (obj_id, payload) => (dispatch) => 
             dispatch(createMonitoringObjectCamerasAction(res.data));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -279,7 +255,7 @@ export const assignMonitoringObjectCameras = (obj_id, cam_id) => (dispatch) => {
             dispatch(assignMonitoringObjectCamerasAction(res.data));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -296,7 +272,7 @@ export const unassignMonitoringObjectCameras = (obj_id, cam_id) => (dispatch) =>
             dispatch(unassignMonitoringObjectCamerasAction(cam_id));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -312,10 +288,10 @@ export const assignMonitoringObjectTracker = (obj_id, tr_id) => (dispatch) => {
 
     response.then(
         (res) => {
-            dispatch(assignMonitoringObjectTrackerAction(res));
+            dispatch(assignMonitoringObjectTrackerAction(res.data));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -332,7 +308,7 @@ export const unassignMonitoringObjectTracker = (obj_id, tr_id) => (dispatch) => 
             dispatch(unassignMonitoringObjectTrackerAction(tr_id));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
@@ -346,24 +322,24 @@ export const fetchMonitoringObjectTrackers = (obj_id) => (dispatch) => {
 
     response.then(
         (res) => dispatch(fetchMonitoringObjectTrackersAction(res)),
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 
-const createMonitoringObjectTrackersAction = (payload) => ({
+const createMonitoringObjectTrackerAction = (payload) => ({
     type: ActionTypes.CREATE_MONITORING_OBJECT_TRACKERS,
     payload
 });
 
-export const createMonitoringObjectTrackers = (obj_id, payload) => (dispatch) => {
+export const createMonitoringObjectTracker = (obj_id, payload) => (dispatch) => {
     const response = createData(ActionTypes.monitoringObjectTrackersUrl(obj_id), {}, payload);
 
     response.then(
         (res) => {
-            dispatch(createMonitoringObjectTrackersAction(res.data));
+            dispatch(createMonitoringObjectTrackerAction(res.data));
             message.success("Success!");
         },
-        (err) => message.error(err.response.data.message ? err.response.data.message : "Error")
+        (err) => err.response.data ? err.response.data.map(el => message.error(el)) : message.error("Error")
     );
 };
 

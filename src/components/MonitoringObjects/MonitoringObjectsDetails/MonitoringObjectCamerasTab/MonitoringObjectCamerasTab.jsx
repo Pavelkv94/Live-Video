@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./MonitoringObjectCamerasTab.scss";
 import { Button, Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { createMonitoringObjectCameras, unassignMonitoringObjectCameras } from "../../../../redux/monitoringObjectsReducer";
+import { createMonitoringObjectCameras, fetchMonitoringObjectCameras, unassignMonitoringObjectCameras } from "../../../../redux/monitoringObjectsReducer";
 import { useParams } from "react-router";
 import CameraModal from "../../../OnlineCameras/CamerasList/CameraModal";
 import { initialCamera } from "../../../general/initialData";
@@ -19,6 +19,10 @@ const MonitoringObjectCamerasTab = ({ t, isSharedObject }) => {
     const [openCreateCamera, setOpenCreateCamera] = useState(false);
     const [cameraData, setCameraData] = useState(initialCamera);
     const [openAssignCamera, setOpenAssignCamera] = useState(false);
+
+    useEffect(() => {
+        dispatch(fetchMonitoringObjectCameras(id));
+    }, [dispatch]);
 
     const handleCreateCamera = () => {
         dispatch(createMonitoringObjectCameras(id, { ...cameraData, monitoring_object_id: id }));
@@ -41,33 +45,33 @@ const MonitoringObjectCamerasTab = ({ t, isSharedObject }) => {
 
     const columnsCameras = [
         {
-            title: t("common.name"),
+            title: t("name"),
             dataIndex: "name",
             key: "name",
             render: (text, params) => <NavLink to={`/cameras/details/${params.id}`}>{text}</NavLink>
         },
         {
-            title: t("onlineCameras.deviceName"),
-            dataIndex: "deviceName",
-            key: "deviceName"
+            title: t("model"),
+            dataIndex: "model",
+            key: "model"
         },
         {
-            title: t("onlineCameras.ip"),
-            dataIndex: "ip",
-            key: "ip"
+            title: t("ip"),
+            dataIndex: "ip_address",
+            key: "ip_address"
         },
         {
-            title: t("login.login"),
+            title: t("login"),
             dataIndex: "login",
             key: "login"
         },
         {
-            title: t("login.password"),
+            title: t("password"),
             dataIndex: "password",
             key: "password"
         },
         {
-            title: t("common.created"),
+            title: t("created"),
             dataIndex: "created_at",
             key: "created_at",
             render: (text, params) => dateConvert(params.created_at)
@@ -78,7 +82,7 @@ const MonitoringObjectCamerasTab = ({ t, isSharedObject }) => {
             key: "actions",
             render: (text, params) => (
                 <Button style={{ color: "#1890ff" }} type="text" onClick={handleUnassignCamera(params)}>
-                    {t("onlineCameras.unassignCamera")}
+                    {t("unassign_camera")}
                 </Button>
             )
         }
@@ -91,10 +95,10 @@ const MonitoringObjectCamerasTab = ({ t, isSharedObject }) => {
             {!isSharedObject && (
                 <div>
                     <Button onClick={() => setOpenCreateCamera(true)} type="primary" style={{ marginBottom: "20px" }}>
-                        {t("onlineCameras.createCamera")}
+                        {t("create_camera")}
                     </Button>
                     <Button onClick={() => setOpenAssignCamera(true)} type="primary" style={{ marginBottom: "20px" }}>
-                        {t("onlineCameras.assignCamera")}
+                        {t("assign_camera")}
                     </Button>
                 </div>
             )}

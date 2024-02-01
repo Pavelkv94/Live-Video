@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { createCamera, deleteCameraAction, fetchCameras } from "../../../redux/camerasReducer";
-import { dateConvert } from "../../../utils/dateConvert";
+import { dateConvert, isDateExpired } from "../../../utils/dateConvert";
 import "./CamersList.scss";
 import CameraModal from "./CameraModal";
 import { initialCamera } from "../../general/initialData";
 
-const CamerasList = ({ t }) => {
+const CamerasList = ({ t, isMobileSize }) => {
     const dispatch = useDispatch();
 
     const [openCreateCamera, setOpenCreateCamera] = useState(false);
@@ -19,7 +19,7 @@ const CamerasList = ({ t }) => {
     const camerasList = useSelector((state) => state.camerasReducer.camerasList);
 
     useEffect(() => {
-        user && dispatch(fetchCameras(user.user_id));
+        user && dispatch(fetchCameras(user.id));
     }, [user]);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ const CamerasList = ({ t }) => {
     }, []);
 
     const handleCreateCamera = () => {
-        dispatch(createCamera(cameraData, user.user_id));
+        dispatch(createCamera(cameraData, user.id));
         setOpenCreateCamera(false);
     };
 
@@ -38,38 +38,39 @@ const CamerasList = ({ t }) => {
 
     const columns = [
         {
-            title: "Name",
+            title: t("name"),
             dataIndex: "name",
             key: "name",
             render: (text, params) => (
                 <div>
                     <NavLink to={`details/${params.key}`}>{text}</NavLink>
-                    {params.shared && <ShareAltOutlined style={{ marginLeft: 5 }} />}
+                    {isDateExpired(params.paid_till) && <i style={{ color: "red" }}>{` (${t("expired")})`}</i>}
+                    {params.user_id !== user.id && <ShareAltOutlined style={{ marginLeft: 5 }} />}
                 </div>
             )
         },
         {
-            title: "Device Name",
-            dataIndex: "device_name",
-            key: "device_name"
+            title: t("model"),
+            dataIndex: "model",
+            key: "model"
         },
         {
-            title: "Ip",
-            dataIndex: "ip",
-            key: "ip"
+            title: t("ip"),
+            dataIndex: "ip_address",
+            key: "ip_address"
         },
         {
-            title: "Login",
+            title: t("login"),
             dataIndex: "login",
             key: "login"
         },
         {
-            title: "Password",
+            title: t("password"),
             dataIndex: "password",
             key: "password"
         },
         {
-            title: "Created",
+            title: t("created"),
             dataIndex: "created_at",
             key: "created_at"
         }
@@ -85,10 +86,10 @@ const CamerasList = ({ t }) => {
     return (
         <div className="common-list">
             <section>
-                <h2>{t("menuBar.cameras")}</h2>
+                <h2>{t("cameras")}</h2>
                 <Button shape="circle" icon={<VideoCameraAddOutlined />} onClick={() => setOpenCreateCamera(true)} />
             </section>
-            <Table columns={columns} dataSource={data} pagination={data.length > 9} />
+            <Table columns={columns} dataSource={data} pagination={data.length > 9} size={isMobileSize ? "small" : "middle"}/>
 
             {openCreateCamera && (
                 <CameraModal

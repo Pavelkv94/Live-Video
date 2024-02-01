@@ -7,16 +7,52 @@
             display: flex;
             align-items: center;
         }
+
+        @media screen and (max-width: 600px) {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .head-section-actions {
+            .ant-select {
+                width: 200px;
+                margin-left: 20px;
+            }
+
+            @media screen and (max-width: 600px) {
+                margin-top: 10px;
+                button {
+                    margin-left: 0;
+                    margin-right: 6px;
+                }
+                .ant-select {
+                    width: 100px;
+                    margin-left: 0;
+                }
+            }
+        }
     }
 
     .routes-content {
         display: flex;
 
+        @media screen and (max-width: 800px) {
+            flex-direction: column;
+        }
         .routes-form {
             display: flex;
             flex-direction: column;
             margin-right: 20px;
             max-width: 500px;
+            @media screen and (max-width: 800px) {
+                max-width: 400px;
+            }
+            @media screen and (max-width: 600px) {
+                max-width: 300px;
+                margin-right: 0;
+                .ant-form-item {
+                    margin-bottom: 10px;
+                }
+            }
 
             .ant-picker.ant-picker-range {
                 float: right;
@@ -30,8 +66,16 @@
 
         .trackers-table {
             margin-right: 20px;
+
+            @media screen and (max-width: 800px) {
+                margin-right: 0;
+            }
             .ant-spin-nested-loading {
                 width: 550px;
+
+                @media screen and (max-width: 800px) {
+                    width: 100%;
+                }
             }
 
             .sub-row-item {
@@ -56,23 +100,22 @@
 
         .routes-details {
             margin-top: 20px;
-    
+
             .ant-card-body {
                 display: flex;
                 flex-direction: column;
-    
+
                 .tabs-header {
                     margin: 0;
-                    align-self: flex-end
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
                 }
             }
         }
-        
     }
     .map-content {
         height: calc(60vh);
         width: 100%;
     }
-
-   
 }

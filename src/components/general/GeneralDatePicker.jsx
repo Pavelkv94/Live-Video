@@ -2,7 +2,7 @@ import { DatePicker, Form } from "antd";
 import dayjs from "dayjs";
 import React from "react";
 
-const GeneralDatePicker = ({ t, setSelectedRange, selectedRange }) => {
+const GeneralDatePicker = ({ t, setSelectedRange, selectedRange, fieldWidth = "400px" }) => {
     const { RangePicker } = DatePicker;
     const now = dayjs();
     const today = now.set("h", 0).set("m", 0);
@@ -23,37 +23,45 @@ const GeneralDatePicker = ({ t, setSelectedRange, selectedRange }) => {
 
     const rangePresets = [
         {
-            label: t("trackerManagement.today"),
+            label: t("today"),
             value: [today, now]
         },
         {
-            label: t("trackerManagement.yesterday"),
+            label: t("yesterday"),
             value: [yesterdayStart, yesterdayEnd]
         },
         {
-            label: t("trackerManagement.beforeYesterday"),
+            label: t("before_yesterday"),
             value: [beforeYesterdayStart, beforeYesterdayEnd]
         },
         {
-            label: t("trackerManagement.currentWeek"),
+            label: t("current_week"),
             value: [currentWeek, now]
         },
         {
-            label: t("trackerManagement.previousWeek"),
+            label: t("previous_week"),
             value: [previousWeekStart, previousWeekEnd]
         },
         {
-            label: t("trackerManagement.currentMonth"),
+            label: t("current_month"),
             value: [currentMonth, now]
         },
         {
-            label: t("trackerManagement.previousMonth"),
+            label: t("previous_month"),
             value: [previousMonthStart, previousMonthEnd]
         }
     ];
+    
     return (
-        <Form.Item label={t("trackerManagement.selectDate")} name="date">
-            <RangePicker presets={rangePresets} showTime format="YYYY-MM-DD HH:mm" value={selectedRange} onChange={handleRangeChange} />
+        <Form.Item label={t("select_date")} name="date">
+            <RangePicker
+                presets={rangePresets}
+                showTime
+                format="YYYY-MM-DD HH:mm"
+                value={selectedRange}
+                onChange={handleRangeChange}
+                style={{ width: fieldWidth }}
+            />
         </Form.Item>
     );
 };

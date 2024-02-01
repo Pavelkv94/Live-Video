@@ -1,5 +1,4 @@
-.balance-operations .balance-operations-content{
-   
+.balance-operations .balance-operations-content {
     display: flex;
     flex-direction: column;
 
@@ -9,12 +8,25 @@
         align-items: center;
         justify-content: center;
 
+        @media screen and (max-width: 800px) {
+            flex-wrap: wrap;
+        }
+
         h3 {
             margin: 0 20px 0 0;
+
+            @media screen and (max-width: 800px) {
+                margin: 0 10px 10px 0;
+            }
         }
         input {
             min-width: 100px;
             max-width: max-content;
+        }
+    }
+    .ant-table-wrapper {
+        @media screen and (max-width: 800px) {
+            overflow-x: scroll;
         }
     }
 }

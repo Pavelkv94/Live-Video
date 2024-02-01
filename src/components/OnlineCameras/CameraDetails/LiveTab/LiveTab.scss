@@ -4,24 +4,36 @@
         min-height: 400px;
         display: flex;
         justify-content: space-between;
+
+        @media screen and (max-width: 1450px) {
+            flex-direction: column;
+        }
     }
     .camera-details section:first-child {
         min-width: 600px;
         height: 338px;
         margin: 20px;
         background-color: black;
-    }
-    .camera-details section:last-child {
-        width: 50%;
+
+        @media screen and (max-width: 800px) {
+            min-width: 350px;
+            margin: 0;
+            height: 200px;
+        }
     }
     .camera-details section:last-child td:first-child {
         font-weight: 700;
     }
     .params-row {
         display: flex;
-        width: 500px;
+        min-width: 500px;
         justify-content: space-between;
         font-size: 18px;
+
+        @media screen and (max-width: 800px) {
+            min-width: 350px;
+            font-size: 14px;
+        }
     }
     .params-row p {
         margin: 0;
@@ -31,23 +43,35 @@
     }
     .camera-actions {
         margin-top: 20px;
-        width: 510px;
+        max-width: 510px;
+        @media screen and (max-width: 800px) {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
     }
     .camera-actions button {
         margin-right: 20px;
+        @media screen and (max-width: 800px) {
+            margin: 0 20px 20px 0;
+        }
     }
     .live {
-        width: 600px !important;
+        min-width: 600px;
+        @media screen and (max-width: 800px) {
+            min-width: 350px;
+        }
     }
 
     .camera-details-second-block {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        
 
-        .actions button{
+        @media screen and (max-width: 800px) {
+            grid-template-columns: 0 1fr;
+        }
+        .actions button {
             margin-right: 10px;
-
         }
     }
 }

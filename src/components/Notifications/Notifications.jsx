@@ -7,7 +7,7 @@ import { CheckCircleOutlined, CloseCircleFilled, DeleteFilled, InfoCircleFilled,
 import { dateConvert } from "../../utils/dateConvert";
 import { DeleteModal } from "../general/DeleteModal";
 
-const Notifications = ({ t }) => {
+const Notifications = ({ t, isMobileSize }) => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.authReducer.user);
     const notifications = useSelector((state) => state.notificationsReducer.notificationsList);
@@ -16,7 +16,7 @@ const Notifications = ({ t }) => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchNotifications(user.user_id));
+        dispatch(fetchNotifications(user.id));
     }, [dispatch]);
 
     const handleSubmitDeleteModal = () => {
@@ -28,11 +28,15 @@ const Notifications = ({ t }) => {
     return (
         <div className="notifications">
             <section className="head-section">
-                <h2>{t("menuBar.notifications")}</h2>
+                <h2>{t("notifications")}</h2>
                 {notifications.length > 0 && (
                     <div className="main-actions">
-                        <Button onClick={() => dispatch(viewAllNotifications(user.user_id))}>{t("notifications.markAllAsViewed")}</Button>
-                        <Button onClick={() => dispatch(deleteAllNotifications(user.user_id))} danger>{t("notifications.deleteAll")}</Button>
+                        <Button onClick={() => dispatch(viewAllNotifications(user.id))} size={isMobileSize ? "small" : "middle"}>
+                            {t("mark_all_as_viewed")}
+                        </Button>
+                        <Button onClick={() => dispatch(deleteAllNotifications(user.id))} danger size={isMobileSize ? "small" : "middle"}>
+                            {t("delete_all")}
+                        </Button>
                     </div>
                 )}
             </section>
@@ -45,7 +49,7 @@ const Notifications = ({ t }) => {
                 renderItem={(item, index) => (
                     <List.Item
                         actions={[
-                            <Tooltip placement="bottom" title={t("notifications.deleteNotify")} key={index}>
+                            <Tooltip placement="bottom" title={t("delete_notify")} key={index}>
                                 <div
                                     className="notification-action-icon"
                                     onClick={() => {
@@ -57,14 +61,14 @@ const Notifications = ({ t }) => {
                                 </div>
                             </Tooltip>,
                             !item.viewed_at ? (
-                                <Space key={index} className="notification-action-icon-text" onClick={() => dispatch(viewNotification(item.id))} >
+                                <Space key={index} className="notification-action-icon-text" onClick={() => dispatch(viewNotification(item.id))}>
                                     <MailOutlined style={{ fontSize: "18px" }} />
-                                    {t("notifications.markAsViewed")}
+                                    {t("mark_as_viewed")}
                                 </Space>
                             ) : (
                                 <Space key={index}>
                                     <CheckCircleOutlined style={{ fontSize: "18px" }} />
-                                    {t("notifications.viewed")}
+                                    {t("viewed")}
                                 </Space>
                             )
                         ]}
@@ -97,7 +101,6 @@ const Notifications = ({ t }) => {
                     t={t}
                 />
             )}
-            
         </div>
     );
 };

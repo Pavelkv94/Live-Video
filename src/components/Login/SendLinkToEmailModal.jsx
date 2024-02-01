@@ -16,13 +16,13 @@ const SendLinkToEmailModal = ({ t, open, item, handleCancel, handleSubmit, setIt
             handleSubmit={handleSubmit}
             handleCancel={handleCancel}
             disableButton={!item.email}
-            action={"sendCode"}
+            action={"send_code"}
         >
-            <h2>{t("login.restorePassword")}</h2>
+            <h2>{t("restore_password")}</h2>
             <section>
-                <label>{t("common.email")}</label>
+                <label>{t("email")}</label>
                 <Input
-                    placeholder={t("common.enterEmail")}
+                    placeholder={t("enter_email")}
                     value={item.email}
                     onChange={handleInput("email")}
                 />

@@ -9,7 +9,7 @@ import { DeleteModal } from "../../general/DeleteModal";
 import SchedulesModal from "./SchedulesModal";
 import { initialCheckedDays, initialSchedule } from "../../general/initialData";
 
-const SchedulesList = React.memo(({t}) => {
+const SchedulesList = React.memo(({t, isMobileSize}) => {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -55,7 +55,7 @@ const SchedulesList = React.memo(({t}) => {
 
     const columns = [
         {
-            title: t("common.name"),
+            title: t("name"),
             dataIndex: "name",
             key: "name",
             render: (text, params) => (
@@ -63,17 +63,17 @@ const SchedulesList = React.memo(({t}) => {
             )
         },
         {
-            title: t("onlineCameras.durationS"),
+            title: t("duration_s"),
             dataIndex: "duration",
             key: "duration"
         },
         {
-            title: t("onlineCameras.periodS"),
+            title: t("period_s"),
             dataIndex: "period",
             key: "period"
         },
         {
-            title: t("common.created"),
+            title: t("created"),
             dataIndex: "created_at",
             key: "created_at"
         },
@@ -103,14 +103,14 @@ const SchedulesList = React.memo(({t}) => {
     return (
         <div className="schedules">
             <section className="head-section">
-                <h2>{t("menuBar.schedules")}</h2>
+                <h2>{t("schedules")}</h2>
                 <Button
                     shape="circle"
                     icon={<PlusOutlined />}
                     onClick={() => setOpen(true)}
                 />
             </section>
-            <Table columns={columns} dataSource={data} pagination={data.length > 9}/>
+            <Table columns={columns} dataSource={data} pagination={data.length > 9} size={isMobileSize ? "small" : "middle"}/>
             {open && <SchedulesModal
                 t={t}
                 open={open}

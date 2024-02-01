@@ -4,3 +4,53 @@
 .storage-actions button {
     margin-right: 20px;
 }
+.modal-body-wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 20px;
+
+    .storage-field p {
+        margin: 10px 0 2px 0;
+    }
+    .storage-field:nth-child(1) {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        grid-row-start: 1;
+        grid-row-end: 4;
+    }
+
+    .storage-field:nth-child(2) {
+        grid-column-start: 2;
+        grid-column-end: 4;
+        grid-row-start: 1;
+        grid-row-end: 4;
+    }
+    .storage-field:nth-child(3) {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+    .storage-field:nth-child(4) {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+    .storage-field:nth-child(5) {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+    .storage-field:nth-child(6) {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+    .storage-field:nth-child(7) {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+    .storage-field:nth-child(8) {
+        grid-column-start: 1;
+        grid-column-end: 2;
+    }
+    .storage-field:nth-child(9) {
+        grid-column-start: 2;
+        grid-column-end: 4;
+    }
+}
